@@ -126,14 +126,14 @@ The {if} control structure is pretty standard except for one thing: {if}
 statements return values.  This makes them much more useful than what I'm used
 to.  At the minimum, it allows us to eliminate the need for a ternary
 operator, because the {if/else} pair does that for us.
-[sc]
+!sc!
     if (predicate) doTrue else doFalse
-[/sc]
+!/sc!
 And you can then assign the result to a {val} or {var}:
-[sc]
+!sc!
     val func = if (args.length == 2) "Execution: (" + args.mkstring(", ") + ")"
                else "Parse: " + args.mkstring(", ")
-[/sc]
+!/sc!
 1.2 "while" and "do/while"                                 *scala-while* {{{2
 ------------------------------------------------------------------------------
 
@@ -147,47 +147,47 @@ using a looping construct like this, and that's why they're frowned upon -
 generally a side-effect-free mechanism is to be preferred.
 
 It's pretty obvious stuff:
-[sc]
+!sc!
     var line = readLine()
     while (line != "") {
         println("Read: "+ line)
         line = readLine()
     }
-[/sc]
+!/sc!
 And the (better, for this particular problem) {do/while} loop:
-[sc]
+!sc!
     var line = ""
     do {
         line = readLine()
         println("Read: "+ line)
     } while (line != "")
-[/sc]
+!/sc!
 1.3 "for"                                                    *scala-for* {{{2
 ------------------------------------------------------------------------------
 
 The {for} control structure is a big deal; it's not just your standard
 "looping" mechanism but more of the swiss-army knife of Scala's control
 structures.  In its simplest form it's a basic {generator}.
-[sc]
+!sc!
     val filesHere = (new java.io.File(".")).listFiles
     for (file <- filesHere)
         println(file)
-[/sc]
+!/sc!
 The {file} parameter above is a {val}, even though it's not explicitly stated;
 and this makes sense due to the fact that it's about to change on the next
 iteration and thus it will be lost and tossed out of scope.
 
 We can use it to filter input to the generator:
-[sc]
+!sc!
     scala> for (i <- 1 to 10 if i %2 == 0) println(i) 
     2
     4
     6
     8
     10
-[/sc]
+!/sc!
 And the filtering can be nested:
-[sc]
+!sc!
     scala> for (i <- 1 to 100
          |      if i % 3 == 0
          |      if i % 4 == 0
@@ -200,10 +200,10 @@ And the filtering can be nested:
     72
     84
     96
-[/sc]
+!/sc!
 And you can have multiple {<-} clauses that let you get some nested loops,
 such as:
-[sc]
+!sc!
     scala> for (digitA <- Array(1, 2, 3, 4, 5, 6)
          |      if digitA % 2 == 0; // **** NOTE the semicolon ****
          |      digitB <- Array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
@@ -218,13 +218,13 @@ such as:
     63
     66
     69
-[/sc]
+!/sc!
                                                      *scala-for-alternate*
 Scala provides for an alternate syntax for {for} expressions with respect to
 the arguments.  You can use a set of curly braces if you want.  I'm not sure
 that it's such a big deal, but should things look weird with parentheses, we
 can opt to use curlies.
-[sc]
+!sc!
     scala> for { digitA <- Array(1, 2, 3, 4, 5, 6)
          |       if digitA % 2 == 0; // **** NOTE the semicolon ****
          |       digitB <- Array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
@@ -239,20 +239,20 @@ can opt to use curlies.
     63
     66
     69
-[/sc]
+!/sc!
                                                              *scala-yield*
 {for} also carries with it, the {yield} keyword we get a really neat
 generator.
-[sc]
+!sc!
     scala> val evens = for (i <- 1 to 10 if i % 2 == 0) yield i
     evens: scala.collection.immutable.IndexedSeq[Int] = Vector(2, 4, 6, 8, 10)
-[/sc]
+!/sc!
 Note: strictly speaking, the above is performed much more functionally, and
 more clearly with the following:
-[sc]
+!sc!
     scala> val evens = (1 to 10) filter (_ % 2 == 0)
     evens: scala.collection.immutable.IndexedSeq[Int] = Vector(2, 4, 6, 8, 10)
-[/sc]
+!/sc!
 
 1.3.1 Terminology                                *scala-for-terminology* {{{3
 ------------------------------------------------------------------------------
@@ -260,9 +260,9 @@ more clearly with the following:
 generator                                               *scala-for-generator*
 
     A generator is of the form:
-[sc]
+!sc!
         pat <- expr
-[/sc]
+!/sc!
     Typically {expr} returns a list of some sort, but this can be generalized.
     {pat} gets matched one-by-one against all elements of that list.  If the
     match succeeds, the variables in the pattern get bound to the
@@ -280,19 +280,19 @@ generator                                               *scala-for-generator*
 definition                                             *scala-for-definition*
 
     A definition is of the form:
-[sc]
+!sc!
         pat = expr
-[/sc]
+!/sc!
     This is the same as a val definition:
-[sc]
+!sc!
         val pat = expr
-[/sc]
+!/sc!
 filter                                                     *scala-for-filter*
 
     A filter is of the form:
-[sc]
+!sc!
         if expr
-[/sc]
+!/sc!
     Here, expr is an expression of type {Boolean}.  The filter drops from the
     iteration all elements for which {expr} returns {false}.
 
@@ -305,7 +305,7 @@ pretty tightly integrated with {for} so we need to deal with them here a bit.
 
 {for} uses pattern matching in its operation and is pretty resilient in the
 face of |scala-option| types.
-[sc]
+!sc!
     scala> val results = List(Some("apple"), None, Some("orange"))
     results: List[Option[java.lang.String]] =
                 List(Some(apple), None, Some(orange))
@@ -313,7 +313,7 @@ face of |scala-option| types.
     scala> for (Some(fruit) <- results) println(fruit)
     apple
     orange
-[/sc]
+!/sc!
 See how we were matching on "Some(fruit)" and "None" didn't match so it never
 made its way into the {for} expression?  Pretty keen stuff.
 
@@ -322,39 +322,39 @@ made its way into the {for} expression?  Pretty keen stuff.
 ------------------------------------------------------------------------------
 
 Translating {for} Expressions with One Generator
-[sc]
+!sc!
         for (x <- expr1) yield expr2
-[/sc]
+!/sc!
     translates to
-[sc]
+!sc!
         expr1.map(x => expr2)
-[/sc]
+!/sc!
 
 Translating {for} Expressions Starting with a Generator and a Filter
-[sc]
+!sc!
         for (x <- expr1 if expr2) yield expr3
-[/sc]
+!/sc!
     translates to
-[sc]
+!sc!
         for (x <- expr1 withFilter (x => expr2)) yield expr3
-[/sc]
+!/sc!
     translates to
-[sc]
+!sc!
         expr1 withFilter (x => expr2) map (x => expr3)
-[/sc]
+!/sc!
 
 Translating {for} Expressions Starting with Two Generators
-[sc]
+!sc!
         for (x <- expr1; y <- expr2; seq) yield expr3
-[/sc]
+!/sc!
     Assume that {seq} is an arbitrary sequence of generators, definitions and
     filters.  In fact, {seq} might also be empty, and in that case there would
     not be a semicolon after {expr2}.  The translation scheme stays the same
     in each case.  The {for} expression above is translated to an application
     of {flatMap}:
-[sc]
+!sc!
         expr1.flatMap(x => for (y <- expr2; seq) yield expr3)
-[/sc]
+!/sc!
 
 1.4 Exceptions                                        *scala-exceptions* {{{2
 ------------------------------------------------------------------------------
@@ -369,12 +369,12 @@ c. You do not have to catch exceptions
 d. You do not need to declare the exceptions you throw
 
 The consequence of {a} is that the following is beautifully deterministic:
-[sc]
+!sc!
     val half = if (n % 2 == 0)
         n/2
     else
         throw new RuntimeException("n must be even")
-[/sc]
+!/sc!
 I'm a little foggy on the details, but in general, although the exception is
 going to kill the current execution state, the return value from the throw is
 actually a deterministic value of {Nothing}.
@@ -383,7 +383,7 @@ actually a deterministic value of {Nothing}.
 
 You catch exceptions in a single clause and pattern match on what you caught.
 This is pretty damn cool:
-[sc]
+!sc!
     import java.io.FileReader
     import java.io.FileNotFoundException
     import java.io.IOException
@@ -394,7 +394,7 @@ This is pretty damn cool:
         case ex: FileNotFoundException => // Handle missing file
         case ex: IOException => // Handle other I/O error
     }
-[/sc]
+!/sc!
                                                          *scala-finally-block*
 
 And we've got the standard {finally} block from Java as well, which we use in
@@ -404,7 +404,7 @@ you want to yield a value.  The try/catch/finally block yields a value in
 Scala, but what do you do when you're in the {finally} block?
 
 Check out the weirdness:
-[sc]
+!sc!
     scala> def f(): Int = try {
          |     return 1
          | } finally {
@@ -414,10 +414,10 @@ Check out the weirdness:
     
     scala> f
     res0: Int = 2
-[/sc]
+!/sc!
 That makes sense, the finally block is the last block to be executed, so
 you're good to go.  However...
-[sc]
+!sc!
     scala> f
     res1: Int = 2
     
@@ -430,11 +430,11 @@ you're good to go.  However...
     
     scala> g
     res2: Int = 1
-[/sc]
+!/sc!
 The idea is that {try} and {catch} return values, but the {finally} block is
 the last one executed.  So, if you're going to explicitly use {return} to
 return a value then the {finally} block is going to make it happen.
-[sc]
+!sc!
     scala> def h(): Int = try {       
          |     1                          
          | } catch {
@@ -447,10 +447,10 @@ return a value then the {finally} block is going to make it happen.
     
     scala> h
     res0: Int = 1
-[/sc]
+!/sc!
 Makes sense.  Everything went well so we got a "1".  Now, let's throw an
 exception and see what happens:
-[sc]
+!sc!
     scala> def h(): Int = try {       
          |     throw new Exception("oops")
          | } catch {
@@ -463,7 +463,7 @@ exception and see what happens:
     
     scala> h
     res0: Int = 2
-[/sc]
+!/sc!
 Again, makes sense.  The {catch} block is run into and it returns a value, and
 that value happens to be "2".  In both cases, the finally block has been
 executed but that's not where the natural return comes from, so it's all
@@ -475,7 +475,7 @@ deterministic and makes good sense.
 
 The match expression allows us to use |scala-pattern-matching| to figure out
 what kind of data we're dealing with and move on it.
-[sc]
+!sc!
     val firstArg = if (!args.isEmpty) args(0) else ""
     val friend = firstArg match {
         case "salt"  => "pepper"
@@ -484,7 +484,7 @@ what kind of data we're dealing with and move on it.
         case _       => "huh?"
     }
     println(friend)
-[/sc]
+!/sc!
 
 ==============================================================================
 2. The "apply" Function                           *scala-apply-function* {{{1
@@ -495,17 +495,17 @@ the function operator in C++ in that the Scala compiler will divert a call to
 the () function to the {apply} function.  Various classes will override the
 definition of the apply function in order to do what they do.  An obvious one
 here is in the Array class:
-[sc]
+!sc!
     scala> val greetStrings: Array[String] = new Array[String](3)
     greetStrings: Array[String] = Array(null, null, null)
     
     scala> greetStrings(0) = "Hello"
     scala> greetStrings(1) = ", "   
     scala> greetStrings(2) = "world!\n"
-[/sc]
+!/sc!
 In the case of a |scala-partial-function| {apply} forwards the call into the
 embedded function:
-[sc]
+!sc!
     scala> def sum(a: Int, b: Int, c: Int) = a + b + c
     sum: (a: Int,b: Int,c: Int)Int
     
@@ -514,7 +514,7 @@ embedded function:
 
     partial.apply(1, 2, 3) == partial(1, 2, 3)
     res1: Boolean = true
-[/sc]
+!/sc!
 
 ==============================================================================
 3. Classes                                               *scala-classes* {{{1
@@ -527,7 +527,7 @@ Classes are much simpler to define in Scala than any other language I've seen.
 
 The parameter list becomes privately available after the class has been
 instantiated.
-[sc]
+!sc!
     scala> class MyClass(a: Int, b: String) {
          |     override def toString = "a: " + a + ", b: " + b
          | }
@@ -535,7 +535,7 @@ instantiated.
     
     scala> val = new MyClass(42, "Forty-Two")
     myobj: MyClass = a: 42, b: Forty-Two
-[/sc]
+!/sc!
 
 3.2 Parametric Fields                         *scala-parametric-fields* {{{2
 ------------------------------------------------------------------------------
@@ -543,7 +543,7 @@ instantiated.
 Often times there's a field or two in the class and a derivation of that class
 may want to override them.  The usual way to do this in other languages is to
 do this:
-[sc]
+!sc!
     scala> abstract class BaseClass {
          |     val attribute: String
          | }
@@ -553,10 +553,10 @@ do this:
          |     val attribute  = attr
          | }
     defined class DerivedClass
-[/sc]
+!/sc!
 However, this doesn't need to be so verbose in Scala.  We can override the
 {attribute} member directly in the class declaration:
-[sc]
+!sc!
     scala> abstract class BaseClass {
          |     val attribute: String
          |     override def toString = "String: " + attribute
@@ -568,7 +568,7 @@ However, this doesn't need to be so verbose in Scala.  We can override the
 
     scala> val obj = new DerivedClass("hithere")
     obj: DerivedClass = String: hithere
-[/sc]
+!/sc!
 
 3.3 Primary Constructor                     *scala-primary-constructor* {{{2
 ------------------------------------------------------------------------------
@@ -576,7 +576,7 @@ However, this doesn't need to be so verbose in Scala.  We can override the
 Scala stipulates that all classes have a primary constructor.  What's more any
 auxillary constructors must call the primary constructor.  Failure to do so
 will result in a compiler error.
-[sc]
+!sc!
     scala> class MyClass(a: Int, b: String) {
          |
          |     def this() {
@@ -590,7 +590,7 @@ will result in a compiler error.
     
     scala> val myobj = new MyClass                        
     myobj: MyClass = a: 42, b: Forty-Two
-[/sc]
+!/sc!
 
 3.4 Superclass Constructor               *scala-superclass-constructor* {{{2
 ------------------------------------------------------------------------------
@@ -598,7 +598,7 @@ will result in a compiler error.
 The constructor of the superclass is called in the class specification, not
 from within one of its constructors, as we would see in other languages.  Say
 you have the following base class declaration:
-[sc]
+!sc!
     scala> class BaseClass(attribute: String) {
          |     override def toString = "attribute: " + attribute
          | }
@@ -609,7 +609,7 @@ you have the following base class declaration:
     
     scala> val obj = new DerivedClass
     obj: DerivedClass = attribute: Hard Coded
-[/sc]
+!/sc!
 Here we've passed in the {attribute} argument to the {BaseClass} inside the
 {extends} clause of the specification of the DerivedClass.
 
@@ -620,7 +620,7 @@ Here we've passed in the {attribute} argument to the {BaseClass} inside the
 You can use the {final} keyword to do a couple of things.  If you want to
 declare that a method cannot be overridden further then we can declare it as
 {final}.
-[sc]
+!sc!
     scala> class MyClass {
          |      override def toString = "MyClass is it"
          | }
@@ -637,16 +637,16 @@ declare that a method cannot be overridden further then we can declare it as
     {console}:8: error: overriding method toString in class MyDerivedOne of type ()java.lang.String;
      method toString cannot override final member
                final override def toString = "MyDerivedTwo is it"
-[/sc]
+!/sc!
 You can also use it to ensure that a class not be derived further:
-[sc]
+!sc!
     scala> final class NoMorePlease
     defined class NoMorePlease
     
     scala> class MaybeOneMore extends NoMorePlease
     {console}:6: error: illegal inheritance from final class NoMorePlease
            class MaybeOneMore extends NoMorePlease
-[/sc]
+!/sc!
 
 ==============================================================================
 3.6 Class Hierarchy                                    *scala-hierarchy* {{{2
@@ -687,7 +687,7 @@ level.
 Because there is a must-have primary constructor, it's pretty tough to make it
 private and not be obvious about it.  Let's say you want to privatize the
 primary constructor but publicize another one; you might want to do this:
-[sc]
+!sc!
     // The keyword 'private' below privatizes the primary constructor
     class Queue[T] private (
         private val leading: List[T],
@@ -712,11 +712,11 @@ primary constructor but publicize another one; you might want to do this:
 
         def enqueue(x: T) = new Queue(leading, x :: trailing)
     }
-[/sc]
+!/sc!
 There's another way to do this, if that seems to suck... We can hide the whole
 damn thing inside the Queue object, expose it with a trait instead, and
 present factory methods in the Queue object for construction purposes.
-[sc]
+!sc!
     // This is what the world sees
     trait Queue[T] {
         def head: T
@@ -751,30 +751,30 @@ present factory methods in the Queue object for construction purposes.
                 new QueueImpl(leading, x :: trailing)
         }
     }
-[/sc]
+!/sc!
 
 3.8 Variables                                          *scala-variables* {{{2
 ------------------------------------------------------------------------------
 
 Scala class / trait / object variables are much like properties in C# without
 the hassle of the extraneous syntax.  The following definition:
-[sc]
+!sc!
     trait AbstractTime {
         var hour: Int
         var minute: Int
     }
-[/sc]
+!/sc!
 is equivalent to the following:
-[sc]
+!sc!
     trait AbstractTime {
         def hour: Int
         def hour_=(x: Int)
         def minute: Int
         def minute_=(x: Int)
     }
-[/sc]
+!/sc!
 So, the following is perfectly correct:
-[sc]
+!sc!
     scala> class C {
          |     private[this] var hiddenVar = "hithere"
          |     def visible = hiddenVar
@@ -792,7 +792,7 @@ So, the following is perfectly correct:
     
     scala> c.visible               
     res1: java.lang.String = what's up?
-[/sc]
+!/sc!
 
 ==============================================================================
 
@@ -815,7 +815,7 @@ the users that mix it in get a ton of stuff for free.
 One of the concrete examples in the Scala language is the {Ordered} trait in
 {scala.math}.  By mixing this trait in, and implementing the {compare}
 function you get {<}, {>}, {<=}, {>=} and {compareTo} for free.
-[sc]
+!sc!
     trait Ordered[A] extends Comparable[A] {
         def < (that: A) : Boolean
         def <= (that: A) : Boolean
@@ -827,7 +827,7 @@ function you get {<}, {>}, {<=}, {>=} and {compareTo} for free.
 
         def compareTo (that: A) : Int 
     }
-[/sc]
+!/sc!
 
 4.2 Stackable Modifications                     *scala-stackable-traits* {{{2
 ------------------------------------------------------------------------------
@@ -850,13 +850,13 @@ inheritance hierarchy.  Scala refers to this algorithm as linearization.
 The algorithm is detailed and, apparently, decently complex but the rule of
 thumb is that the ordering goes from right to left.  Given the following
 inheritance structure:
-[sc]
+!sc!
     class Animal
     trait Furry extends Animal
     trait HasLegs extends Animal
     trait FourLegged extends HasLegs
     class Cat extends Animal with Furry with FourLegged
-[/sc]
+!/sc!
 The linearization for {Cat} gets evaluated in parts.  We start with {Animal}
 and linearize it:
 
@@ -882,14 +882,14 @@ And finally we finish up with {Cat}.
 
 An example of stacking is to modify a "Integer Queue" with different behaviour
 when putting more information into the queue.
-[sc]
+!sc!
     abstract class IntQueue {
         def get(): Int
         def put(x: Int)
     }
-[/sc]
+!/sc!
 With a basic implementation as follows:
-[sc]
+!sc!
     import scala.collection.mutable.ArrayBuffer
 
     class BasicIntQueue extends IntQueue {
@@ -898,10 +898,10 @@ With a basic implementation as follows:
         def put(x: Int) { buf += x }
     }
 
-[/sc]
+!/sc!
 Now we want to create some traits that allow us to modify the behaviour of the
 push with different types of policies.
-[sc]
+!sc!
     trait Doubling extends IntQueue {
         abstract override def put(x: Int) { super.put(2 * x) }
     }
@@ -915,7 +915,7 @@ push with different types of policies.
             if (x >= 0) super.put(x)
         }
     }
-[/sc]
+!/sc!
 Note the "abstract override".  That's one of the things that makes this work.
 Normally if you're going to call {super} on an abstract class, you're screwed,
 but Scala fixes this by allowing you to specify that you are specifically
@@ -924,7 +924,7 @@ will resolve the lack of an implementation with the implementation that gets
 mixed in.
 
 So now we can mix this up and put it together:
-[sc]
+!sc!
     scala> val q = new BasicIntQueue with Doubling
          |                           with Incrementing
          |                           with Filtering
@@ -952,7 +952,7 @@ So now we can mix this up and put it together:
     // Nothing left, because we only put in two things
     scala> q.get
     java.lang.IndexOutOfBoundsException: 0
-[/sc]
+!/sc!
 
 4.3 IteratbleLike                                  *scala-iterable-like* {{{2
 ------------------------------------------------------------------------------
@@ -963,7 +963,7 @@ So now we can mix this up and put it together:
 The *zip()* function will create an object of the same base type as its
 arguments (i.e. If you give it Arrays, it will create Arrays), that is the
 combination of each one in a {Tuple}.
-[sc]
+!sc!
     scala> val ary1 = Array(1, 2, 3, 4, 5)
     ary1: Array[Int] = Array(1, 2, 3, 4, 5)
     
@@ -981,7 +981,7 @@ combination of each one in a {Tuple}.
     (3,Three)
     (4,Four)
     (5,Five)
-[/sc]
+!/sc!
 
 ==============================================================================
 5. Objects                                               *scala-objects* {{{1
@@ -997,10 +997,10 @@ in the same source file.
 
 One can see the use of a companion object and an object factory method
 whenever you're constructing a List / Array / Map / etc...
-[sc]
+!sc!
     scala> val list = List("One", "Two", "Three")
     list: List[java.lang.String] = List(One, Two, Three)
-[/sc]
+!/sc!
 The List() method is on defined on the object and returns a new instance of a
 List class.
 
@@ -1011,7 +1011,7 @@ List class.
 
 Due to Scala's flexibility, the concept of the "abstract" becomes much more
 powerful.  There are a number of concepts in the abstract.
-[sc]
+!sc!
     trait Abstract {
         // An abstract type alias
         type T
@@ -1025,21 +1025,21 @@ powerful.  There are a number of concepts in the abstract.
         // An abstract variable definition
         var current: T
     }
-[/sc]
+!/sc!
 In order to create a concrete instantiation of the {Abstract} trait decleared
 above, we must define all of the abstract members.
-[sc]
+!sc!
     class Concreate extends Abstract {
         type T = String
         def transform(x: String) = x + x
         val initial = "hi"
         var current = initial
     }
-[/sc]
+!/sc!
                                              *scala-abstract-method-with-val*
 You can implement an abstract method definition with concrete method or with a
 value, assuming there are no arguments.  i.e. the following:
-[sc]
+!sc!
     trait Abstract {
         def m: String
     }
@@ -1047,32 +1047,32 @@ value, assuming there are no arguments.  i.e. the following:
     class Concrete {
         val m: String = "concrete value"
     }
-[/sc]
+!/sc!
 
 6.1 Initializing Abstract-ness         *scala-initializing-abstractness* {{{2
 ------------------------------------------------------------------------------
 
 Let's say you have the following:
-[sc]
+!sc!
     trait RationalTrait {
         val numerArg: Int
         val denomArg: Int
     }
-[/sc]
+!/sc!
 and you try to instantiate it into an anonymous class with the following:
-[sc]
+!sc!
     new RationalTrait {
         val numerArg = 1
         val denomArg = 2
     }
-[/sc]
+!/sc!
 This isn't the same as if you had a "real" class called {Rational} with a
 primary constructor, the initialization of the fields would be different:
-[sc]
+!sc!
     class Rational(numer: Int, denom: Int)
 
     val rat = new Rational(expr1, expr2)
-[/sc]
+!/sc!
 The execution of {expr1} and {expr2} happen before the initialization of
 {Rational}.  In the case of the anonymous class, the elements of the anonymous
 class are initialized /after/ the {RationalTrait}.  This is a critical
@@ -1084,30 +1084,30 @@ not the "initialized" ones.
                                               *scala-pre-initialized-fields*
 You can fix this up a bit with "pre-initialized fields".  You could do the
 following:
-[sc]
+!sc!
     scala> new {
          |         val numerArg = 1 * x
          |         val denomArg = 2 * x
          | } with RationalTrait
-[/sc]
+!/sc!
 or
-[sc]
+!sc!
     scala> object oneHalf extends {
          |     val numerArg = 1
          |     val denomArg = 2
          | } with RationalTrait
-[/sc]
+!/sc!
 Syntactically this makes pretty decent sence, it would seem, since you're
 indicating that you want this done /before/ the trait itself gets put
 together.  But you can't do things like this:
-[sc]
+!sc!
     scala> new {
          |         val numerArg = 1 * x
          |         val denomArg = this.numerArg * 2
          | } with RationalTrait
     {console}:9: error: value numerArg is not a member of object $iw
              val denomArg = this.numerArg * 2
-[/sc]
+!/sc!
                                                            *scala-lazy-vals*
 This can also be done by using {lazy} values.  Lazy values are initialized
 when they're first needed.  Thus, the "static" default initialization of a
@@ -1118,12 +1118,12 @@ problem, of course, is that this is a bit brittle against changes to the trait
 originally intended, then it's going to pick up the default value again.
 
 The specification of a lazy val is pretty simple.
-[sc]
+!sc!
     trait Abstract {
         lazy val numerArg = 1 * x
         lazy val denomArg = 1 * x
     }
-[/sc]
+!/sc!
 
 6.2 Abstract Types                                *scala-abstract-types* {{{2
 ------------------------------------------------------------------------------
@@ -1133,7 +1133,7 @@ have to be used otherwise.
 
 Programming in Scala 2nd Edition has a decent case study at the end of section
 20 that explains a decent amount, but it's certainly not comprehensive.
-[sc]
+!sc!
     abstract class CurrencyZone {
         // Artifact 1
         type Currency <: AbstractCurrency
@@ -1172,7 +1172,7 @@ Programming in Scala 2nd Edition has a decent case study at the end of section
         // Artifact 5
         val CurrencyUnit: Currency
     }
-[/sc][sc]
+!/sc!!sc!
     object Converter { // {{{4
         var exchangeRate = Map(
             "USD" -> Map("USD" -> 1.0,
@@ -1196,7 +1196,7 @@ Programming in Scala 2nd Edition has a decent case study at the end of section
                          "CHF" -> 1.0)
         )
     } // }}}4
-[/sc]
+!/sc!
 The initeresting part of the above is its somewhat typical Scala definition; a
 design artifact that is somewhat alien to how I think things through.
 
@@ -1227,7 +1227,7 @@ NOTE: There's a /lot/ about this that isn't currently "real" to me.
 
 Once this class definition is in place, we can now create actual currencies
 directly.  Let's have a look at creating a US Dollar and a European Euro.
-[sc]
+!sc!
     object US extends CurrencyZone {
         abstract class Dollar extends AbstractCurrency {
             def designation = "USD"
@@ -1265,20 +1265,20 @@ directly.  Let's have a look at creating a US Dollar and a European Euro.
         val Yen = make(1)
         val CurrencyUnit = Yen
     }
-[/sc]
+!/sc!
 
 6.3 Structural Typing                          *scala-structural-typing* {{{2
 ------------------------------------------------------------------------------
 
 The best use of structural typing I've seen to date is declaring a generic
 type bound on a function - in this case, the loan pattern.
-[sc]
+!sc!
     def using[T <: { def close(): Unit }, S](obj: T) (operation: T => S) = {
         val result = operation(obj)
         obj.close()
         result
     }
-[/sc]
+!/sc!
 Structural typing is more than just duck-typing; Scala provides syntactical
 support for structural typing as with the above.  Essentially, Scala allows
 you to specify an associated superclass not by its type name, but by its
@@ -1289,11 +1289,11 @@ Above we see that the {using} function requires a type {T} that has a method
 on it called {close} that returns {Unit}.  A {PrintWriter} happens to satisfy
 this structure, so definition of the |scala-loan-pattern| we have here would
 still work, but so would the following:
-[sc]
+!sc!
     using(serverSocket.accept()) { socket =>
         socket.getOutputStream().write("hello, world\n".getBytes)
     }
-[/sc]
+!/sc!
 
 ==============================================================================
 7. Functions                                           *scala-functions* {{{1
@@ -1306,17 +1306,17 @@ can't reassign a value to a passed in parameter.
 ------------------------------------------------------------------------------
 
 The most basic function definition is a single statement definition.
-[sc]
+!sc!
     scala> def func(.. args ..): ReturnType = .. body ..
-[/sc]
+!/sc!
 
 7.2 Parameterless Methods                 *scala-parameterless-methods* {{{2
 ------------------------------------------------------------------------------
 
 The general idea here is something like this:
-[sc]
+!sc!
     scala> def func(): ReturnType
-[/sc]
+!/sc!
 The above is termed an {empty-paren} method and is used when there are no
 parameters and the method accesses mutable state only by reading fields of the
 containing object.  This maintains the uniform access principle.
@@ -1328,20 +1328,20 @@ containing object.  This maintains the uniform access principle.
 Scala functions are destined to return a value, and do so implicitly based on
 the value of the final line of the function body, unless explicitly defined to
 do otherwise based on the declaration.
-[sc]
+!sc!
     scala> def procedure(.. args ..): Unit = {
          |  .. Body defined to return Unit: i.e. nothing ..
          | }
-[/sc]
+!/sc!
 In the case of the above, the {Unit} and the {=} tend to cancel each other
 out.  The {=} states that the function results in a value and {Unit} dictates
 that the value is non-existant.  Thus, the following "procedure" definition
 eliminates the cancellation and makes things simpler:
-[sc]
+!sc!
     scala> def procedure(.. args ..) {
          |     .. Body defined to return Unit: i.e. nothing ..
          | }
-[/sc]
+!/sc!
 The {=}, {:} and {Unit} have been eliminated and all replaced with a single
 set of curly braces.
 
@@ -1350,52 +1350,52 @@ set of curly braces.
 ------------------------------------------------------------------------------
 
 Pretty simple...
-[sc]
+!sc!
     scala> (.. args ..): ReturnType => .. body ..
-[/sc]
+!/sc!
 It's just not a formal {def} method definition.  You can pass these anywhere,
 such as to the *Map.exists()* method:
-[sc]
+!sc!
     scala> map.exists((e) => e._1 == "Sentinel Value")
-[/sc]
+!/sc!
 Using the "_" default parameter placeholder, this can be simplified as:
-[sc]
+!sc!
     scala> map.exists(_._1 == "Sentinel Value")
-[/sc]
+!/sc!
 
 7.5 Functions as Parameters                 *scala-functions-as-params* {{{2
 ------------------------------------------------------------------------------
 
 Functions are just types, nothing really special.  As such, it's no big deal
 to toss them in as parameters to functions:
-[sc]
+!sc!
     scala> def func(passedIn: (String) => Boolean) = {
          |     passedIn("Hard Coded")
          | }
-[/sc]
+!/sc!
 It's easy to call this with an anonymous function, like this:
-[sc]
+!sc!
     scala> func((x: String) => if (x.length > 0) true else false)
     res1: Boolean = true
-[/sc]
+!/sc!
 
 7.6 Local Functions                             *scala-local-functions* {{{2
 ------------------------------------------------------------------------------
 
 Local functions are defined within functions.
-[sc]
+!sc!
     scala> def outerFunc(files: List[String]) = {
          |     def innerFunc(s) = println("File: " + s)
          |     for (file <- files) innerFunc(file)
          | }
-[/sc]
+!/sc!
 
 7.7 Assignemtn to val/var                     *scala-functions-as-type* {{{2
 ------------------------------------------------------------------------------
 
 Since functions are just first class types in Scala, they can be assigned to
 values and variables just like anything else.
-[sc]
+!sc!
     scala> var varIncrease = (x: Int) => x + 1
     scala> varIncrease(10)
     res1: 11
@@ -1411,7 +1411,7 @@ values and variables just like anything else.
     scala> valIncrease = (x: Int) => x + 20
     {console}:1: error: reassignment to val
               valIncrease = (x: Int) => x + 20
-[/sc]
+!/sc!
 
 7.8 Partial Functions                          *scala-partial-function* {{{2
 ------------------------------------------------------------------------------
@@ -1420,32 +1420,32 @@ These are known much better to me as bound functions in C++.  These are
 functions where only part of the parameters have been applied to.
 
 One of the ways to do this is as the following:
-[sc]
+!sc!
     scala> def sum(a, b, c) = a + b + c
     scala> val partial = sum _
     partial: (Int, Int, Int) => Int = {function3}
-[/sc]
+!/sc!
 That defines a {function3} object.  Scala has a set of {traits} called
 {FunctionN} where {N} ranges from {0} to {22}.  If you really want to create a
 function with more than {22} parameters, you're out of luck, and you probably
 should be :)
 
 When you call "partial(1, 2, 3)" defined above, Scala calls:
-[sc]
+!sc!
     scala> partial.apply(1, 2, 3)
-[/sc]
+!/sc!
 Of course, you can specify any subset of parameters and create a partially
 applied function:
-[sc]
+!sc!
     scala> val partial = sum(1, _: Int, 3)
     partial: (Int) => Int = {function1}
-[/sc]
+!/sc!
 So now, "partial" becomes a function with a single paramter and the {apply}
 function will now take a single parameter:
-[sc]
+!sc!
     scala> partial(2)
     res1: Int = 6
-[/sc]
+!/sc!
 
 7.9 Closures                                           *scala-closures* {{{2
 ------------------------------------------------------------------------------
@@ -1457,7 +1457,7 @@ later - it's specified at the creation source instead of the execution target.
 There are a few ways to get state into a closure, but we have to remember what
 we're closing on... we're closing on the symbol, not the data it holds.  This
 means the following happens:
-[sc]
+!sc!
     scala> var more = 10
     more: Int = 10
 
@@ -1472,11 +1472,11 @@ means the following happens:
 
     scala> addMore(10)
     res2: 30
-[/sc]
+!/sc!
 The {addMore} closure is affected by the change to the {more} variable.
 However, it's still a closure because of the {more} variable goes out of
 scope, the {addMore} function is still valid.  For example:
-[sc]
+!sc!
     scala> val addMore = {
          |    var more = 10
          |    (x: Int) => x + more
@@ -1485,15 +1485,15 @@ scope, the {addMore} function is still valid.  For example:
 
     scala> addMore(20)
     res1: 30
-[/sc]
+!/sc!
 Another way to achieve the same is through a factory method:
-[sc]
+!sc!
     scala> def factor(more: Int) = (x: Int) => x + more
     factory: (more: Int)(Int) => Int
 
     scala> val addMore = factory(10)
     addMore: (Int) => Int = {function1}
-[/sc]
+!/sc!
 
 7.10 Currying                                          *scala-currying* {{{2
 ------------------------------------------------------------------------------
@@ -1501,24 +1501,24 @@ Another way to achieve the same is through a factory method:
 Currying is a mechanism by which you can supply more than one parameter list
 to a function and then apply to those lists separately.  The simplest thing to
 do is to take this:
-[sc]
+!sc!
     scala> def plainOldSum(x: Int, y: Int) = x + y
     plainOldSum: (x: Int,y: Int)Int
 
     scala> plainOldSum(1, 2)
     res4: Int = 3
-[/sc]
+!/sc!
 and rewrite to look like this:
-[sc]
+!sc!
     scala> def curriedSum(x: Int)(y: Int) = x + y
     curriedSum: (x: Int,y: Int)Int
 
     scala> curriedSum(1)(2)
     res4: Int = 3
-[/sc]
+!/sc!
 This actually looks like this when it's being executed, because you get two
 executions back to back:
-[sc]
+!sc!
     scala> def first(x: Int) = (y: Int) => x + y
     first: (x: Int)(Int) => Int
 
@@ -1527,13 +1527,13 @@ executions back to back:
 
     scala> second(2)
     res1: Int = 3
-[/sc]
+!/sc!
 You can also get a partial function out of a curried function by giving it a
 placeholder parameter:
-[sc]
+!sc!
     scala> val onePlus = curriedSum(1)_
     onePlus: (Int) => Int = {function1}
-[/sc]
+!/sc!
 We can now follow on to the |scala-loan-pattern|.
 
 
@@ -1544,7 +1544,7 @@ The loan pattern implements a "higher-order" function using |scala-currying|.
 The pattern itself takes a resource and loans it out to a function that uses
 it.  When the function is finished with the resource, the loaner then cleans
 it up and releases it.
-[sc]
+!sc!
     scala> def fileLoaner(onLoan: File)(loanedTo: PrintWriter => Unit) {
          |     val writer = new PrintWriter(onLoan)
          |     try {
@@ -1554,13 +1554,13 @@ it up and releases it.
          |         writer.close()
          |     }
          | }
-[/sc]
+!/sc!
 Which can now be used like this:
-[sc]
+!sc!
     scala> fileLoaner(new File("somefile.txt")) {
          |     writer => writer.println(new java.util.Date)
          | }
-[/sc]
+!/sc!
 
 7.12 "By Name" Parameters                         *scala-byname-params* {{{2
 ------------------------------------------------------------------------------
@@ -1569,7 +1569,7 @@ The idea of a "by name" parameter is one where the "name" is passed in to the
 function, not the value it represents.  This avoids evaluating the paremeter
 before the function is called.  A simple example of this is with respect to an
 assertion function.
-[sc]
+!sc!
     scala> var assertionsEnabled = true
     assertionsEnabled: Boolean = true
 
@@ -1577,7 +1577,7 @@ assertion function.
          |     if (assertionsEnabled && predicate())
          |         throw new AssertionError
     myAssert: (predicate: () => Boolean)Unit
-[/sc]
+!/sc!
 The beauty here is that we don't pay the price of evaluating the predicate
 when {assertionsEnabled} is {false}.
 
@@ -1588,7 +1588,7 @@ when {assertionsEnabled} is {false}.
 Repeated parameters give us the closest thing we have to variable argument
 lists in C++.  It's pretty damn simple; a repeated set of arguments - of the
 same type - get sent into the function as an Array[Type].
-[sc]
+!sc!
     scala> def echo(args: String*) =
         for (arg <- args) println(arg)
     echo: (args: String*)Unit
@@ -1597,20 +1597,20 @@ same type - get sent into the function as an Array[Type].
     Hi
     there
     guys
-[/sc]
+!/sc!
 And to see exactly what's happening:
-[sc]
+!sc!
     scala> def view(args: String*) = println(args)
     view: (args: String*)Unit
 
     scala> view("Hi", "there", "guys")
     WrappedArray(Hi, there, guys)
-[/sc]
+!/sc!
 But, that doesn't mean you can pass an Array in to the function and expect it
 to do what you want.  The type that you'd be passing in is completely wrong,
 and the type system simply won't accept it.  However, you can pull the Array
 apart if you have one and need to get it into the function.
-[sc]
+!sc!
     scala> val ary = Array("so", "what's", "the", "haps?")
     ary: Array[java.lang.String] = Array(so, what's, the, haps?)
 
@@ -1626,42 +1626,42 @@ apart if you have one and need to get it into the function.
     what's
     the
     haps?
-[/sc]
+!/sc!
 
 7.14 Named Arguments                            *scala-named-arguments* {{{2
 ------------------------------------------------------------------------------
 
 Scala brings the named arguments feature of other languages like Ruby into the
 fold.
-[sc]
+!sc!
     scala> def speed(distance: Float, time: Float): Float = distance / time
     speed: (distance: Float, time: Float)Float
-[/sc]
+!/sc!
 Now, you can call this in the usual way and get the expected result:
-[sc]
+!sc!
     scala> speed(100, 10)
     res1: Float = 10.0
-[/sc]
+!/sc!
 But as expected, the order of those parameters makes a difference.  If you
 call it with things in reverse order, the math works out differently.
-[sc]
+!sc!
     scala> speed(10, 100)
     res1: Float = 0.1
-[/sc]
+!/sc!
 But, if you really want to do things in reverse order, or you want to do
 things for clarity, or whatever other bloody reason you've got, you can simply
 name the parameters.
-[sc]
+!sc!
     scala> speed(time = 10, distance = 100)
     res1: Float = 10.0
-[/sc]
+!/sc!
 
 7.15 Default Parameter Values                  *scala-default-arguments* {{{2
 ------------------------------------------------------------------------------
 
 You gotta have 'em.  This is pretty standard stuff but when you couple it with
 |scala-named-arguments| things get a little more sexy.
-[sc]
+!sc!
     scala> def printTime(out: java.io.PrintStream = Console.out, divisor: Int = 1) =
         out.println("time = " + System.currentTimeMillis() / divisor)
     printTime: (out: java.io.PrintStream,divisor: Int)Unit
@@ -1674,7 +1674,7 @@ You gotta have 'em.  This is pretty standard stuff but when you couple it with
     
     scala> printTime(divisor = 100000)
     time = 12983218
-[/sc]
+!/sc!
 
 7.16 Tail Recursion                               *scala-tail-recursion* {{{2
 ------------------------------------------------------------------------------
@@ -1682,16 +1682,16 @@ You gotta have 'em.  This is pretty standard stuff but when you couple it with
 Scala will optimize tail-recursive calls so long as they're easy to see.  The
 problem is that they may be difficult to debug when you seem them in action,
 because the call stack won't look the way you think it will.  For example:
-[sc]
+!sc!
     scala> def boom(x: Int): Int =
          |     if (x == 0) throw new Exception("boom!")
          |     else boom(x - 1) + 1
-[/sc]
+!/sc!
 That's not tail recursive because the last operation is not a recursive call,
 it's an addition call.
 
 Now, if we change that to be tail recursive, we get this:
-[sc]
+!sc!
     scala> def boom(x: Int): Int =
          |     if (x == 0) throw new Exception("boom!")
          |     else boom(x - 1)
@@ -1703,12 +1703,12 @@ Now, if we change that to be tail recursive, we get this:
 	        at .{init}({console}:11)
 	        at .{clinit}({console})
             ...
-[/sc]
+!/sc!
 That's not the stack we were expecting to see.  If instead we supply
 {-g:notailcalls} to the scala interpreter, we ensure that the optimization is
 not applied.  If we do that (by calling scala like "scala -g:notailcalls")
 then we'll see this:
-[sc]
+!sc!
     scala> def boom(x: Int): Int =
          |     if (x == 0) throw new Exception("boom!")
          |     else boom(x - 1)
@@ -1725,7 +1725,7 @@ then we'll see this:
 	        at .{init}({console}:7)
 	        at .{clinit}({console})
             ...
-[/sc]
+!/sc!
 
 ==============================================================================
 8. Predef                                                 *scala-predef* {{{1
@@ -1753,7 +1753,7 @@ The {Predef} object also has a couple of interesting bits in it with respect
 to {Set}s and {Map}s.  When you declare a {Map} or a {Set}, without qualifying
 a package, you get a {collection.immutable.Map} or a {collection.immutable.Set}
 and the reason you get these variants is due to the definitions in {Predef}.
-[sc]
+!sc!
     object Predef {
         type Map[A, +B] = collection.immutable.Map[A, B]
         type Set[A] = collection.immutable.Set[A]
@@ -1761,7 +1761,7 @@ and the reason you get these variants is due to the definitions in {Predef}.
         val Set = collection.immutable.Set
         // ...
     }
-[/sc]
+!/sc!
 There is a type {alias} there for each one plus a value that forwards calls
 into the right object.
 
@@ -1777,7 +1777,7 @@ it's "None" then there's nothing there and if it's "Some(x)" then the value is
 "x".
 
 Scala's Map collection returns an Option from the {get} method:
-[sc]
+!sc!
     scala> val capitals = Map("France" -> "Paris", "Japan" -> "Tokyo")
     capitals: scala.collection.immutable.Map[java.lang.String,java.lang.String]
               = Map((France,Paris), (Japan,Tokyo))
@@ -1787,9 +1787,9 @@ Scala's Map collection returns an Option from the {get} method:
     
     scala> capitals get "Nowhere"
     res12: Option[java.lang.String] = None
-[/sc]
+!/sc!
 You can take these apart with a pattern match:
-[sc]
+!sc!
     scala> capitals.get("Japan") match {  
          |     case Some(city) => println(city)
          |     case None => println("Not found")
@@ -1801,7 +1801,7 @@ You can take these apart with a pattern match:
          |     case None => println("Not found")
          | }                                    
     Not found
-[/sc]
+!/sc!
 Option is used when you want to say that something is optional.  In Java, the
 way to do this (and the way you /must/ do this) is to use {null}.  You can't
 opt-out of this either, so you can actually get a {null} at any time on any
@@ -1832,7 +1832,7 @@ implicitly converted into the {WrappedArray} class, which is done for us quite
 nicely, and transparently by the |scala-predef| object's implicit definitions.
 The {WrappedArray} class gives us a ton more methods from mixins across the
 Scala library.
-[sc]
+!sc!
     scala> val ary = Array[String]("This", "is", "an", "Array",
          |                         "of", "Strings")
     ary: Array[String] = Array(This, is, an, Array, of, Strings)
@@ -1840,7 +1840,7 @@ Scala library.
     scala> val ary1 = Array("This", "is", "an", "Array",
          |                  "of", "Strings")        
     ary1: Array[java.lang.String] = Array(This, is, an, Array, of, Strings)
-[/sc]
+!/sc!
 Note that you can use an explicit Array element type, as you can with any
 generic class / trait but Scala will also deduce as required.
 
@@ -1852,7 +1852,7 @@ Range is a very simple type that exist in many other languages but is still
 quite a cool deal.  What's even more fun is how they generally get constructed
 in Scala programs.  The {RichInt} (|scala-richint|) class has some methods on
 it that help us out:
-[sc]
+!sc!
     // Inclusive and ByOne are members of scala.collection.immutable.Range
     def to(end: Int, step: Int): Inclusive
     def to(end: Int): Inclusive with ByOne
@@ -1860,11 +1860,11 @@ it that help us out:
     // ByOne is a member of scala.collection.immutable.Range
     def until(end: Int, step: Int): Range
     def until(end: Int): Range with ByOne
-[/sc]
+!/sc!
 Now, because {RichInt} (|scala-richint|) is implicitly converted to from {Int}
 via the implicit converters present in {Predef} (|scala-predef|) we get a nice
 and easy syntax for creating Ranges:
-[sc]
+!sc!
     scala> for (i <- 1 to 5) println(i)
     1
     2
@@ -1877,7 +1877,7 @@ and easy syntax for creating Ranges:
     2
     3
     4
-[/sc]
+!/sc!
 
 ==============================================================================
 9.4 List                                                    *scala-list* {{{2
@@ -1893,7 +1893,7 @@ Lists are unlike Arrays in that a couple of ways:
 
 Lists are covariant (|scala-covariant|), meaning that the following is
 possible:
-[sc]
+!sc!
     scala> val l = List("One", "Two", "Three")
     l: List[java.lang.String] = List(One, Two, Three)
     
@@ -1905,11 +1905,11 @@ possible:
     
     scala> ol
     res1: List[java.lang.Object] = List(One, Two, Three)
-[/sc]
+!/sc!
 Note that a "List()" is of type "List[Nothing]", which is perfectly OK because
 of covariance.  {Nothing} is the bottom type of everything else, so it will
 defeinitely inherit the type you're intending to use.
-[sc]
+!sc!
     scala> val l: List[String] = List()
     l: List[String] = List()
     
@@ -1918,7 +1918,7 @@ defeinitely inherit the type you're intending to use.
     
     scala> val u = List.empty[String]
     u: List[String] = List()
-[/sc]
+!/sc!
 All operations on lists can be expressed in terms of the following three:
 
 - head:    returns the first element of a list
@@ -1935,7 +1935,7 @@ of the list, it's going to get expensive, so avoid using |scala-list-init| and
 ------------------------------------------------------------------------------
 
 Lists can be taken apart via pattern matching in a couple of different ways:
-[sc]
+!sc!
     scala> val list = List(1, 2, 3)
     list: List[Int] = List(1, 2, 3)
     
@@ -1943,11 +1943,11 @@ Lists can be taken apart via pattern matching in a couple of different ways:
     a: Int = 1
     b: Int = 2
     c: Int = 3
-[/sc]
+!/sc!
 That only works if you know exactly how many elements the list actually has,
 which isn't necessarily easy to know all the time.  The more flexible way to
 do this is with the {cons} operator.
-[sc]
+!sc!
     scala> val list = List(1, 2, 3, 4, 5)
     list: List[Int] = List(1, 2, 3, 4, 5)
     
@@ -1955,7 +1955,7 @@ do this is with the {cons} operator.
     a: Int = 1
     b: Int = 2
     rest: List[Int] = List(3, 4, 5)
-[/sc]
+!/sc!
 In patterns, we work with |scala-extractors| and constructors, not method
 calls.  So when we see something like "b :: rest" we have to understand that
 this gets interpreted as "::(b, rest)" and this is actually a pattern
@@ -1970,23 +1970,23 @@ and again as a method in class {List}.
 ::                                                      *scala-::* *scala-cons*
     The {List} {cons} operator prepends an element to the {List}.  This is a
     constant time operation and is thus very cheap.
-[sc]
+!sc!
         scala> val list = List(1, 2, 3)
         list: List[Int] = List(1, 2, 3)
         
         scala> val newlist = 0 :: list
         newlist: List[Int] = List(0, 1, 2, 3)
-[/sc]
+!/sc!
     Note that the {::} operator associates to the right, as do all operators
     that end with {:}.  The method is actually executed on the {list} in the
     above code snippet, not on the {Int}.
 
     You can construct {List}s using the {::} operator, coupled with the {Nil}
     object, which is of type {List}.
-[sc]
+!sc!
         scala> val list = 1 :: 2 :: 3 :: 4 :: 5 :: Nil
         list: List[Int] = List(1, 2, 3, 4, 5)
-[/sc]
+!/sc!
     You need to specify {Nil} at the "end" of this list because the {::}
     operator is an operator on the {List} type, not in the {Int} type and,
     since the {::} is right-associative, it will associate with whatever is
@@ -1994,70 +1994,70 @@ and again as a method in class {List}.
 
 :::                                            *scala-:::* *scala-list-concat*
     The {List} concatenation operator sticks two lists together.
-[sc]
+!sc!
         scala> val list = List(1, 2, 3) ::: List(4, 5)
         list: List[Int] = List(1, 2, 3, 4, 5)
-[/sc]
+!/sc!
     Note as with {::}, the {:::} operator associates to the right.
 
 head                                                       *scala-list-head*
     Returns the head of the list.
-[sc]
+!sc!
         scala> val list = List(1, 2, 3)
         list: List[Int] = List(1, 2, 3)
 
         scala> list.head
         res0: Int = 1
-[/sc]
+!/sc!
     Throws {NoSuchElementException} if called on an empty list
 
 tail                                                       *scala-list-tail*
     Returns the tail of the list.
-[sc]
+!sc!
         scala> val list = List(1, 2, 3)
         list: List[Int] = List(1, 2, 3)
 
         scala> list.tail
         res0: List[Int] = List(2, 3)
-[/sc]
+!/sc!
     Throws {UnsupportedOperationException} if called on an empty {List}.  If
     the {List} only has a single element, then an empty {List} is returned.
 
 init                                                       *scala-list-init*
     Returns a new {List} minus the head; this is the inverse of tail.  This is
     inefficient.
-[sc]
+!sc!
         scala> val list = List(1, 2, 3)
         list: List[Int] = List(1, 2, 3)
 
         scala> list.init
         res0: List[Int] = List(1, 2)
-[/sc]
+!/sc!
     Throws {UnsupportedOperationException} if called on an empty {List}.
     Returns an empty {List} if the {List} only has one element.
 
 last                                                       *scala-list-last*
     Returns the last element in the list as a value; this is the inverse of
     head.  This is inefficient.
-[sc]
+!sc!
         scala> val list = List(1, 2, 3)
         list: List[Int] = List(1, 2, 3)
 
         scala> list.last
         res0: Int = 3
-[/sc]
+!/sc!
     Throws {UnsupportedOperationException} if called on an empty {List}.
 
 reverse                                                 *scala-list-reverse*
     Reverse will return a new {List} with the elements in reverse order.  This
     is linear in complexity.
-[sc]
+!sc!
         scala> val list = List(1, 2, 3)
         list: List[Int] = List(1, 2, 3)
 
         scala> list.reverse
         res23: List[Int] = List(3, 2, 1)
-[/sc]
+!/sc!
     Reverse works with some of the previous notions to give algorithmic
     equality to them.
 
@@ -2069,25 +2069,25 @@ reverse                                                 *scala-list-reverse*
 
 drop                                                       *scala-list-drop*
     Returns a new {List} minus the first {n} elements.
-[sc]
+!sc!
         scala> val list = List(1, 2, 3, 4, 5, 6, 7, 8, 9)
         list: List[Int] = List(1, 2, 3, 4, 5, 6, 7, 8, 9)
         
         scala> list.drop(4)
         res0: List[Int] = List(5, 6, 7, 8, 9)
-[/sc]
+!/sc!
     Returns an empty list if there are less than {n+1} elements in the {List}
     and an empty list if the {List} is empty.
 
 take                                                       *scala-list-take*
     Returns a new {List} containing only the first {n} elements.
-[sc]
+!sc!
         scala> val list = List(1, 2, 3, 4, 5, 6, 7, 8, 9)
         list: List[Int] = List(1, 2, 3, 4, 5, 6, 7, 8, 9)
         
         scala> list.take(4)
         res0: List[Int] = List(1, 2, 3, 4)
-[/sc]
+!/sc!
     Returns an empty list if the {List} was empty and a list with length less
     than {n} if the receiving list has length less than {n}.
 
@@ -2095,13 +2095,13 @@ splitAt                                                 *scala-list-splitAt*
     Returns a {Tuple2} (or colloquially known as a {pair}) that's split at
     index {n}, where the first list has elements from 0 to {n-1} and the
     second list has element from {n} to the end.
-[sc]
+!sc!
         scala> val list = List(1, 2, 3, 4, 5, 6, 7, 8)
         list: List[Int] = List(1, 2, 3, 4, 5, 6, 7, 8)
         
         scala> list.splitAt(4)
         res8: (List[Int], List[Int]) = (List(1, 2, 3, 4),List(5, 6, 7, 8))
-[/sc]
+!/sc!
     If the index is outside the range of the receiver, then the second list is
     always empty, and if the reciever is empty, both resulting lists are
     empty.
@@ -2109,57 +2109,57 @@ splitAt                                                 *scala-list-splitAt*
 indices                                                  *scala-list-indices*
     Returns a |scala-range| containing the zero-based index list of the
     elements in the {List}.
-[sc]
+!sc!
         scala> val words = List("some", "words", "are", "in", "this", "list")
         words: List[java.lang.String] = List(some, words, are, in, this, list)
         
         scala> words.indices 
         res15: scala.collection.immutable.Range = Range(0, 1, 2, 3, 4, 5)
-[/sc]
+!/sc!
 flatten                                                  *scala-list-flatten*
     Takes a recursively defined {List} and flattens it out one level deep and
     returns a new {List}.
-[sc]
+!sc!
         scala> List(List(1, 2), List(3), List(), List(4, 5)).flatten
         res16: List[Int] = List(1, 2, 3, 4, 5)
 
         scala> List(List(1, 2), List(List(3)), List(), List(4, 5)).flatten
         res17: List[Any] = List(1, 2, List(3), 4, 5)
-[/sc]
+!/sc!
     Note the return value of {List[Any]} above.
 
 zip                                                          *scala-list-zip*
     Takes two {List}s and zips them together into a single {List} of pairs
     whos length is the minimum of the length of the two originating lists.
-[sc]
+!sc!
         scala> List(1, 2, 3) zip List("a", "b", "c", "d")
         res18: List[(Int, java.lang.String)] = List((1,a), (2,b), (3,c))
-[/sc]
+!/sc!
 unzip                                                      *scala-list-unzip*
     Takes a {List} of pairs and splits it up into a pair of {List}s.
-[sc]
+!sc!
         scala> val zipped = List(1, 2, 3) zip List("a", "b", "c", "d")
         zipped: List[(Int, java.lang.String)] = List((1,a), (2,b), (3,c))
         
         scala> zipped.unzip
         res20: (List[Int], List[java.lang.String]) =
                     (List(1, 2, 3),List(a, b, c))
-[/sc]
+!/sc!
 mkString                                                *scala-list-mkString*
     Concatenates all of the elements of the {List} together into a string,
     using a delimeter and a prefix / postfix pair.
-[sc]
+!sc!
         scala> val abcde = List("a", "b", "c", "d", "e")
         abcde: List[java.lang.String] = List(a, b, c, d, e)
         
         scala> abcde.mkString("ABCDE[", ", ", "]")
         res22: String = ABCDE[a, b, c, d, e]
-[/sc]
+!/sc!
 addString                                              *scala-list-addString*
     Due to the immutability factor, mkString can be expensive.  In these cases
     we have the {addString} method that can use a |scala-stringbuilder| object
     to create the string without the cost of the immutable data structure.
-[sc]
+!sc!
         scala> val buf = new StringBuilder
         buf: StringBuilder = StringBuilder()
         
@@ -2169,10 +2169,10 @@ addString                                              *scala-list-addString*
         
         scala> buf.toString
         res25: java.lang.String = ABCDE[a, b, c, d, e]
-[/sc]
+!/sc!
 iterator                                                *scala-list-iterator*
     You can grab yourself an iterator pretty easily.
-[sc]
+!sc!
         scala> val iter = list.iterator
         iter: Iterator[Int] = non-empty iterator
         
@@ -2187,23 +2187,23 @@ iterator                                                *scala-list-iterator*
         
         scala> iter.next
         res30: Int = 3
-[/sc]
+!/sc!
 map                                                          *scala-list-map*
     Map executes a function over element in the list and returns a new list
     containing all the new values.
-[sc]
+!sc!
         scala> val list = List(1, 2, 3, 4, 5, 6, 7, 8, 9)
         list: List[Int] = List(1, 2, 3, 4, 5, 6, 7, 8, 9)
 
         scala> list.map(_ * 2)
         res32: List[Int] = List(2, 4, 6, 8, 10, 12, 14, 16, 18)
-[/sc]
+!/sc!
 flatMap                                                  *scala-list-flatmap*
     Flatmap is the same as |scala-list-map| except for the fact that it will
     also flatten the {List} at the same time.  I'm a little foggy on this one
     though... based on that description, I would have expected that the
     following would work:
-[sc]
+!sc!
         scala> val deepList = List(1, 2, List(3, 4, 5), 6, 7, List(8, 9))
         deepList: List[Any] = List(1, 2, List(3, 4, 5), 6, 7, List(8, 9))
         
@@ -2213,11 +2213,11 @@ flatMap                                                  *scala-list-flatmap*
          required: Traversable[?]
                deepList.flatMap(_.asInstanceOf[Int] * 2)
                                                     ^
-[/sc]
+!/sc!
     Instead, what we need is literally a {List} of {List}s and nothing more,
     and then it would seem that we can only do operations on the elements,
     which are themselves {List}s.
-[sc]
+!sc!
         scala> val listOfLists = List(List(1, 2, 3),
              |                        List(4, 5, 6),
              |                        List(7, 8, 9))
@@ -2227,12 +2227,12 @@ flatMap                                                  *scala-list-flatmap*
         
         scala> listOfLists.flatMap(_.toList)
         res0: List[Int] = List(1, 2, 3, 4, 5, 6, 7, 8, 9)
-[/sc]
+!/sc!
 foreach                                                  *scala-list-foreach*
     Foreach runs the passed in function over each element of the list but
     returns {Unit}.  Everything that's done to the {List} is a side effect.
     The simplest example of this is printing out the elements.
-[sc]
+!sc!
         scala> val list = List(1, 2, 3, 4, 5, 6, 7, 8, 9)
         list: List[Int] = List(1, 2, 3, 4, 5, 6, 7, 8, 9)
 
@@ -2246,63 +2246,63 @@ foreach                                                  *scala-list-foreach*
         7
         8
         9
-[/sc]
+!/sc!
 filter                                                    *scala-list-filter*
     Returns a new {List} composed of elements of the receiver where the passed
     in predicate evaluates to {true}.
-[sc]
+!sc!
         scala> val list = List(1, 2, 3, 4, 5, 6, 7, 8, 9)
         list: List[Int] = List(1, 2, 3, 4, 5, 6, 7, 8, 9)
 
         scala> list.filter(_ % 2 == 0)
         res0: List[Int] = List(2, 4, 6, 8)
-[/sc]
+!/sc!
 
 partition                                              *scala-list-partition*
     Works like |scala-list-filter| except it returns both the {List} that
     would have been returned by {filter} as well as a {List} of elements that
     would not have been returned by {filter}.
-[sc]
+!sc!
         scala> val list = List(1, 2, 3, 4, 5, 6, 7, 8, 9)
         list: List[Int] = List(1, 2, 3, 4, 5, 6, 7, 8, 9)
 
         scala> list.partition(_ % 2 == 0)
         res0: (List[Int], List[Int]) = (List(2, 4, 6, 8),List(1, 3, 5, 7, 9))
-[/sc]
+!/sc!
 find                                                        *scala-list-find*
     Returns an Option (|scala-option|) containing the first result of trying
     to find an element in the {List} that matches the predicate.
-[sc]
+!sc!
         scala> val list = List(1, 2, 3, 4, 5, 6, 7, 8, 9)
         list: List[Int] = List(1, 2, 3, 4, 5, 6, 7, 8, 9)
 
         scala> list.find(_ % 2 == 0)
         res0: Option[Int] = Some(2)
-[/sc]
+!/sc!
 takeWhile                                              *scala-list-takeWhile*
     Continues to |scala-list-take| while the predicate is true.  Take takes up
     to {n} and takeWhile uses a predicate to decide what to take.
-[sc]
+!sc!
         scala> val list = List(1, 2, 3, 4, 5, 6, 7, 8, 9)
         list: List[Int] = List(1, 2, 3, 4, 5, 6, 7, 8, 9)
 
         scala> list.takeWhile(_ < 5)      
         res0: List[Int] = List(1, 2, 3, 4)
-[/sc]
+!/sc!
 dropWhile                                              *scala-list-dropWhile*
     Continues to |scala-list-drop| while the predicate is true.  Drop drops up
     to {n} and dropWhile uses a predicate to decide what to drop.
-[sc]
+!sc!
         scala> val list = List(1, 2, 3, 4, 5, 6, 7, 8, 9)
         list: List[Int] = List(1, 2, 3, 4, 5, 6, 7, 8, 9)
 
         scala> list.dropWhile(_ < 5)      
         res0: List[Int] = List(5, 6, 7, 8, 9)
-[/sc]
+!/sc!
 forall                                                    *scala-list-forall*
     Executes the predicate across all elements in the {List} and returns
     {true} if the predicate is satisfied for all elements.
-[sc]
+!sc!
         scala> val list = List(1, 2, 3, 4, 5, 6, 7, 8, 9)
         list: List[Int] = List(1, 2, 3, 4, 5, 6, 7, 8, 9)
 
@@ -2311,10 +2311,10 @@ forall                                                    *scala-list-forall*
 
         scala> list.forall(_ < 7)      
         res1: Boolean = false
-[/sc]
+!/sc!
 exists                                                    *scala-list-exists*
     Returns {true} if there is a single element that satisfies the predicate.
-[sc]
+!sc!
         scala> val list = List(1, 2, 3, 4, 5, 6, 7, 8, 9)
         list: List[Int] = List(1, 2, 3, 4, 5, 6, 7, 8, 9)
 
@@ -2323,12 +2323,12 @@ exists                                                    *scala-list-exists*
 
         scala> list.forall(_ == 22)      
         res1: Boolean = false
-[/sc]
+!/sc!
 /:                                             *scala-list-foldleft* *scala-/:*
     FoldLeft.  This is unlike some of the other higher order functions in that
     this one applies against two arguments.  The simplest way to explain it is
     through an example, where we'll play with some numbers.
-[sc]
+!sc!
         scala> val list = List(1, 2, 3)
         list: List[Int] = List(1, 2, 3)
         
@@ -2337,7 +2337,7 @@ exists                                                    *scala-list-exists*
         
         scala> list.foldLeft(0)(_ + _)
         res1: Int = 6
-[/sc]
+!/sc!
     This creates an expression that leans to the left:
 
                                 +
@@ -2349,7 +2349,7 @@ exists                                                    *scala-list-exists*
                           0   1
 
     Another example:
-[sc]
+!sc!
         scala> val list = List(2, 2, 3)
         list: List[Int] = List(2, 2, 3)
         
@@ -2358,7 +2358,7 @@ exists                                                    *scala-list-exists*
         
         scala> list.foldLeft(1)(_ * _)
         res1: Int = 12
-[/sc]
+!/sc!
     Which creates an expression with the same structure, just different
     values.
 
@@ -2374,7 +2374,7 @@ exists                                                    *scala-list-exists*
     FoldRight.  This is like |scala-list-foldleft| except that it folds to the
     right.  The argument structure is different due to the fact that things
     fold to the right.
-[sc]
+!sc!
         scala> val list = List(1, 2, 3)
         list: List[Int] = List(1, 2, 3)
         
@@ -2383,7 +2383,7 @@ exists                                                    *scala-list-exists*
         
         scala> list.foldRight(0)(_ + _)
         res1: Int = 6
-[/sc]
+!/sc!
     This creates an expression that leans to the left:
 
                            +
@@ -2395,7 +2395,7 @@ exists                                                    *scala-list-exists*
                              1   0
 
     Another example:
-[sc]
+!sc!
         scala> val list = List(2, 2, 3)
         list: List[Int] = List(2, 2, 3)
         
@@ -2404,7 +2404,7 @@ exists                                                    *scala-list-exists*
         
         scala> list.foldLeft(1)(_ * _)
         res1: Int = 12
-[/sc]
+!/sc!
     Which creates an expression with the same structure, just different
     values.
 
@@ -2423,7 +2423,7 @@ exists                                                    *scala-list-exists*
 List.range                                                 *scala-list-range*
     The range method on the {List} object will create a {List} object that's
     like a range object, but isn't a range object.
-[sc]
+!sc!
         scala> List.range(1, 5)
         res0: List[Int] = List(1, 2, 3, 4)
 
@@ -2432,11 +2432,11 @@ List.range                                                 *scala-list-range*
 
         scala> List.range(9, 1, -3)
         res2: List[Int] = List(9, 6, 3)
-[/sc]
+!/sc!
 List.fill                                                   *scala-list-fill*
     The fill method creates a new list of a particular size with each element
     set to a given value.
-[sc]
+!sc!
         scala> List.fill(5)('a')
         res0: List[Char] = List(a, a, a, a, a)
 
@@ -2445,11 +2445,11 @@ List.fill                                                   *scala-list-fill*
 
         scala> List.fill(2, 3)('b')
         res2: List[List[Char]] = List(List(b, b, b), List(b, b, b))
-[/sc]
+!/sc!
 List.tabulate                                           *scala-list-tabulate*
     Constructs an object much like |scala-list-fill| but uses a function to
     fill in the values instead of a hard-coded value.
-[sc]
+!sc!
         scala> val squares = List.tabulate(5)(n => n * n)
         squares: List[Int] = List(0, 1, 4, 9, 16)
 
@@ -2457,11 +2457,11 @@ List.tabulate                                           *scala-list-tabulate*
         multiplication: List[List[Int]] = List(List(0, 0, 0, 0, 0),
             List(0, 1, 2, 3, 4), List(0, 2, 4, 6, 8),
             List(0, 3, 6, 9, 12), List(0, 4, 8, 12, 16))
-[/sc]
+!/sc!
 List.concat                                               *scala-List-concat*
     The concat method concatenates a number of element lists. The lists to be
     concatenated are supplied as direct arguments to concat:
-[sc]
+!sc!
         scala> List.concat(List('a', 'b'), List('c'))
         res60: List[Char] = List(a, b, c)
         
@@ -2470,7 +2470,7 @@ List.concat                                               *scala-List-concat*
         
         scala> List.concat()
         res62: List[Nothing] = List()
-[/sc]
+!/sc!
 
 9.5 ArrayBuffer                                     *scala-array-buffer* {{{2
 ------------------------------------------------------------------------------
@@ -2502,50 +2502,50 @@ would return a {String} object (that may later need conversion back to
 
 * (n: Int) : String                                        *scala-string-star*
     Return the current string concatenated n times.
-[sc]
+!sc!
         scala> "| a string |" * 3
         res0: String = | a string || a string || a string |
-[/sc]
+!/sc!
 ++ (that: TraversableOnce[Char]) : StringOps[A]              *scala-string-++*
     Concatenates this string with the elements of a traversable collection.
-[sc]
+!sc!
         scala> "str: " ++ List(1, 2, 3, 4)     
         res0: scala.collection.immutable.IndexedSeq[AnyVal] =
           Vector(s, t, r, :,  , 1, 2, 3, 4)
-[/sc]
+!/sc!
 +: (elem: Char) : StringOps[A]                                *scala-string-+*
     Prepends an element to this string
-[sc]
+!sc!
         scala> 'c' + "harlie"
         res0: java.lang.String = charlie
-[/sc]
+!/sc!
 
 /: [B] (z: B)(op: (B, Char) ⇒ B) : B                         *scala-string-/:*
     Applies a binary operator to a start value and all elements of this
     string, going left to right.
-[sc]
+!sc!
         scala> ("h" /: "ithere")(_ + _) 
         res0: java.lang.String = hithere
-[/sc]
+!/sc!
 
 :+ (elem: Char) : StringOps[A]                               *scala-string-:+*
     Appends an element to this string
-[sc]
+!sc!
         scala> "hithere " + 'g' + 'u' + 'y' + 's'
         res0: java.lang.String = hithere guys
-[/sc]
+!/sc!
 
 :\ [B] (z: B)(op: (Char, B) ⇒ B) : B                         *scala-string-:\*
     Applies a binary operator to all elements of this string and a start
     value, going right to left.
-[sc]
+!sc!
         scala> ("h" :\ "ithere")(_ + _)
         res0: java.lang.String = hithere
-[/sc]
+!/sc!
 
 addString (b: StringBuilder) : StringBuilder          *scala-string-addString*
     Appends all elements of this string to a string builder.
-[sc]
+!sc!
         scala> val b = new StringBuilder
         b: StringBuilder = StringBuilder()
         
@@ -2555,26 +2555,26 @@ addString (b: StringBuilder) : StringBuilder          *scala-string-addString*
         scala> " folks".addString(b)
         res1: StringBuilder = StringBuilder(h, i, t, h, e, r, e,  ,
                                             f, o, l, k, s)
-[/sc]
+!/sc!
 capitalize : String                                *scala-string-capitalize*
     Returns this string with first character converted to upper case
-[sc]
+!sc!
         scala> "booger".capitalize
         res0: String = Booger
-[/sc]
+!/sc!
 contains (elem: Any) : Boolean                       *scala-string-contains*
     Tests whether this string contains a given value as an element
-[sc]
+!sc!
         scala> "booger".contains("oog") 
         res37: Boolean = true
-[/sc]
+!/sc!
 r () : Regex                                            *scala-string-regex*
     Returns a regular expression object using the data contained in the
     {String}.  For more info, see |scala-regular-expressions|.
-[sc]
+!sc!
         scala> """\d+\.\d+""".r
         res0: scala.util.matching.Regex = \d+\.\d+
-[/sc]
+!/sc!
 
 9.7 Sets and Maps                                  *scala-sets-and-maps* {{{2
 ------------------------------------------------------------------------------
@@ -2605,7 +2605,7 @@ There are different classes to handle different sizes of collections:
 
 Regular expressions come in package {scala.util.matching.Regex}.  You can
 construct them using two specific methods...
-[sc]
+!sc!
     scala> import scala.util.matching.Regex
 
     scala> val Decimal = new Regex("(-)?(\\d+)(\\.\\d*)?")
@@ -2615,14 +2615,14 @@ construct them using two specific methods...
 
     scala> val Decimal = new Regex("""(-)?(\d+)(\.\d*)?""")
     Decimal: scala.util.matching.Regex = (-)?(\d+)(\.\d*)?
-[/sc]
+!/sc!
 ... and ...
-[sc]
+!sc!
     scala> import scala.util.matching.Regex
 
     scala> val Decimal = """(-)?(\d+)(\.\d*)?""".r
     Decimal: scala.util.matching.Regex = (-)?(\d+)(\.\d*)?
-[/sc]
+!/sc!
 
 9.8.1 Methods on Regex                             *scala-regex-methods* {{{3
 ------------------------------------------------------------------------------
@@ -2631,7 +2631,7 @@ construct them using two specific methods...
 findAllIn (source: CharSequence) : MatchIterator
     Return all matches of this regexp in given character sequence as an
     iterator
-[sc]
+!sc!
         scala> val Decimal = """(-)?(\d+)(\.\d*)?""".r
         Decimal: scala.util.matching.Regex = (-)?(\d+)(\.\d*)?
         
@@ -2642,12 +2642,12 @@ findAllIn (source: CharSequence) : MatchIterator
         -1.0
         99
         3
-[/sc]
+!/sc!
                                                       *scala-regex-findFirstIn*
 findFirstIn (source: CharSequence) : Option[String]
     Return optionally first matching string of this regexp in given character
     sequence, None if it does not exist.
-[sc]
+!sc!
         scala> val Decimal = """(-)?(\d+)(\.\d*)?""".r
         Decimal: scala.util.matching.Regex = (-)?(\d+)(\.\d*)?
         
@@ -2656,7 +2656,7 @@ findFirstIn (source: CharSequence) : Option[String]
         
         scala> Decimal findFirstIn input
         res1: Option[String] = Some(-1.0)
-[/sc]
+!/sc!
 
                                                  *scala-regex-findFirstMatchIn*
 findFirstMatchIn (source: CharSequence) : Option[Match]
@@ -2726,7 +2726,7 @@ split (toSplit: CharSequence) : Array[String]
 
 Every {Regex} object is automatically an object that can easily pattern match.
 Let's look at:
-[sc]
+!sc!
     scala> val Decimal = """(-)?(\d+)(\.\d*)?""".r
     Decimal: scala.util.matching.Regex = (-)?(\d+)(\.\d*)?
 
@@ -2739,9 +2739,9 @@ Let's look at:
     sign: String = null
     integerpart: String = 1
     decimalpart: String = .0
-[/sc]
+!/sc!
 And you can combine this with a {for} expression.
-[sc]
+!sc!
     scala> val input = "for -1.0 to 99 by 3"
     input: java.lang.String = for -1.0 to 99 by 3
 
@@ -2751,7 +2751,7 @@ And you can combine this with a {for} expression.
     sign: -, integer: 1, decimal: .0
     sign: null, integer: 99, decimal: null
     sign: null, integer: 3, decimal: null
-[/sc]
+!/sc!
 
 ==============================================================================
 10. Packages and Access Modifiers                        *scala-packages* {{{1
@@ -2775,7 +2775,7 @@ are not found in Scala.
 Both {private} and {protected} can have {modifiers} added on to them.  A
 {modifier} takes the form of [symbol] where 'symbol' is a user-defined entity
 in Scala.
-[sc]
+!sc!
     package bobsrockets
 
     package navigation {
@@ -2807,14 +2807,14 @@ in Scala.
         private[launch] val guide = new Navigator
       }
     }
-[/sc]
+!/sc!
 
 10.2 Packaging                                          *scala-packaging* {{{2
 ------------------------------------------------------------------------------
 
 Packaging is pretty much the same as Java except for the imports and a cool
 |scala-package-object|.
-[sc]
+!sc!
     // This package is global to the entire file
     package main.pkg
     
@@ -2831,12 +2831,12 @@ Packaging is pretty much the same as Java except for the imports and a cool
     package anotherSubPkg {
         // And you can just keep doing this stuff
     }
-[/sc]
+!/sc!
                                                              *scala-imports*
 
 Scala provides some pretty decent importing mechanisms as well.  You can
 selectively import, import all, hide and rename.
-[sc]
+!sc!
     // Imports the Actor class and object
     import akka.actor.Actor
 
@@ -2852,7 +2852,7 @@ selectively import, import all, hide and rename.
     // Imports everything from the actor namespace /except/ Supervisor
     // This effectively /hides/ Supervisor
     import akka.actor.{Supervisor => _, _}
-[/sc]
+!/sc!
 You can also import anywhere you feel like.  If you want to import within a
 function definition, go for it.
 
@@ -2864,7 +2864,7 @@ The object itself has to be named the same as the package in which it's
 declared and should be in a file called {packagename/package.scala}, where
 "packagename" is the name of the package.
 
-[sc]"mypackage/package.scala"
+!sc!"mypackage/package.scala"
 
     package mypackage
     import scala.collection.immutable.Map
@@ -2874,7 +2874,7 @@ declared and should be in a file called {packagename/package.scala}, where
             println(someMap)
         }
     }
-[/sc]
+!/sc!
 
 ==============================================================================
 11. Type Parameterization                               *scala-generics* {{{1
@@ -2892,7 +2892,7 @@ Scala defines mechanisms to handle three variance types.
                                                           *scala-nonvariance*
 - Nonvariance: Kinda like C++.  If S is a subtype of T a vector<S> is not a
   subtype of vector<T>.
-[sc]
+!sc!
     scala> class Variance[T](init: T) {                                    
          |     val t: T = init
          |     override def toString = "Variance[" + t + "]"
@@ -2908,11 +2908,11 @@ Scala defines mechanisms to handle three variance types.
      required: Variance[Any]
            val va: Variance[Any] = vs
                                    ^
-[/sc]
+!/sc!
                                                            *scala-covariance*
 - Covariance: States that the type can be substituted by a type derived from
   the stated type.
-[sc]
+!sc!
     scala> class Variance[+T](init: T) {
          |     val t: T = init
          |     override def toString = "Variance[" + t + "]"
@@ -2924,14 +2924,14 @@ Scala defines mechanisms to handle three variance types.
     
     scala> val va: Variance[Any] = vs
     va: Variance[Any] = Variance[String]
-[/sc]
+!/sc!
   Above we have a type {Variance[Any]} that we shove a {Variance[String]} in -
   i.e. the type we're putting in the {Any}'s place is a type that's derived
   from {Any}.
                                                        *scala-contravariance*
 - Contravariance: States that the type can be be substituted by a type that is
   a superclass of the stated type.
-[sc]
+!sc!
     scala> class OutputChannel[-T] {
          |     def write(t: T) = println(t)
          | }
@@ -2942,7 +2942,7 @@ Scala defines mechanisms to handle three variance types.
     
     scala> new OutputChannel[Any].write("String".asInstanceOf[String])
     String
-[/sc]
+!/sc!
   Here we've got a base type and we're substituting something further down the
   hierarchy.
 
@@ -2953,11 +2953,11 @@ Scala defines mechanisms to handle three variance types.
 The simplest example of {covariance} and {contravariance} is the discussion of
 {Function} traits.  If we take a look at the {Function1} trait, we see its
 definition as:
-[sc]
+!sc!
         trait Function1[-S, +T] {
             apply(x: S): T
         }
-[/sc]
+!/sc!
 The argument is contravariant in {S} and the result is covariant in {T}.
 Because the function itself will be instantiating the type represented by {T},
 we know that the contract is held by the client.  The client is expecting a
@@ -2972,7 +2972,7 @@ wishes to substitute it.
 The following is a small example of covariance and contravariance without the
 explicit statements by using {[+T]} and {[-S]} - we're not writing generic
 code here.
-[sc]
+!sc!
     class Publication(val title: String)
     class Book(title: String) extends Publication(title)
 
@@ -2991,7 +2991,7 @@ code here.
         def getTitle(p: Publication): String = p.title
         Library.printBookList(getTitle)
     }
-[/sc]
+!/sc!
    argument type                                                result type
    -------------                                                -----------
        Book                 Book   =>   AnyRef                     AnyRef
@@ -3007,7 +3007,7 @@ code here.
 A lower bound states that a type must be a superclass of another type.  It's a
 way of making certain things variant in the direction you need them to be when
 those tend to be collection types.  The Queue is a decent example.
-[sc]
+!sc!
     class Queue[+T] (private val leading: List[T],
                      private val trailing: List[T]) {
         private def mirror() = {
@@ -3032,7 +3032,7 @@ those tend to be collection types.  The Queue is a decent example.
         def enqueue[U >: T](x: U) =
             new Queue[U](leading, x :: trailing)
     }
-[/sc]
+!/sc!
 The lower bound on {enqueue} method states that it will accept a {U} typed
 argument but that type must be a supertype of {T}.  This is a mechanism by
 which the Queue can {enqueue} a new element that will result in the entire
@@ -3046,7 +3046,7 @@ containing elements of type {U}, which is legal because {T} inherits from {U}.
 The upper bound is the inverse of the lower bound.  It's a mechanism by which
 you can specify that a given type inherits from another given type.  A common
 example of this is to specify that a type inherit from the {Ordered} type.
-[sc]
+!sc!
     def orderedMergeSort[T <: Ordered[T]](xs: List[T]): List[T] = {
         def merge(xs: List[T], ys: List[T]): List[T] = {
             (xs, ys) match {
@@ -3065,7 +3065,7 @@ example of this is to specify that a type inherit from the {Ordered} type.
             merge(orderedMergeSort(ys), orderedMergeSort(zs))
         }
     }
-[/sc]
+!/sc!
 Here we're passing in a {List[T]} but are stipulating that {T} must inherit
 from {Ordered[T]} so that we can do some comparisons on it later.
 
@@ -3082,31 +3082,31 @@ In Scala it's implemented using instances of {case} classes.
 
 In the simplest of terms, a {case} class is a regular class that is prefixed
 with the keyword "case".  The following are {case} classes:
-[sc]
+!sc!
     abstract class Expr
     case class Var(name: String) extends Expr
     case class Number(num: Double) extends Expr
     case class UnOp(operator: String, arg: Expr) extends Expr
     case class BinOp(operator: String, left: Expr, right: Expr) extends Expr
-[/sc]
+!/sc!
 The keyword {case} is put there by the Scala compiler in order to optimize a
 few things:
 
 - the requirement for the {new} keyword is eliminated.  Object factories are
   immediately created that allow you to construct instances very easily:
-[sc]
+!sc!
     val variable = Var("a variable")
-[/sc]
+!/sc!
 - as well, all of the elements in the parameter list get a {val} prefix and
   become maintained fields:
-[sc]
+!sc!
     scala> variable.name
     res0: String = a variable
-[/sc]
+!/sc!
 - you also get natural implementations of {toString}, {hashCode} and {equals}.
   These will happily work recursively through whatever nested {case} classes
   they find.
-[sc]
+!sc!
     scala> val op = BinOp("+", Number(1), v)
     op: BinOp = BinOp(+,Number(1.0),Var(x))
 
@@ -3115,41 +3115,41 @@ few things:
 
     scala> op.right == Var("a variable")
     res0: Boolean = true
-[/sc]
+!/sc!
 - as well, the {copy} method is also created for you, and allows for you to
   specify changes using named parameters.  Anything that isn't specified is
   copied from the original.  As an example, we can copy the {BinOp} object and
   change the operation.
-[sc]
+!sc!
     scala> op.copy(operator = "-")
     res0: BinOp = BinOp(-,Number(1.0),Var(x))
-[/sc]
+!/sc!
 
 12.2 Basic Pattern Match                     *scala-basic-pattern-match* {{{2
 ------------------------------------------------------------------------------
 
 Working from what's previously defined, we can simplify expressions that
 cancel each other out with this function definition:
-                                                         *scala-simplify-top* [sc]
+                                                         *scala-simplify-top* !sc!
     def simplifyTop(expr: Expr): Expr = expr match {
         case UnOp("-", UnOp("-", e)) => e // Double negation
         case BinOp("+", e, Number(0)) => e	// Adding zero
         case BinOp("*", e, Number(1)) => e	// Multiplying by one
         case _ => expr // Can't be simplified
     }
-[/sc]
+!/sc!
 
 12.3 Comparison to Java Switch                   *scala-match-vs-switch* {{{2
 ------------------------------------------------------------------------------
 
 - Different syntax:
-[sc]
+!sc!
     switch (selector) { alternatives }
 
 vs
 
     selector match { alternatives }
-[/sc]
+!/sc!
 - A {match} is an {expression} in Scala, not just a statement.  This means
   that it will always return a value.
 
@@ -3166,12 +3166,12 @@ vs
 The "_" character matches anything and you can use it to ignore parts of a
 pattern if you want.  If you want to match structure but not care what's in
 that structure, just do this:
-[sc]
+!sc!
     expr match {
         case BinOp(_, _, _) => println(expr + " is a binary expression")
         case _ => println("It's a non-binary expression")
     }
-[/sc]
+!/sc!
 
 12.5 Constant Patterns                         *scala-constant-patterns* {{{2
 ------------------------------------------------------------------------------
@@ -3179,7 +3179,7 @@ that structure, just do this:
 You don't have to use constructed objects to match on, you can use constants
 as well.  A constant will only match itself, it won't match any magically
 constructed object.
-[sc]
+!sc!
     def describe(x: Any) = x match {
         case 5       => "five"
         case true    => "truth"
@@ -3187,19 +3187,19 @@ constructed object.
         case Nil     => "the empty list"
         case _       => "something else"
 }
-[/sc]
+!/sc!
 
 12.6 Variable Patterns                         *scala-variable-patterns* {{{2
 ------------------------------------------------------------------------------
 
 Just as with the "_" wildcard, you can have a variable pattern match, which is
 exactly the same idea but gives a symbol to the "anything" that gets matched.
-[sc]
+!sc!
     expr match {
         case 0 => "zero"
         case somethingElse => "not zero: " + somethingElse
     }
-[/sc]
+!/sc!
 The {somethingElse} is the variable we've used to match anything at all and
 give it a symbol we can grab on to.
 
@@ -3208,7 +3208,7 @@ to Scala - a {constant} pattern is assumed to start with an upper case letter
 while a {variable} expression is assumed to start with a lower case letter.
 
 Here's the idea:
-[sc]
+!sc!
     scala> val pi = math.Pi
     pi: Double = 3.141592653589793
 
@@ -3216,20 +3216,20 @@ Here's the idea:
          |     case pi => "strange math? Pi = " + pi
          | }
     res0: java.lang.String = strange math? Pi = 2.718281828459045
-[/sc]
+!/sc!
 Scala has matched against the variable pattern specification "pi" instead of
 matching against its value; that's not the goal here.
 
 If you really want to use a lower case symbol for a constant, you can put it
 in some sort of context, such as an object:
-[sc]
+!sc!
     scala> object Obj { val pi = math.Pi }
     scala> E match {                                 
          |     case Obj.pi => "strange math? Pie = " + Obj.pi
          |     case _ => "OK"
          | }
     res0: java.lang.String = OK
-[/sc]
+!/sc!
 
 12.7 Constructor Patterns                   *scala-constructor-patterns* {{{2
 ------------------------------------------------------------------------------
@@ -3243,27 +3243,27 @@ constructors, etc... sweetness.
 
 If we want to match against a {List} where the first element in the {List} is
 "0" and the {List} has three elements in it, we can do something like this:
-[sc]
+!sc!
     expr match {
         case List(0, _, _) => println("found it")
         case _ =>
     }
-[/sc]
+!/sc!
                                    *scala-variable-length-sequence-patterns*
 
 If you want to match against any length of sequence then you can use the
 special "_*" symbol.
-[sc]
+!sc!
     scala> List(0, 1, 2, 3, 4, 5) match {
          |    case List(0, _*) => println("found it")
          |    case _ =>
          | }
     found it
-[/sc]                                                     *scala-tuple-patterns*
+!/sc!                                                     *scala-tuple-patterns*
 
 You can match against arbitrary tuples as well as can be seen from the
 following example:
-[sc]
+!sc!
     scala> def tupleDemo(expr: Any) = expr match {
          |     case (a, b, c) => println("matched " + a + b + c)
          |     case _ =>
@@ -3272,14 +3272,14 @@ following example:
     
     scala> tupleDemo(("a ", 3, "-tuple"))
     matched a 3-tuple
-[/sc]
+!/sc!
 
 12.8 Typed Patterns                               *scala-typed-patterns* {{{2
 ------------------------------------------------------------------------------
 
 Typed patterns are the other area where things get cool.  A simple example of
 this is:
-[sc]
+!sc!
     scala> def generalSize(x: Any) = x match {
          |     case s: String => s.length
          |     case m: Map[_, _] => m.size
@@ -3295,14 +3295,14 @@ this is:
     
     scala> generalSize(math.Pi)
     res2: Int = -1
-[/sc]
+!/sc!
 
 12.9 Type Erasure                                   *scala-type-erasure* {{{2
 ------------------------------------------------------------------------------
 
 Scala uses the erasure model for generics just like Java does.  This means
 that doing the following is pretty tough:
-[sc]
+!sc!
     scala> def isIntIntMap(x: Any) = x match {
          |     case m: Map[Int, Int] => true
          |     case _ => false
@@ -3310,9 +3310,9 @@ that doing the following is pretty tough:
     warning: there were unchecked warnings;
              re-run with -unchecked for details
              isIntIntMap: (x: Any)Boolean
-[/sc]
+!/sc!
 So we re-run this with {-unchecked} turned on:
-[sc]
+!sc!
     scala> :quit
     $ scala -unchecked
     Welcome to Scala version 2.8.1
@@ -3329,61 +3329,61 @@ So we re-run this with {-unchecked} turned on:
                  by erasure
           case m: Map[Int, Int] => true
                   ˆ
-[/sc]
+!/sc!
 This yields the following surprising results:
-[sc]
+!sc!
     scala> isIntIntMap(Map(1 -> 1))
     res0: Boolean = true
 
     scala> isIntIntMap(Map("abc" -> "abc"))
     res1: Boolean = true
-[/sc]
+!/sc!
 
 12.10 Variable Binding                          *scala-variable-binding* {{{2
 ------------------------------------------------------------------------------
 
 When you want to reference the thing you matched you might need to use the "@"
 symbol.
-[sc]
+!sc!
     expr match {
         case UnOp("abs", e @ UnOp("abs", _)) => e
         case _ =>
     }
-[/sc]
-Note how we can use {e} above and its matching the [sc]UnOps("abs", _))[/sc].
+!/sc!
+Note how we can use {e} above and its matching the !sc!UnOps("abs", _))!/sc!.
 
 
 12.11 Pattern Guards                              *scala-pattern-guards* {{{2
 ------------------------------------------------------------------------------
 
 Let's say you want to do this:
-[sc]
+!sc!
     scala> def simplifyAdd(e: Expr) = e match {
          |     case BinOp("+", x, x) => BinOp("*", x, Number(2))
          |     case _ => e
          | }
-[/sc]
+!/sc!
 Well, you can't.  Scala requires that the pattern itself be linearized and
 that symbols within it can only appear once.  In order to do what you want,
 where you want to see a duplication, you have to put a guard in place.
-[sc]
+!sc!
     scala> def simplifyAdd(e: Expr) = e match {
          |     case BinOp("+", x, y) if x == y => BinOp("*", x, Number(2))
          |     case _ => e
          | }
-[/sc]
-It's the "[sc]if x == y[/sc]" that we're talking about here.  The failure to
+!/sc!
+It's the "!sc!if x == y!/sc!" that we're talking about here.  The failure to
 match the entire pattern, including the guard(s) will make it test the next
 pattern alternative.
 
 Some other examples:
-[sc]
+!sc!
     // match only positive integers
     case n: Int if 0 < n => ...
     
     // match only strings starting with the letter ‘a’
     case s: String if s(0) == 'a' => ...
-[/sc]
+!/sc!
 
 12.12 Pattern Overlaps (Depth)                  *scala-pattern-overlaps* {{{2
 ------------------------------------------------------------------------------
@@ -3392,7 +3392,7 @@ The |scala-simplify-top| example above does a single level match on what it
 finds and tries to simplify it.  However, that's pretty naive because these
 expressions could get quite deep.  We can perform pattern overlapping and deep
 recursion to perform the simplification.
-[sc]
+!sc!
     def simplifyAll(expr: Expr): Expr = expr match {
         case UnOp("-", UnOp("-", e)) =>
             // Just ditch the rest as they cancel each other out
@@ -3409,7 +3409,7 @@ recursion to perform the simplification.
             BinOp(op, simplifyAll(l), simplifyAll(r)
         case _ => expr
     }
-[/sc]
+!/sc!
 Note that the more specific cases come before the more general cases.  This is
 critical, of course, in order to match things properly.  If we put the general
 cases first then we'd match those and never reach the more specific cases that
@@ -3430,15 +3430,15 @@ match.  A sealed class must see all derivations within the same file, so if
 you declare your case classes' base class as a {sealed} class then the
 compiler will guarantee that all of the derivations are visible within that
 specific translation unit.
-[sc]
+!sc!
     sealed abstract class Expr
     case class Var(name: String) extends Expr
     case class Number(num: Double) extends Expr
     case class UnOp(operator: String, arg: Expr) extends Expr
     case class BinOp(operator: String, left: Expr, right: Expr) extends Expr
-[/sc]
+!/sc!
 The compiler will tell you if you're missing something, like this:
-[sc]
+!sc!
     scala> def describe(e: Expr): String = e match {
          |     case Number(_) => "a number"
          |     case Var(_)    => "a variable"
@@ -3446,42 +3446,42 @@ The compiler will tell you if you're missing something, like this:
     warning: match is not exhaustive!
     missing combination	UnOp
     missing combination	BinOp
-[/sc]
+!/sc!
 If you know that the warning is benign and want to shut it up, there are two
 methods:
 
 Toss in a catch-all:
-[sc]
+!sc!
     scala> def describe(e: Expr): String = e match {
          |     case Number(_) => "a number"
          |     case Var(_)    => "a variable"
          |     case _ => throw new RuntimeException // Shouldn't happen
          | }
-[/sc]
+!/sc!
 Toss in an annotation:
-[sc]
+!sc!
     scala> def describe(e: Expr): String = (e: @unchecked) match {
          |     case Number(_) => "a number"
          |     case Var(_)    => "a variable"
          |     case _ => throw new RuntimeException // Shouldn't happen
          | }
-[/sc]
+!/sc!
 
 12.14 Patterns in Variable Definitions     *scala-patterns-in-variables* {{{2
 ------------------------------------------------------------------------------
 
                                                  *scala-pulling-apart-tuples*
 Pattern matching is used when pulling tuples apart:
-[sc]
+!sc!
     scala> val myTuple = (123, "abc")
     myTuple: (Int, java.lang.String) = (123,abc)
 
     scala> val (number, string) = myTuple
     number: Int = 123
     string: java.lang.String = abc
-[/sc]
+!/sc!
 You can also pull apart a {case} class explicitly:
-[sc]
+!sc!
     scala> val exp = new BinOp("*", Number(5), Number(1))
     exp: BinOp = BinOp(*,Number(5.0),Number(1.0))
 
@@ -3489,23 +3489,23 @@ You can also pull apart a {case} class explicitly:
     op: String = *
     left: Expr = Number(5.0)
     right: Expr = Number(1.0)
-[/sc]
+!/sc!
 
 12.15 Patterns and Partial Functions       *scala-patterns-and-partials* {{{2
 ------------------------------------------------------------------------------
 
 A list of pattern alternatives may not be exhaustive - i.e. it may not handle
 all possible cases, with the obvious thing being that it may not have a
-[sc]{ case _ => _ }[/sc] alternative in it.  When the list is not exhaustive,
+!sc!{ case _ => _ }!/sc! alternative in it.  When the list is not exhaustive,
 we have a partial function.
 
 Scala does not really detect these, per se.  You can define them literally by
 doing something like the following:
-[sc]
+!sc!
     val second: PartialFunction[List[Int], Int] = {
         case x :: y :: _ => y
     }
-[/sc]
+!/sc!
 The above is partial by definition since it, at the very least, doesn't handle
 the case of an empty {List}.  But by stating that it is a {PartialFunction} we
 are telling Scala something important.  It will now be able to provide a
@@ -3514,7 +3514,7 @@ defined.
 
 What the compiler does is essentially create a construct that looks like the
 following:
-[sc]
+!sc!
     new PartialFunction[List[Int], Int] {
         def apply(xs: List[Int]) = xs match {
             case x :: y :: _ => y
@@ -3524,38 +3524,38 @@ following:
             case _ => false
         }
     }
-[/sc]
+!/sc!
 The point being that now we can interrogate the object an ask it if it's
 defined for certain inputs:
-[sc]
+!sc!
     scala> second.isDefinedAt(List(5,6,7))
     res0: Boolean = true
 
     scala> second.isDefinedAt(List())
     res1: Boolean = false
-[/sc]
+!/sc!
 It's generally a good idea to stick with complete functions whenever you can
 because this type of flexibility would generally result in more runtime
 errors.  There are two code paths you could write to deal with a partial
 function, and only one of them is arguably any good - but it's still a pain to
 write.
 
-First:[sc]
+First:!sc!
     if (second.isDefinedAt(List())
         second(List())
     else
         // do something intelligent
-[/sc]
-And second:[sc]
+!/sc!
+And second:!sc!
     second(List()) // Oops
-[/sc]
+!/sc!
 
 12.16 Extractors                             *scala-patterns-extractors* {{{2
 ------------------------------------------------------------------------------
 
 Extractors take the form of {unapply} and {unapplySeq} methods on objects.  A
 simple example is:
-[sc]
+!sc!
     object Email {
         def unapply(addr: String) = {
             val parts = addr.split("@")
@@ -3571,9 +3571,9 @@ simple example is:
          |         println(userId + " - (at) - " + domain)
          | }
     derek - (at) - derekwyatt.org
-[/sc]
+!/sc!
 and it works using an {Any} as well
-[sc]
+!sc!
     scala> val myAnyEmail: Any = "derek@derekwyatt.org"
     myEmail: Any = derek@derekwyatt.org
 
@@ -3582,14 +3582,14 @@ and it works using an {Any} as well
          |         println(userId + " - (at) - " + domain)
          | }
     derek - (at) - derekwyatt.org
-[/sc]
+!/sc!
 
 12.16.1 Deeper Extracting                      *scala-deeper-extracting* {{{3
 ------------------------------------------------------------------------------
 
 Given the following extractors (with some defined, but not required
 {injectors}):
-[sc]
+!sc!
     object Email {
         def apply(userId: String, domain: String) = userId + "@" + domain
         def unapply(addr: String) = {
@@ -3610,9 +3610,9 @@ Given the following extractors (with some defined, but not required
     object UpperCase {
         def unapply(s: String): Boolean = s.toUpperCase == s
     }
-[/sc]
+!/sc!
 we can create the following pattern matcher:
-[sc]
+!sc!
     def userTwiceUpper(s: String) = s match {
         case Email(Twice(x @ UpperCase()), domain) =>
             "match: " + x + " in domain " + domain
@@ -3628,7 +3628,7 @@ we can create the following pattern matcher:
 
     scala> userTwiceUpper("DIDI@derekwyatt.org") 
     res2: java.lang.String = match: DI in domain derekwyatt.org
-[/sc]
+!/sc!
 It's important to understand how the matching is taking place.  We match
 backwards to what you think we might.  Normally we would evaluate {UpperCase},
 then evaluate {Twice} and then evaluate {Email}, but it happens backwards in
@@ -3648,7 +3648,7 @@ matched so we can use it later.
 In order to extract variable arguments we need to implement the {unapplySeq}
 instead of the {unapply} function.  If we want to extract a fully qualified
 domain name, for example, we could do this:
-[sc]
+!sc!
     object Domain {
         def apply(parts: String*): String = parts.reverse.mkString(".")
         def unapplySeq(whole: String): Option[Seq[String]] =
@@ -3677,7 +3677,7 @@ domain name, for example, we could do this:
          | }
     org
     WrappedArray(scala-lang, api)
-[/sc]
+!/sc!
 
 ==============================================================================
 13. Language Extensibility                         *scala-extensibility* {{{1
@@ -3691,15 +3691,15 @@ so it requires some serious explanation.  I pulled this from:
 http://www.scala-lang.org/node/138
 
 Here's the construct we're going for:
-[sc]
+!sc!
     var i = 10
     loop {
         println("i = " + i)
         i -= 1
     } unless (i == 0)
-[/sc]
+!/sc!
 Now, here's how we make it happen.
-[sc]
+!sc!
     object LoopConstruct {
         def loop(body: => Unit): LoopUnlessCond =
             new LoopUnlessCond(body)
@@ -3715,19 +3715,19 @@ Now, here's how we make it happen.
     // Import the elements of the object so that we
     // can make use of it as the goal requires
     import LoopConstruct._
-[/sc]
+!/sc!
 This is pretty easy to figure out, but I wouldn't be able to build it myself
 at this point.  The key point is that we present to the user, the main goal
 function, {loop}.  The publicly available {loop} function takes a "by name"
 parameter called {body} that doesn't return anything.  If that's all there was
 then it would satisfy something like this:
-[sc]
+!sc!
     var i = 10
     loop {
         println("i = " + i)
         i -= 1
     }
-[/sc]
+!/sc!
 What we need to make happen is to pass the block of code to something that
 will manage it conditionally with the {unless} condition.  We do that by
 returning a new object, but this object is not directly constructable by the
@@ -3743,14 +3743,14 @@ the {unless} method that executes the code in a Tail Recursive
 
 Assuming we could construct the {LoopUnlessCond} object directly, we can
 illustrate what the {factory} code is actually doing:
-[sc]
+!sc!
     var i = 10
     val unlessCode = new LoopUnlessCond({
         println("i = " + i)
         i -= 1
     })
     unlessCode.unless(i == 0)
-[/sc]
+!/sc!
 However, that looks like absolute crap.  Scala's infix notation makes it
 possible to create real control constructs that look like true extensions of
 the language instead of simple library additions.
@@ -3765,7 +3765,7 @@ imperative style programming into functional style programming.
 
 14.1 Printing a Matrix                         *scala-functional-matrix* {{{2
 ------------------------------------------------------------------------------
-[sc]
+!sc!
     def printMultiTable() {
         var i = 1
 
@@ -3788,10 +3788,10 @@ imperative style programming into functional style programming.
             i += 1
         }
     }
-[/sc]
+!/sc!
 We can refactor this imperative-style code into functional style code with the
 following implementation:
-[sc]
+!sc!
     def makeRowSeq(row: Int) =
         for (col <- 1 to 10) yield {
             val prod = (row * col).toString
@@ -3805,9 +3805,9 @@ following implementation:
         val tableSeq = for (row <- 1 to 10) yield makeRow(row)
         tableSeq.mkString("\n")
     }
-[/sc]
+!/sc!
 And, what this does, in either case is:
-[sc]
+!sc!
    1   2   3   4   5   6   7   8   9  10
    2   4   6   8  10  12  14  16  18  20
    3   6   9  12  15  18  21  24  27  30
@@ -3818,7 +3818,7 @@ And, what this does, in either case is:
    8  16  24  32  40  48  56  64  72  80
    9  18  27  36  45  54  63  72  81  90
   10  20  30  40  50  60  70  80  90 100
-[/sc]
+!/sc!
 
 ==============================================================================
 15. Testing                                              *scala-testing* {{{1
@@ -3831,7 +3831,7 @@ to do at the moment is to, at least, use the ScalaTest framework
 (http://scalatest.org/).
 
 As far as I can tell, the most straight forward way to go is something like
-the following: [sc]
+the following: !sc!
 
     import org.scalatest.FlatSpec
     import org.scalatest.matchers.ShouldMatchers
@@ -3853,13 +3853,13 @@ the following: [sc]
             } should produce [IllegalArgumentException]
         }
     }
-[/sc]
+!/sc!
                                                            *scala-scalacheck*
 
 Beyond that, there's something I should try at some point - ScalaCheck
 (http://code.google.com/p/scalacheck/).  ScalaCheck can generate test data and
 drive that through your code based on a specification that you toss in.
-[sc]
+!sc!
     import org.scalatest.WordSpec
     import org.scalatest.prop.Checkers
     import org.scalacheck.Prop._
@@ -3875,7 +3875,7 @@ drive that through your code based on a specification that you toss in.
             }
         }
     }
-[/sc]
+!/sc!
 
 ==============================================================================
 16. Miscellaneous                                  *scala-miscellaneous* {{{1
@@ -3886,10 +3886,10 @@ drive that through your code based on a specification that you toss in.
 
 Anywhere you need to, you can specify a unicode character with "\u{code}".
 This example should do it all:
-[sc]
+!sc!
     scala> val B\u0041\u0044 = 1
     BAD: Int = 1
-[/sc]
+!/sc!
 
 16.2 Working with Collections                    *scala-collection-tips* {{{2
 ------------------------------------------------------------------------------
@@ -3898,7 +3898,7 @@ This example should do it all:
 Constructing a {List} may be expensive depending on how you can do it and if
 it's getting expensive because you're having to do it all piecemeal and such,
 it may be necessary to use a {ListBuffer}.
-[sc]
+!sc!
     scala> import scala.collection.mutable.ListBuffer
     import scala.collection.mutable.ListBuffer
 
@@ -3919,7 +3919,7 @@ it may be necessary to use a {ListBuffer}.
 
     scala> buf.toList
     res5: List[Int] = List(3, 1, 2)
-[/sc]
+!/sc!
 You may also want to use it to avoid a stack overflow.  If you could build the
 {List} using standard means, by prepending everything but there are a ton of
 elements and you can't do it in a tail recursive manner, it may be better to
@@ -3946,19 +3946,19 @@ source object occur in a number of situations:
 - When the return value from a function is not the right type
 
 It's pretty simple:
-[sc]
+!sc!
     val d: Double = 5
     val d: Double = thisReturnsADouble(5)
     val x = thisRequiresADouble(5)
-[/sc]
+!/sc!
 In Java and C++ the upcast from {Int} to {Double} is part of the language, but
 in Scala it's not - it's just another library specification.  The definition
 exists in {Predef}:
-[sc]
+!sc!
     object Predef {
         implicit int2double(x: Int) : Double = x.toDouble
     }
-[/sc]
+!/sc!
 ... or something like that :)
 
 
@@ -3971,7 +3971,7 @@ on {Y}, and {Y} has the method we're looking for.  The {->} operator for map
 association is a good example of this.  Defined in |scala-preamble| it
 converts the left-hand side object to type {ArrowAssoc} in order to take
 advantage of the {->} operator within it.
-[sc]
+!sc!
     package scala
 
     object Predef {
@@ -3982,7 +3982,7 @@ advantage of the {->} operator within it.
         implicit def any2ArrowAssoc[A](x: A): ArrowAssoc[A] =
             new ArrowAssoc(x)
     }
-[/sc]
+!/sc!
 When the compiler sees something like ("One" -> 1) it scans the object of type
 {java.lang.String} to see if it has a method called {->} and it finds that it
 doesn't.  It doesn't give up yet, though... it looks through the list of
@@ -3994,14 +3994,14 @@ does it.  So it then converts from the {java.lang.String} to {ArrowAssoc} to
 do the conversion.
 
 The compiler generates the following code:
-[sc]
+!sc!
     // This is what the coder wrote in
     val map = Map("One" -> 1, "Two" -> 2)
 
     // And the Scala compiler converted to this
     val map = Map(any2ArrowAssoc("One").->(1),
                   any2ArrowAssoc("Two").->(2))
-[/sc]
+!/sc!
 
 16.3.3 Implicit Parameters                   *scala-implicit-parameters* {{{2
 ------------------------------------------------------------------------------
@@ -4013,7 +4013,7 @@ supplied from implicit objects defined using the same scoping rules as for
 other implicits.
 
 The simple example is the following:
-[sc]
+!sc!
     class PreferredPrompt(val preference: String)
 
     object DereksPrefs {
@@ -4030,10 +4030,10 @@ The simple example is the following:
     scala> Greeter.greet("Derek")
     Welcome, Derek. The system is ready.
     make it happen> 
-[/sc]
+!/sc!
 However, there's a more interesting example that brings out a language
 construct.
-[sc]
+!sc!
     def maxListUpBound[T <: Ordered[T]](elements: List[T]): T =
         elements match {
             case List() =>
@@ -4044,13 +4044,13 @@ construct.
                 if (x > maxRest) x
                 else maxRest
         }
-[/sc]
+!/sc!
 The problem with the above is that it doesn't work with a ton of stuff, only
 those things that inherit from, or mix in {Ordered[T]} and not everything does
 that; specifically {Int} doesn't work with {Ordered[T]} in that way.
 
 What would be better is to pass in a function that orders the elements:
-[sc]
+!sc!
     def maxListUpBound(elements: List[T])(implicit orderer: T => Ordered[T]): T =
         elements match {
             case List() =>
@@ -4061,21 +4061,21 @@ What would be better is to pass in a function that orders the elements:
                 if (orderer(x) > maxRest) x
                 else maxRest
         }
-[/sc]
+!/sc!
 Note that the {orderer} function is used to create a type that will allow for
 comparisons against the elements of the {List}.  And the {orderer} function is
 implicit so one doesn't necessarily need to supply it.  Scala defines a number
 of implicits that will convert various types to something compatible with
 {Ordered[T]}.  For things that already support {Ordered[T]}, Scala will use
 the identity function:
-[sc]
+!sc!
     implicit def identity[A](x: A): A = x
-[/sc]
+!/sc!
                                                            *scala-view-bound*
 However, this isn't as sexy as one might like.  The original example that
 included the upper bound is preferable.  This opens the door for a new
 language construct called the "view bound".
-[sc]
+!sc!
     def maxListUpBound[T <% Ordered[T]](elements: List[T]): T =
         elements match {
             case List() =>
@@ -4088,7 +4088,7 @@ language construct called the "view bound".
                 if (x > maxRest) x
                 else maxRest
         }
-[/sc]
+!/sc!
 The interesting bit here is that we have replaced the {<:} with a {<%},
 signifying that we have moved from the upper bound to a view bound.  The view
 bound will attempt to find an implicit conversion that makes {T} operable in
@@ -4098,7 +4098,7 @@ The other interesting point is that (obviously) we don't need {orderer}
 anymore, but we really never did.  Because the implicit parameter was
 implicit, the compiler would always substitute it where it needs to be so it
 actually was never needed in the first place, so we could have written this:
-[sc]
+!sc!
     def maxListUpBound(elements: List[T])(implicit orderer: T => Ordered[T]): T =
         elements match {
             case List() =>
@@ -4111,7 +4111,7 @@ actually was never needed in the first place, so we could have written this:
                 if (x > maxRest) x
                 else maxRest
         }
-[/sc]
+!/sc!
 Now, we don't have to worry about anything else since we have specified the
 {<%}.
 
@@ -4152,7 +4152,7 @@ Ambiguity resolution
 - If multiple matches for an implicit are possible then the same rules apply
   as for function overloads.  The compiler will choose the more specific
   version.  An example is mose illustrative here:
-[sc]
+!sc!
 
     class Base
     class Derived extends Base
@@ -4165,14 +4165,14 @@ Ambiguity resolution
 
     scala> var i2: Int = new Derived
     i1: Int = 10
-[/sc]
+!/sc!
 The compiler /could/ have chosen the {base2int} implicit definition above for
 {i2} but there was a more specific version available so it chose {derived2int}
 instead.
 
 - There's another specialization that also removes ambiguity.  An implicit
   defined lower down in a hierarchy takes precedence over one higher up.
-[sc]
+!sc!
     class Base
     class Higher {
         implicit def base2int(x: Base) : Int = 5
@@ -4184,7 +4184,7 @@ instead.
     scala> import Lower._
     scala> var i: Int = new Base
     i: Int = 10
-[/sc]
+!/sc!
 There are two independent functions that convert instances of {Base} to {Int}
 but the compiler prefers the definition specific to {object} {Lower} because
 it's further down in the hierarchy.
@@ -4198,28 +4198,28 @@ There are few ways to debug these issues:
 
 - If an implicit conversion you think should be happening isn't actually
   happening, try do it explicitly and see what happens.
-[sc]
+!sc!
     scala> val chars: List[Char] = "xyz"
     {console}:5: error: type mismatch;
      found   : java.lang.String("xyz")
      required: List[Char]
            val chars: List[Char] = "xyz"
                                    ^
-[/sc]
+!/sc!
   This says that there's something more wrong than you might think... either
   - the function hasn't been written
   - hasn't been written properly (e.g. has the wrong type)
   - isn't imported into the right scope
 
 - Try calling the implicit conversion function explicitly.
-[sc]
+!sc!
     scala> val chars: List[Char] = wrapString("xyz")
     {console}:5: error: type mismatch;
      found   : scala.collection.immutable.WrappedString
      required: List[Char]
            val chars: List[Char] = wrapString("xyz")
                                              ^
-[/sc]
+!/sc!
   {wrapString} converts to {WrappedString} and not {List[Char]} so the
   explicitly called conversion doesn't work.
 
@@ -4227,7 +4227,7 @@ There are few ways to debug these issues:
   what the code looks like after the compiler has shoved in the implicits that
   it has decided to shove in there.  This is probably most appropriate when a
   conversion happens that you weren't expecting.
-[sc]
+!sc!
     object Mocha extends Application {
         class PreferredDrink(val preference: String)
         implicit val pref = new PreferredDrink("mocha")
@@ -4239,13 +4239,13 @@ There are few ways to debug these issues:
         }
         enjoy("reader")
     }
-[/sc]
+!/sc!
 $ scalac -Xprint:typer mocha.scala
 
  (FYI: I put the <...> guys in double quotes to
   fix the syntax highlighting problem.  The
   syntax highlighter things these are XML tags)
-[sc]
+!sc!
     [[syntax trees at end of typer]]// Scala source: mocha.scala
     package "<empty>" {
         final object Mocha extends java.lang.Object with Application
@@ -4265,7 +4265,7 @@ $ scalac -Xprint:typer mocha.scala
             Mocha.this.enjoy("reader")(Mocha.this.pref)
         }
     }
-[/sc]
+!/sc!
 
 ==============================================================================
 Modelines: {{{1
