@@ -1,0 +1,44 @@
+Scala Indent file for Vim
+=========================
+
+Ugh... Scala's tough to indent; it's just too damn flexible.
+
+This latest update appears to help things a little bit, but there's at least
+one thing that it doesn't handle, so far:
+
+  def removeDuplicates[a](xs: List[a]): List[a] =
+    if (xs.isEmpty)
+      xs
+    else
+      xs.head :: removeDuplicates(for (x <- xs.tail if x != xs.head) yield x)
+
+    // This indents to the 'else', not to the previous 'def'
+    def main(args: Array[String]) {
+
+The above was pulled from the 'fors.scala' example file in the scala 2.8.1
+distribution.  The problem with the above is that the 'if' statement is actually
+the end of the entire function definition, but we don't know that.  If it were a
+'brace' then we'd know how to find it due to the new 'LineCompletesBrackets' but
+it's not.  The 'LineCompletesBrackets' function is able to use Vim's
+searchpairpos() function but it's more difficult to make that work with
+'if/else' given above.
+
+The good news is that it's pretty easy to fix the above in your own code by
+sacrificing that syntax.  Do this instead:
+
+  def removeDuplicates[a](xs: List[a]): List[a] = {
+    if (xs.isEmpty)
+      xs
+    else
+      xs.head :: removeDuplicates(for (x <- xs.tail if x != xs.head) yield x)
+  }
+
+  // Now it indents properly
+  def main(args: Array[String]) {
+
+If anyone's got any bright ideas on how to fix that up cleanly, please take some
+time to hack away at the indent file.
+
+If you've got any questions about what's defined now, you can reach me at
+http://derekwyatt.org.
+
