@@ -4,7 +4,19 @@ Author:    Derek Wyatt <derek@{my first name}{my last name}.org>
 
 Copyright: (c) 2011 by Derek Wyatt
            No license implied... use it for whatever tickles your particular
-           fancy
+           fancy.  A lot of these examples have come from the book,
+
+               "Programming in Scala 2nd Edition" by
+                    Martin Odersky
+                    Lex Spoon
+                    Bill Venners
+
+            You can purchase the book from Artima at:
+
+                http://www.artima.com/shop/programming_in_scala_2ed
+
+            I highly recommend it - you'll get a lot more out of reading that
+            than reading this.
 
 ==============================================================================
 0. Contents                                     *scala* *scala-contents*
