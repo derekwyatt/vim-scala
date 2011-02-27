@@ -5,3 +5,8 @@ all of my notes and customizations.
 It's free for anyone to fork, clone, etc... no licensing or whatever... just do
 whatever you want with it, but you can't take credit for my stuff :)
 
+You really should be using Tim Pope's Pathogen module for Vim
+(https://github.com/tpope/vim-pathogen and
+http://tammersaleh.com/posts/the-modern-vim-config-with-pathogen) if you're
+going to clone this repository because, well... you should.
+
