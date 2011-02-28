@@ -1,0 +1,14 @@
+*akkainfo.txt*	       Akka Reference and Information	        Feb 21, 2011
+
+Author:    Derek Wyatt <derek@{my first name}{my last name}.org>
+
+Copyright: (c) 2011 by Derek Wyatt
+           No license implied... use it for whatever tickles your particular
+           fancy.
+
+==============================================================================
+0. Contents                                              *akka* *akka-contents*
+------------------------------------------------------------------------------
+
+Modelines: {{{1
+vim:tw=78:ts=4:ft=help:fdm=marker:fdl=0
