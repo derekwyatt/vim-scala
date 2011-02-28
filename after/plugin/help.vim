@@ -23,6 +23,7 @@ function! BuildTOC()
     :g/^<<</,/^>>>/s/^\ze\d\d\.\d\+/   /
     :g/^<<</,/^>>>/s/^\ze\d\./  /
     :g/^<<</,/^>>>/s/^\ze\d\d\./ /
+    :g/^\s\+0\. Content/d
     :g/<<</+,/>>>/-s/^\(.\{-}\)\(\s\+\)\ze |/\=FixTOCLine(submatch(1), 45)/
     :g/<<</d
     :g/>>>/d
