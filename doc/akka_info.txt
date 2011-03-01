@@ -280,11 +280,13 @@ There is a plus side here, though... the caller that receives the {Future}
 need not be an {Actor}, as is the case in the !! call.  Using the exact same
 {SyncServerActor} defined above, we have:
 !sc!
-scala> val future = server !!! SyncGreetRequest("Hithere, SyncServerActor")
-future: akka.dispatch.Future[Nothing] = akka.dispatch.DefaultCompletableFuture@bf3fd22
-
-scala> future.result
-res16: Option[Nothing] = Some(You said, 'Hithere, SyncServerActor', and I say 'Thanks')
+    scala> val future = server !!! SyncGreetRequest("Hithere, SyncServerActor")
+    future: akka.dispatch.Future[Nothing] =
+      akka.dispatch.DefaultCompletableFuture@bf3fd22
+    
+    scala> future.result
+    res16: Option[Nothing] =
+      Some(You said, 'Hithere, SyncServerActor', and I say 'Thanks')
 !/sc!
 
 Modelines: {{{1

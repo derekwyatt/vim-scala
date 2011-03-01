@@ -4,11 +4,3 @@ tags
 # Ignore Vim swap files
 .*.swp
 .*.swo
-
-# The following are projects I have out on github
-vimruntime/vimfiles/bundle/vim-scala/*
-vimruntime/vimfiles/bundle/vim-fswitch/*
-vimruntime/vimfiles/bundle/vim-protodef/*
-
-# Ignore Tim Pope's Git integration bundle
-vimruntime/vimfiles/bundle/vim-fugitive/*
