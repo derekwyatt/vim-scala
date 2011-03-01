@@ -1069,5 +1069,184 @@ And the same types of events are availble for server-related objects:
 	*Todo	needs to be investigated
 
 
+==============================================================================
+2. Actor Routing                                           *akka-routing* {{{1
+------------------------------------------------------------------------------
+
+Routing is tightly coupled with |akka-actors| but are technically in their own
+distinct realm so they can be studied separately.
+
+The Routing framework gives us a mechanism by which we can route work to
+{Actor}s in different ways in order to help us load balance them and/or
+provide another level of fault tolerance by sending the same message to
+multiple {Actor}s in order to increase the liklihood of a response message in
+the face of "interesting" failures.
+
+
+2.1 Simple Dispatching                         *akka-routing-dispatching* {{{2
+------------------------------------------------------------------------------
+
+There are a couple of ways to get a dispatcher up and running.  The first way
+is to use the factory method located in the {akka.routing.Routing} companion
+object:
+!sc!
+    import akka.actor.Actor._
+    import akka.actor.Actor
+    import akka.routing.Routing._
+     
+    case object Ping
+    case object Pong
+     
+    val pinger = actorOf(new Actor {
+        def receive = { case msg => println("Pinger: " + msg) }
+      }).start
+    
+    val ponger = actorOf(new Actor {
+        def receive = { case msg => println("Ponger: " + msg) }
+      }).start
+     
+    val d = dispatcherActor {
+      case Ping => pinger
+      case Pong => ponger
+    }
+ 
+  scala> d ! Ping
+  Pinger: Ping
+
+  scala> d ! Pong
+  Ponger: Pong
+!/sc!
+As can be seen, the messages only get routed if they go through the
+{dispatcher}, obviously.  I suppose if we wanted, we could send to the
+{dispatcher} and also send to the {Actor}s directly however we saw fit.
+
+Another way to do the same thing, but provides more programmatic flexibility
+is to mix in the {Dispatcher} trait and define the {routes} method:
+!sc!
+    import akka.actor.Actor
+    import akka.actor.Actor._
+    import akka.routing.Dispatcher
+     
+    case object Ping
+    case object Pong
+     
+    class MyDispatcher extends Actor with Dispatcher {
+      val pinger = actorOf(new Actor {
+          def receive = { case msg => println("Pinger: " + msg) }
+        }).start
+      val ponger = actorOf(new Actor {
+          def receive = { case msg => println("Ponger: " + msg) }
+        }).start
+      def routes = {
+        case Ping => pinger
+        case Pong => ponger
+      }
+    }
+     
+    val d = actorOf[MyDispatcher].start
+ 
+  scala> d ! Ping
+  Pinger: Ping
+
+  scala> d ! Pong
+  Ponger: Pong
+!/sc!
+
+2.2 Simple Load Balancing                      *akka-routing-loadbalance* {{{2
+------------------------------------------------------------------------------
+
+Another way to route information is using a {LoadBalancer}.  Again, there are
+a couple of ways to do this, with the first being more ad-hoc than the second:
+!sc!
+    import akka.actor.Actor._
+    import akka.actor.Actor
+    import akka.routing.Routing._
+    import akka.routing.CyclicIterator
+     
+    case object Ping
+    case object Pong
+     
+    val pinger = actorOf(new Actor {
+        def receive = { case msg => println("Pinger: " + msg) }
+      }).start
+    val ponger = actorOf(new Actor {
+        def receive = { case msg => println("Ponger: " + msg) }
+      }).start
+     
+    val d = loadBalancerActor(new CyclicIterator(List(pinger, ponger)))
+
+  scala> d ! Ping
+  Pinger: Ping
+
+  scala> d ! Ping
+  Ponger: Ping
+
+  scala> d ! Pong
+  Pinger: Pong
+
+  scala> d ! Pong
+  Ponger: Pong
+!/sc!
+Above we can see a simple "round robin" load balancer such that we keep moving
+around the {List} routing to the next candidate regardless of what's happening
+in the system.
+!sc!
+    import akka.actor._
+    import akka.actor.Actor._
+    import akka.routing.{LoadBalancer, CyclicIterator}
+     
+    case object Ping
+    case object Pong
+     
+    class MyLoadBalancer extends Actor with LoadBalancer {
+      val pinger = actorOf(new Actor {
+        def receive = { case msg => println("Pinger: " + msg) }
+      }).start
+      val ponger = actorOf(new Actor {
+        def receive = { case msg => println("Ponger: " + msg) }
+      }).start
+     
+      val seq = new CyclicIterator[ActorRef](List(pinger, ponger))
+    }
+ 
+    val d = actorOf[MyLoadBalancer].start
+
+  scala> d ! Ping
+  Pinger: Ping
+
+  scala> d ! Ping
+  Ponger: Ping
+
+  scala> d ! Pong
+  Pinger: Pong
+
+  scala> d ! Pong
+  Ponger: Pong
+!/sc!
+Beyond the {CyclicIterator}, we can use a more intelligent iterator that
+routes based on the size of the {Mailbox} in the {ActorRef}.  Creating one of
+these is as simple as the above:
+!sc!
+    import akka.routing.SmallestMailboxFirstIterator
+
+    val d = loadBalancerActor(new SmallestMailboxFirstIterator(
+        List(pinger, ponger)))
+!/sc!
+
+2.3 Actor Pools                                      *akka-routing-pools* {{{2
+------------------------------------------------------------------------------
+
+{Actor} Pools are more complex than the simple mechanisms described above, but
+in truth, they're probably the only serious method you'd ever use in a real
+application.
+
+A Pool provides the ability to dynamically shrink and grow the number of
+available {Actor}s based on {capacity} and {pressure}, as well as providing a
+number of different parameters to enhance the routing strategy.
+
+	*Error	it turns out these aren't in 1.0 yet.  I can see them in the git
+	*Error	repository but they're not in the distribution yet. I'm going to
+	*Error	hold off on these for the moment.
+
 Modelines: {{{1
 vim:tw=78:ts=4:ft=help:fdm=marker:fdl=0
