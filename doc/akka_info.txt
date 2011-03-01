@@ -559,5 +559,58 @@ together and allow for some extensibility:
     }
 !/sc!
 
+1.10 Actor Registry                                 *akka-actor-registry* {{{2
+------------------------------------------------------------------------------
+
+Every time an {Actor} is started it is added to the {ActorRegistry} and every
+time it's stopped, it gets removed.  The registered {Actor}s (by {ActorRef})
+are indexed by two identifiers: the {ActorRef}s {UUID} and the {ActorRef}s
+specific {Id}.
+
+An {ActorRef}'s {UUID} never changes, but its {Id} is can be modified by
+anyone at any time.  The problem with that is that the mapping in the
+{ActorRegistry} has a copy of the {Id} in a key field so if it changes, you're
+going to be screwed.
+
+If you want to change the {Id}, you're going to have to {unregister} the
+{ActorRef} and then {register} it again.
+!sc!
+    scala> blueActors = actorOf(new MyActor { self.id = "blueActor1" }) ::
+                        actorOf(new MyActor { self.id = "blueActor2" }) ::
+                        actorOf(new MyActor { self.id = "blueActor3" }) ::
+                        actorOf(new MyActor { self.id = "blueActor4" }) ::
+                        Nil
+    blueActors: List[akka.actor.ActorRef] = List(
+        Actor[blueActor1:1128df00-43f3-11e0-8bc5-005056c00008],
+        Actor[blueActor2:11290610-43f3-11e0-8bc5-005056c00008],
+        Actor[blueActor3:37fbfd10-43f3-11e0-8bc5-005056c00008],
+        Actor[blueActor4:37fbfd11-43f3-11e0-8bc5-005056c00008])
+
+    scala> redActors = actorOf(new MyActor { self.id = "redActor1" }) ::
+                       actorOf(new MyActor { self.id = "redActor2" }) ::
+                       actorOf(new MyActor { self.id = "redActor3" }) ::
+                       actorOf(new MyActor { self.id = "redActor4" }) ::
+                       Nil
+    redActors: List[akka.actor.ActorRef] = List(
+        Actor[redActor1:587a5140-43f3-11e0-8bc5-005056c00008],
+        Actor[redActor2:587a5141-43f3-11e0-8bc5-005056c00008],
+        Actor[redActor3:631e02e0-43f3-11e0-8bc5-005056c00008],
+        Actor[redActor4:631e29f0-43f3-11e0-8bc5-005056c00008])
+
+    scala> blueActors.foreach(_.start)
+
+    scala> redActors.foreach(_.start)
+
+    scala> Actor.registry.actors.foreach((x) => println(x.uuid + ": " + x.id))
+    587a5141-43f3-11e0-8bc5-005056c00008: redActor2
+    587a5140-43f3-11e0-8bc5-005056c00008: redActor1
+    37fbfd10-43f3-11e0-8bc5-005056c00008: blueActor3
+    631e29f0-43f3-11e0-8bc5-005056c00008: redActor4
+    631e02e0-43f3-11e0-8bc5-005056c00008: redActor3
+    1128df00-43f3-11e0-8bc5-005056c00008: blueActor1
+    11290610-43f3-11e0-8bc5-005056c00008: blueActor2
+    37fbfd11-43f3-11e0-8bc5-005056c00008: blueActor4
+!/sc!
+
 Modelines: {{{1
 vim:tw=78:ts=4:ft=help:fdm=marker:fdl=0
