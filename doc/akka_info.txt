@@ -39,6 +39,12 @@ Copyright: (c) 2011 by Derek Wyatt
       1.11.6 Session Based Servers...........: |akka-actor-remote-sessions|
       1.11.7 Event Listening.................: |akka-actor-remote-events|
       1.11.8 Messge Serialization............: |akka-actor-remote-serialization|
+  2. Actor Supervision.......................: |akka-supervision|
+  3. Actor Routing...........................: |akka-routing|
+    3.1 Simple Dispatching...................: |akka-routing-dispatching|
+    3.2 Simple Load Balancing................: |akka-routing-loadbalance|
+    3.3 Actor Pools..........................: |akka-routing-pools|
+
 
 ==============================================================================
 1. Actors                                                   *akka-actors* {{{1
@@ -414,6 +420,68 @@ pattern that can use some work to generalize a bit more with some generics:
  
   scala> client ! SendRequestTo("Hithere", server)
   Client got -> Hithere : dood
+!/sc!
+
+1.6.5 Forwarding a Future                         *akka-actor-future-fwd* {{{3
+------------------------------------------------------------------------------
+
+There are times when we may want to synchronize an asynchronous call.
+i.e. something like this:
+                                              +---> SomeOtherActor ! AsyncReq
+                                              |
+ [Client] SomeActor !!! Msg -> [SomeActor] <-->
+                                              |
+                                              +<--- AsyncRsp ! SomeActor
+
+Or, in words...
+
+  - [Client] wants to send !! or !!! to [SomeActor] for {Msg}
+
+  - [SomeActor] could furnish that request, but unfortunately it's using
+    [SomeOtherActor] and the only mechanism it has with [SomeOtherActor] is an
+    asynchronous one.
+
+  - We need some way to give results to the {Future} object held by [Client]
+    over an asynchronous bridge.
+
+We can do that with the following:
+!sc!
+    class SomeOtherActor extends Actor {
+      def receive = {
+        // Inherently asynchronous
+        case AsyncReq =>
+          self.sender.get ! AsyncRsp("Here's some results")
+      }
+    }
+
+    class SomeActor extends Actor {
+      val server = actorOf[SomeOtherActor].start
+      def receive = {
+        // The Client wants this to be Future-based
+        case GetSomethingForMe =>
+          // - Delegate the "senderFuture" to this temporary Actor.
+          // - Create a closure, holding the future object for later use.
+          // - Call the "server" and send the intended request and receive that
+          //   one message.
+          // - Once it's received, complete the future with the results and
+          //   terminate yourself
+          actorOf(new { val future = self.senderFuture.get } with Actor {
+              server ! AsyncReq
+              def receive = {
+                case AsyncRsp(results) =>
+                  future.completeWithResult(results)
+                  self.stop
+              }
+            }).start
+      }
+      override def postStop = { server.stop }
+    }
+
+    scala> val future = SomeActor !!! GetSomethingForMe
+    scala> future.await
+    scala> future.result.get
+    res1: String = Here's some results
+!/sc!
 
 1.7 Actor Control                                    *akka-actor-control* {{{2
 ------------------------------------------------------------------------------
@@ -1070,7 +1138,11 @@ And the same types of events are availble for server-related objects:
 
 
 ==============================================================================
-2. Actor Routing                                           *akka-routing* {{{1
+2. Actor Supervision                                   *akka-supervision* {{{1
+------------------------------------------------------------------------------
+
+==============================================================================
+3. Actor Routing                                           *akka-routing* {{{1
 ------------------------------------------------------------------------------
 
 Routing is tightly coupled with |akka-actors| but are technically in their own
@@ -1083,7 +1155,7 @@ multiple {Actor}s in order to increase the liklihood of a response message in
 the face of "interesting" failures.
 
 
-2.1 Simple Dispatching                         *akka-routing-dispatching* {{{2
+3.1 Simple Dispatching                         *akka-routing-dispatching* {{{2
 ------------------------------------------------------------------------------
 
 There are a couple of ways to get a dispatcher up and running.  The first way
@@ -1152,7 +1224,7 @@ is to mix in the {Dispatcher} trait and define the {routes} method:
   Ponger: Pong
 !/sc!
 
-2.2 Simple Load Balancing                      *akka-routing-loadbalance* {{{2
+3.2 Simple Load Balancing                      *akka-routing-loadbalance* {{{2
 ------------------------------------------------------------------------------
 
 Another way to route information is using a {LoadBalancer}.  Again, there are
@@ -1233,7 +1305,7 @@ these is as simple as the above:
         List(pinger, ponger)))
 !/sc!
 
-2.3 Actor Pools                                      *akka-routing-pools* {{{2
+3.3 Actor Pools                                      *akka-routing-pools* {{{2
 ------------------------------------------------------------------------------
 
 {Actor} Pools are more complex than the simple mechanisms described above, but
