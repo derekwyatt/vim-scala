@@ -20,6 +20,7 @@ Copyright: (c) 2011 by Derek Wyatt
       1.6.1 !................................: |akka-actor-!|
       1.6.2 !!...............................: |akka-actor-!!|
       1.6.3 !!!..............................: |akka-actor-!!!|
+      1.6.4 Unifying Pattern.................: |akka-actor-unifying-msg|
     1.7 Actor Control........................: |akka-actor-control|
       1.7.1 Starting and Stopping............: |akka-actor-start-stop|
       1.7.2 Poison Pill......................: |akka-actor-poisonpill|
@@ -27,7 +28,17 @@ Copyright: (c) 2011 by Derek Wyatt
     1.8 Hot-Swapping.........................: |akka-actor-hotswap|
       1.8.1 Invoking the Hot-Swap............: |akka-actor-invoke-hotswap|
       1.8.2 Reverting the Hot-Swap...........: |akka-actor-revert-hotswap|
-
+    1.9 PartialFunction Chaining.............: |akka-actor-partialfunc-chaining|
+    1.10 Actor Registry......................: |akka-actor-registry|
+    1.11 Remote Actors.......................: |akka-actor-remote|
+      1.11.1 Starting Up Remote..............: |akka-actor-remote-startup|
+      1.11.2 Registering Actors..............: |akka-actor-remote-register|
+      1.11.3 Invoking Actors Remotely........: |akka-actor-remote-invoke|
+      1.11.4 Connection Fault Tolerance......: |akka-actor-remote-resilience|
+      1.11.5 Remote Security.................: |akka-actor-remote-security|
+      1.11.6 Session Based Servers...........: |akka-actor-remote-sessions|
+      1.11.7 Event Listening.................: |akka-actor-remote-events|
+      1.11.8 Messge Serialization............: |akka-actor-remote-serialization|
 
 ==============================================================================
 1. Actors                                                   *akka-actors* {{{1
@@ -95,13 +106,13 @@ actorOf[T <: Actor](implicit arg0: Manifest[T]): ActorRef
 {val} log : Logger                                          *akka-actor-log*
     This is merely a {val} which will will return the contextual SLF4J logger.
 
-{val} registry : ActorRegistry                         *akka-actor-registry*
+{val} registry : ActorRegistry                   *akka-actor-registry-short*
     This value contains the current {ActorRegistry} against which we can
     register and lookup different {Actor}s.  I can't find the code for this at
     the moment, so I'm not sure if it's actually {Actor}s or {ActorRef}s -
     probably the latter.
 
-{lazy} {val} remote : RemoteSupport                      *akka-actor-remote*
+{lazy} {val} remote : RemoteSupport                *akka-actor-remote-short*
     Provides access to the remoting system support for launching and accessing
     remote {Actor}s
 
@@ -357,6 +368,53 @@ need not be an {Actor}, as is the case in the !! call.  Using the exact same
       Some(You said, 'Hithere, SyncServerActor', and I say 'Thanks')
 !/sc!
 
+1.6.4 Unifying Pattern                          *akka-actor-unifying-msg* {{{3
+------------------------------------------------------------------------------
+
+Ideally we should be able to unify the !, !!, !!! usage into a single pattern,
+where the client can choose to do a request / response interaction via the
+"scalable" ! or by the "deterministic" !!, or !!!.  This is a non-general
+pattern that can use some work to generalize a bit more with some generics:
+!sc!
+  import akka.actor._
+  import akka.actor.Actor._
+  
+  case class Request(msg: String, replyTo: ActorRef = null)
+  case class Response(msg: String)
+  case class SendRequestTo(msg: String, actor: ActorRef)
+  
+  class Server extends Actor {
+    def receive = {
+      case Request(msg, replyTo) =>
+        if (replyTo == null)
+          self.reply(msg + " : dood")
+        else
+          replyTo ! Response(msg + " : dood")
+    }
+  }
+  
+  class Client extends Actor {
+    def receive = {
+      case Response(msg) =>
+        println("Client got -> " + msg)
+      case SendRequestTo(msg, actor) =>
+        actor ! Request(msg, self)
+    }
+  }
+  
+  scala> val server = actorOf[Server].start
+  scala> val client = actorOf[Client].start
+
+  scala> server !! Request("Waiting on Future")
+  res0: Option[Nothing] = Some(Waiting on a future : dood)
+ 
+  scala> val future = server !!! Request("Getting back a Future")
+  scala> future.result
+  res1: Option[Nothing] = Some(Getting back a Future : dood)
+ 
+  scala> client ! SendRequestTo("Hithere", server)
+  Client got -> Hithere : dood
+
 1.7 Actor Control                                    *akka-actor-control* {{{2
 ------------------------------------------------------------------------------
 
@@ -575,42 +633,441 @@ going to be screwed.
 If you want to change the {Id}, you're going to have to {unregister} the
 {ActorRef} and then {register} it again.
 !sc!
-    scala> blueActors = actorOf(new MyActor { self.id = "blueActor1" }) ::
-                        actorOf(new MyActor { self.id = "blueActor2" }) ::
-                        actorOf(new MyActor { self.id = "blueActor3" }) ::
-                        actorOf(new MyActor { self.id = "blueActor4" }) ::
-                        Nil
-    blueActors: List[akka.actor.ActorRef] = List(
-        Actor[blueActor1:1128df00-43f3-11e0-8bc5-005056c00008],
-        Actor[blueActor2:11290610-43f3-11e0-8bc5-005056c00008],
-        Actor[blueActor3:37fbfd10-43f3-11e0-8bc5-005056c00008],
-        Actor[blueActor4:37fbfd11-43f3-11e0-8bc5-005056c00008])
+  scala> class MyActor extends Actor {
+       |   def receive = {
+       |     case "hi" =>
+       |   }
+       | } 
+  defined class MyActor
+  
+  scala> def mkActor(id: String) = actorOf(new MyActor { self.id = id })
+  mkActor: (id: String)akka.actor.ActorRef
+  
+  scala> var blues = mkActor("blue1") :: mkActor("blue2") ::
+       |             mkActor("blue3") :: mkActor("blue4") :: Nil
+  blues: List[akka.actor.ActorRef] = List(
+    Actor[blue1:074eda70-43fd-11e0-a132-005056c00008],
+    Actor[blue2:07520ec0-43fd-11e0-a132-005056c00008],
+    Actor[blue3:07520ec1-43fd-11e0-a132-005056c00008],
+    Actor[blue4:07520ec2-43fd-11e0-a132-005056c00008])
+  
+  scala> var reds = mkActor("red1") :: mkActor("red2") ::
+                    mkActor("red3") :: mkActor("red4") :: Nil     
+  reds: List[akka.actor.ActorRef] = List(
+    Actor[red1:15eb1670-43fd-11e0-a132-005056c00008],
+    Actor[red2:15eb1671-43fd-11e0-a132-005056c00008],
+    Actor[red3:15eb1672-43fd-11e0-a132-005056c00008],
+    Actor[red4:15eb1673-43fd-11e0-a132-005056c00008])
+  
+  scala> blues.foreach(_.start)
+  
+  scala> reds.foreach(_.start) 
+  
+  scala> Actor.registry.actors.foreach((x) => println(x.uuid + ": " + x.id))
+  15eb1670-43fd-11e0-a132-005056c00008: red1
+  07520ec2-43fd-11e0-a132-005056c00008: blue4
+  15eb1673-43fd-11e0-a132-005056c00008: red4
+  074eda70-43fd-11e0-a132-005056c00008: blue1
+  15eb1671-43fd-11e0-a132-005056c00008: red2
+  15eb1672-43fd-11e0-a132-005056c00008: red3
+  07520ec0-43fd-11e0-a132-005056c00008: blue2
+  07520ec1-43fd-11e0-a132-005056c00008: blue3
 
-    scala> redActors = actorOf(new MyActor { self.id = "redActor1" }) ::
-                       actorOf(new MyActor { self.id = "redActor2" }) ::
-                       actorOf(new MyActor { self.id = "redActor3" }) ::
-                       actorOf(new MyActor { self.id = "redActor4" }) ::
-                       Nil
-    redActors: List[akka.actor.ActorRef] = List(
-        Actor[redActor1:587a5140-43f3-11e0-8bc5-005056c00008],
-        Actor[redActor2:587a5141-43f3-11e0-8bc5-005056c00008],
-        Actor[redActor3:631e02e0-43f3-11e0-8bc5-005056c00008],
-        Actor[redActor4:631e29f0-43f3-11e0-8bc5-005056c00008])
+  // I'm not really sure the 'find' function is of all that much use
+  scala> Actor.registry.find({
+       |   case a: ActorRef if a.id endsWith "1" => a
+       | })
+  res6: Option[akka.actor.ActorRef] =
+    Some(Actor[red1:15eb1670-43fd-11e0-a132-005056c00008])
 
-    scala> blueActors.foreach(_.start)
-
-    scala> redActors.foreach(_.start)
-
-    scala> Actor.registry.actors.foreach((x) => println(x.uuid + ": " + x.id))
-    587a5141-43f3-11e0-8bc5-005056c00008: redActor2
-    587a5140-43f3-11e0-8bc5-005056c00008: redActor1
-    37fbfd10-43f3-11e0-8bc5-005056c00008: blueActor3
-    631e29f0-43f3-11e0-8bc5-005056c00008: redActor4
-    631e02e0-43f3-11e0-8bc5-005056c00008: redActor3
-    1128df00-43f3-11e0-8bc5-005056c00008: blueActor1
-    11290610-43f3-11e0-8bc5-005056c00008: blueActor2
-    37fbfd11-43f3-11e0-8bc5-005056c00008: blueActor4
+  // When we can just do this instead:
+  scala> Actor.registry.actors.find((x) => x.id endsWith "1")
+  res7: Option[akka.actor.ActorRef] =
+    Some(Actor[red1:15eb1670-43fd-11e0-a132-005056c00008])
 !/sc!
+You can also register different types and pull them out based on their
+concrete type:
+!sc!
+  scala> actorOf(new NewActorType { self.id = "newType1" }).start
+  res9: akka.actor.ActorRef =
+    Actor[newType1:f6c57040-4403-11e0-a132-005056c00008]
+  
+  scala> actorOf(new NewActorType { self.id = "newType2" }).start
+  res10: akka.actor.ActorRef =
+    Actor[newType2:f94934f0-4403-11e0-a132-005056c00008]
+  
+  scala> actorOf(new NewActorType { self.id = "newType3" }).start
+  res11: akka.actor.ActorRef =
+    Actor[newType3:fb2c25c0-4403-11e0-a132-005056c00008]
+  
+  scala> actorOf(new NewActorType { self.id = "newType4" }).start
+  res12: akka.actor.ActorRef =
+    Actor[newType4:fcdbd190-4403-11e0-a132-005056c00008]
+  
+  scala> Actor.registry.actors.foreach((x) => println(x.uuid + ": " + x.id))
+  15eb1670-43fd-11e0-a132-005056c00008: red1
+  07520ec2-43fd-11e0-a132-005056c00008: blue4
+  fb2c25c0-4403-11e0-a132-005056c00008: newType3
+  15eb1673-43fd-11e0-a132-005056c00008: red4
+  074eda70-43fd-11e0-a132-005056c00008: blue1
+  15eb1671-43fd-11e0-a132-005056c00008: red2
+  fcdbd190-4403-11e0-a132-005056c00008: newType4
+  f94934f0-4403-11e0-a132-005056c00008: newType2
+  f6c57040-4403-11e0-a132-005056c00008: newType1
+  15eb1672-43fd-11e0-a132-005056c00008: red3
+  07520ec0-43fd-11e0-a132-005056c00008: blue2
+  07520ec1-43fd-11e0-a132-005056c00008: blue3
+
+  scala> Actor.registry.actorsFor[NewActorType]
+  res14: Array[akka.actor.ActorRef] = Array(
+    Actor[newType3:fb2c25c0-4403-11e0-a132-005056c00008],
+    Actor[newType4:fcdbd190-4403-11e0-a132-005056c00008],
+    Actor[newType2:f94934f0-4403-11e0-a132-005056c00008],
+    Actor[newType1:f6c57040-4403-11e0-a132-005056c00008])
+!/sc!
+And if you give a bunch of {Actor}s the same {Id} then you can pull them all
+out in a single {Array}:
+!sc!
+  scala> actorOf(new NewActorType { self.id = "sameId" }).start             
+  res15: akka.actor.ActorRef =
+    Actor[sameId:6777d760-4404-11e0-a132-005056c00008]
+  
+  scala> actorOf(new NewActorType { self.id = "sameId" }).start
+  res16: akka.actor.ActorRef =
+    Actor[sameId:67d75c80-4404-11e0-a132-005056c00008]
+  
+  scala> actorOf(new NewActorType { self.id = "sameId" }).start
+  res17: akka.actor.ActorRef =
+    Actor[sameId:680b8be0-4404-11e0-a132-005056c00008]
+  
+  scala> actorOf(new NewActorType { self.id = "sameId" }).start
+  res18: akka.actor.ActorRef =
+    Actor[sameId:6852ce10-4404-11e0-a132-005056c00008]
+  
+  scala> Actor.registry.actorsFor("sameId")
+  res19: Array[akka.actor.ActorRef] = Array(
+    Actor[sameId:6777d760-4404-11e0-a132-005056c00008],
+    Actor[sameId:67d75c80-4404-11e0-a132-005056c00008],
+    Actor[sameId:680b8be0-4404-11e0-a132-005056c00008],
+    Actor[sameId:6852ce10-4404-11e0-a132-005056c00008])
+!/sc!
+
+1.11 Remote Actors                                    *akka-actor-remote* {{{2
+------------------------------------------------------------------------------
+
+{Actor}s can be launched, connected-to, and managed remotely, and the work
+involved in doing all of this isn't much more complicated than doing the same
+locally.
+
+Remote {Actor}s are built on an efficient and scalable network I/O
+implementation based on JBoss Netty and Google Protocol Buffers.
+
+
+1.11.1 Starting Up Remote                    *akka-actor-remote-startup* {{{3
+------------------------------------------------------------------------------
+
+The {remote} subsystem is accessible via the |akka-actor-object|.  It's pretty
+simple to start it up and shut it down:
+!sc!
+  scala> Actor.remote.start("localhost", 20000)
+  08:50:30.730 [main] DEBUG akka.remote.netty.NettyRemoteSupport -
+    Starting up remote server on localhost:20000
+  res3: akka.remoteinterface.RemoteServerModule =
+    akka.remote.netty.NettyRemoteSupport@576f8789
+
+  scala> Actor.remote.shutdown                 
+  08:51:13.821 [main] DEBUG akka.remote.netty.NettyRemoteSupport -
+    Shutting down remote server on localhost:20000
+!/sc!
+That's the programatic way to do it but you can also configure it via the
+configuration file ({akka.conf}):
+>
+ akka {
+   remote {
+
+     # generate your own with '$AKKA_HOME/scripts/generate_secure_cookie.sh'
+     # or using 'Crypt.generateSecureCookie'
+     secure-cookie = "050E0A0D0D06010A00000900040D060F0C09060B"
+
+     # Options: "zlib" (lzf to come), leave out for no compression
+     compression-scheme = "zlib"
+
+     # Options: 0-9 (1 being fastest and 9 being the most compressed), default
+     # is 6
+     zlib-compression-level = 6
+
+     server {
+       # The hostname or IP that clients should connect to
+       hostname = "localhost"
+
+       # The port clients should connect to. Default is 2552 (AKKA)
+       port = 2552
+
+       # Increase this if you want to be able to send messages with large
+       # payloads
+       message-frame-size = 1048576
+       connection-timeout = 1
+
+       # Should the remote server require that it peers share the same
+       # secure-cookie (defined in the 'remote' section)?
+       require-cookie = on
+
+       # Enable untrusted mode for full security of server managed actors,
+       # allows untrusted clients to connect.
+       untrusted-mode = off
+
+       # Sets the size of the connection backlog
+       backlog = 4096
+     }
+   }
+ }
+<
+Given the above configuration, then you can forego the programatic
+configuration and just let it default construct:
+!sc!
+  scala> Actor.remote.start                    
+  08:57:02.175 [main] DEBUG akka.remote.netty.NettyRemoteSupport -
+    Starting up remote server on localhost:2552
+  res5: akka.remoteinterface.RemoteServerModule =
+    akka.remote.netty.NettyRemoteSupport@576f8789
+  
+  scala> Actor.remote.shutdown
+  08:57:07.460 [main] DEBUG akka.remote.netty.NettyRemoteSupport -
+    Shutting down remote server on localhost:2552
+!/sc!
+
+1.11.2 Registering Actors                    *akka-actor-remote-register* {{{3
+------------------------------------------------------------------------------
+
+If your code is taking the role of the "server" then it's reasonable to
+{register} your {Actor}s in the remote node directly after construction, like
+this:
+!sc!
+  scala> Actor.remote.start   
+
+  scala> class Ponger extends Actor {
+       |   def receive = { 
+       |     case "Ping" =>
+       |       println("Received a Ping")
+       |       self.reply("Pong") 
+       |   }
+       | }
+  defined class Ponger
+  
+  scala> Actor.remote.register("pong-service", actorOf[Ponger])
+  
+  scala> var ponger = Actor.remote.actorFor("pong-service", "localhost", 2552)
+  
+  scala> ponger !! "Ping"
+  Received a Ping
+  res9: Option[Any] = Some(Pong)
+  
+  scala> Actor.remote.shutdown
+!/sc!
+You can also register {Actor}s by their {UUID} instead of by their {Id} or
+{Handle} directly by prefixing the registration / deregistration with the
+{uuid} protocol:
+!sc!
+    remote.register("uuid:" + actor.uuid, actor)
+    remote.unregister("uuid:" + actor.uuid)
+!/sc!
+
+1.11.3 Invoking Actors Remotely                *akka-actor-remote-invoke* {{{3
+------------------------------------------------------------------------------
+
+If you're the "client" then it might be reasonable to request that an {Actor}
+be launched on the remote node:
+!sc!
+  scala> var ponger = remote.actorOf[Ponger]("localhost", 2552).start
+  ponger: akka.actor.ActorRef =
+    Actor[Ponger:e89d51d0-440e-11e0-9725-005056c00008]
+  
+  scala> ponger !! "Ping"
+  Received a Ping
+  res19: Option[Any] = Some(Pong)
+!/sc!
+You can also use the {spawnRemote} and {spawnLinkRemote} functions as well to
+launch {Actor}s remotely:
+!sc!
+  scala> val a = actorOf(new Actor {
+       |    // spawnLinkRemote is another option, which has the same effect
+       |    // for this particular use case, but obviously linking changes
+       |    // in the more general sense.
+       |    val ponger = self.spawnRemote[Ponger]("localhost", 2552, 600)
+       |
+       |    def receive = {
+       |      case "Ping" =>
+       |        println("Calling the remote Ponger")
+       |        self.reply(ponger !! "Ping")
+       |    }
+       |  }).start
+
+  scala> a !! "Ping"
+  Calling the remote Ponger
+  Received a Ping
+  res1: Option[Any] = Some(Some(Pong))
+!/sc!
+
+1.11.4 Connection Fault Tolerance          *akka-actor-remote-resilience* {{{3
+------------------------------------------------------------------------------
+
+Remote clients automatically perform reconnection upon failure.  You can
+configure it explicitly 
+>
+ akka {
+   remote {
+     client {
+       reconnect-delay = 5
+       read-timeout = 10
+       message-frame-size = 1048576
+
+       # Maximum time window that a client should try to reconnect for
+       reconnection-time-window = 600
+     }
+   }
+ }
+<
+Eventually the reconnect attempt may timeout, at which point the next usage
+will yield a {RemoteClientException}.  Now, I'm sure it's a pain in the ass to
+have to recognize this "at the right time", but assuming you go through that
+pain, the exception carries the reference to the {RemoteClient} so you could
+try to do an explicit connect if you want.
+
+It's probably easier to register a listener that will list for the
+{RemoteClientStopped} event instead of trying to deal with the exception
+"wherever it may occur".
+
+
+1.11.5 Remote Security                       *akka-actor-remote-security* {{{3
+------------------------------------------------------------------------------
+
+It's possible to run the server in "untrusted mode".  Essentially, this stops
+the client from doing anything related to the {LifeCycle} of the {Actor}s
+running in the remote node.  This includes:
+
+- Sending {LifeCycle} control messages
+  - HotSwap
+  - RevertHotSwap
+  - Restart
+  - Exit
+  - Link
+  - Unlink
+  - UnlinkAndStop
+  - ReceiveTimeout
+- Invoking {LifeCycle} affecting commands
+  - start
+  - stop
+  - link
+  - unlink
+  - spawnLink
+  - etc...
+
+You turn on "untrusted mode" with a configuration parameter:
+>
+ akka {
+   remote {
+     server {
+       # Enable untrusted mode for full security of server managed actors,
+       # allows untrusted clients to connect.
+       untrusted-mode = on
+     }
+   }
+ }
+<
+Akka also has a "secure cookie" mechanism similar to that used in {Erlang}.
+Assuming all your nodes are configured appropriately to use the secure cookie,
+and you have configured the node to require the cookie:
+>
+ akka {
+   remote {
+     # generate your own with '$AKKA_HOME/scripts/generate_secure_cookie.sh'
+     # or using 'Crypt.generateSecureCookie'
+     secure-cookie = "050E0A0D0D06010A00000900040D060F0C09060B"
+
+     server {
+       # Should the remote server require that it peers share the same
+       # secure-cookie (defined in the 'remote' section)?
+       require-cookie = on
+     }
+   }
+ }
+<
+When connecting, a client will send its cookie across SSL and, assuming it
+matches the server's version, the client will be granted full access and, if
+not you will get a {java.lang.SecurityException}.
+
+1.11.6 Session Based Servers                 *akka-actor-remote-sessions* {{{3
+------------------------------------------------------------------------------
+
+You can specify that Server-side {Actor}s be created on a "session" basis,
+such that every new client {Actor} that connects would get a new {Actor}
+instance for that particular registration.  The {Actor}s are stopped
+automatically when the client disconnects.
+
+A session-based {Actor} would be useful if we need to keep some per-session
+state such as a username or want to do a per-client amount of cleanup by
+overriding the {postStop} method on the server-side {Actor}.
+
+Getting a session-based {Actor} up and running is dead simple - just use
+{registerPerSession} instead of {register}:
+!sc!
+  class Ponger extends Actor {
+    def receive = {
+      case "Ping" => self.reply("Pong")
+    }
+  }
+
+  remote.start
+  remote.registerPerSession("pong-service", actorOf[Ponger])
+!/sc!
+According to the ScalaDoc for the {registerPerSession} method, we must
+{unregister} the actor by this {Id} on our own.
+
+
+1.11.7 Event Listening                         *akka-actor-remote-events* {{{3
+------------------------------------------------------------------------------
+
+The remote node will publish client-related events to registered listeners:
+!sc!
+  val listener = actorOf(new Actor {
+    def receive = {
+      case RemoteClientError(cause, client, address) => ...
+      case RemoteClientDisconnected(client, address) => ...
+      case RemoteClientConnected(client, address)    => ...
+      case RemoteClientStarted(client, address)      => ...
+      case RemoteClientShutdown(client, address)     => ...
+      case RemoteClientWriteFailed(request, cause, client, address) => ...
+      case _ => //ignore other
+    }
+  }).start
+  remote.addListener(listener)
+  ...
+  remote.removeListener(listener)
+!/sc!
+And the same types of events are availble for server-related objects:
+!sc!
+  val listener = actorOf(new Actor {
+    def receive = {
+      case RemoteServerStarted(server)                           => ...
+      case RemoteServerShutdown(server)                          => ...
+      case RemoteServerError(cause, server)                      => ...
+      case RemoteServerClientConnected(server, clientAddress)    => ...
+      case RemoteServerClientDisconnected(server, clientAddress) => ...
+      case RemoteServerClientClosed(server, clientAddress)       => ...
+      case RemoteServerWriteFailed(request, casue, server, clientAddress) => ...
+      case _ => //ignore other
+    }
+  }).start
+  remote.addListener(listener)
+  ...
+  remote.removeListener(listener)
+!/sc!
+
+1.11.8 Messge Serialization             *akka-actor-remote-serialization* {{{3
+------------------------------------------------------------------------------
+
+	*Todo	needs to be investigated
+
 
 Modelines: {{{1
 vim:tw=78:ts=4:ft=help:fdm=marker:fdl=0
