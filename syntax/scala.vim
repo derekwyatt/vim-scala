@@ -18,6 +18,9 @@ syn match scalaKeyword "=>"
 syn match scalaKeyword "<-"
 syn match scalaKeyword "\<_\>"
 
+" well known 'names'
+syn keyword scalaWellKnowns Actor ActorRef
+
 syn match scalaOperator ":\{2,\}" "this is not a type
 
 " package and import statements
@@ -139,6 +142,7 @@ hi link scalaClassName Special
 hi link scalaClassSpecializer Special
 hi link scalaConstructor Special
 hi link scalaConstructorSpecializer scalaConstructor
+hi link scalaWellKnowns Function
 
 let b:current_syntax = "scala"
 
