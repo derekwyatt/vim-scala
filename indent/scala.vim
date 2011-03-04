@@ -95,7 +95,9 @@ function! GetScalaIndent()
   " If 'if', 'for' or 'while' end with ), this is a one-line block
   " If 'val', 'var', 'def' end with =, this is a one-line block
   let inOneLineBlock = 0
-  if prevline =~ '^\s*\<\(\(else\s\+\)\?if\|for\|while\|va[lr]\|def\)\>.*[)=]\s*$'
+  if prevline =~ '^\s*\<\(\(else\s\+\)\?if\|for\|while\)\>.*[)=]\s*$'
+        \ || prevline =~ '^\s*\<def\>.*[)=]\s*$'
+        \ || prevline =~ '^\s*\<va[lr]\>.*[=]\s*$'
         \ || prevline =~ '^\s*\<else\>\s*$'
         \ || prevline =~ '=\s*$'
     call scala#ConditionalConfirm("4")
@@ -132,21 +134,6 @@ function! GetScalaIndent()
     endif
   endfor
 
-  let prevCurlyCount = scala#CountCurlies(prevline)
-  let prevParenCount = scala#CountParens(prevline)
-  " Dedent after if, for, while and val, var, def without block
-  let pprevline = getline(prevnonblank(lnum - 1))
-  if pprevline =~ '^\s*\<\(\(else\s\+\)\?if\|for\|while\|va[lr]\|def\)\>.*[)=]\s*$'
-        \ || pprevline =~ '^\s*\<else\>\s*$'
-    " Unless we are already in a one line block.  If that's the case, then
-    " we don't want to dedent since we've already got the right indent level
-    call scala#ConditionalConfirm("11")
-    if inOneLineBlock == 0
-      call scala#ConditionalConfirm("12")
-      let ind = ind - &shiftwidth
-    endif
-  endif
-
   " Subtract a 'shiftwidth' on '}' or html
   let thisline = getline(v:lnum)
   let curCurlyCount = scala#CountCurlies(thisline)
@@ -159,7 +146,8 @@ function! GetScalaIndent()
     let ind = ind - &shiftwidth
   endif
 
-  if prevline =~ '^\s*\<for\>.*$' && (prevCurlyCount > 0 || prevParenCount > 0)
+  let prevParenCount = scala#CountParens(prevline)
+  if prevline =~ '^\s*\<for\>.*$' && prevParenCount > 0
     call scala#ConditionalConfirm("15")
     let ind = indent(lnum) + 5
   endif
