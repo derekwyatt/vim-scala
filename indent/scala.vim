@@ -164,7 +164,7 @@ function! GetScalaIndent()
     let ind = indent(lnum) + 5
   endif
 
-  if prevline =~ '\<case\>'
+  if prevline =~ '^.*\<case\>.*=>\s*$'
     call scala#ConditionalConfirm("16")
     let ind = ind + &shiftwidth
   endif
