@@ -466,13 +466,21 @@ We can do that with the following:
           // - Once it's received, complete the future with the results and
           //   terminate yourself
           actorOf(new { val future = self.senderFuture.get } with Actor {
-              server ! AsyncReq
               def receive = {
                 case AsyncRsp(results) =>
                   future.completeWithResult(results)
                   self.stop
+                // It's very important to do this.  I previously had the call
+                // to "server ! AsyncReq" in the constructor of this anonymous
+                // Actor but that causes a race condition.  The call back to
+                // this Actor's AsyncRsp(results) handler is called before the
+                // 'start' call below completes.  Making the call in this
+                // handler ensures that the Actor has been successfully
+                // started
+                case "go" =>
+                  server ! AsyncReq
               }
-            }).start
+            }).start ! "go"
       }
       override def postStop = { server.stop }
     }
