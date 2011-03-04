@@ -117,7 +117,7 @@ function! GetScalaIndent()
 
   for bracketType in [ ['(', ')'], ['{', '}'] ]
     let bracketCount = scala#CountBrackets(prevline, bracketType[0], bracketType[1])
-    if bracketCount > 0
+    if bracketCount > 0 || prevline =~ '.*{\s*$' || prevline =~ '.*(\s*$'
       call scala#ConditionalConfirm("5")
       let ind = ind + &shiftwidth
       break
@@ -144,6 +144,10 @@ function! GetScalaIndent()
     endif
   endfor
 
+  if curline =~ '^\s*}\s*else\s*{\s*$'
+    let ind = ind - &shiftwidth
+  endif
+
   " Subtract a 'shiftwidth' on '}' or html
   let curCurlyCount = scala#CountCurlies(curline)
   if curCurlyCount < 0
@@ -161,7 +165,8 @@ function! GetScalaIndent()
     let ind = indent(lnum) + 5
   endif
 
-  if prevline =~ '^.*\<case\>.*=>\s*$'
+  let prevCurlyCount = scala#CountCurlies(prevline)
+  if prevCurlyCount == 0 && prevline =~ '^.*=>\s*$'
     call scala#ConditionalConfirm("16")
     let ind = ind + &shiftwidth
   endif
