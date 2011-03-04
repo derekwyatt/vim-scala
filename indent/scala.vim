@@ -16,6 +16,12 @@ setlocal autoindent
 "    finish
 "endif
 
+function! scala#GetLine(lnum)
+  let line = substitute(getline(a:lnum), '//.*$', '', '')
+  let line = substitute(line, '"[^"]*"', '""', 'g')
+  return line
+endfunction
+
 function! scala#CountBrackets(line, openBracket, closedBracket)
   let line = substitute(a:line, '"\(.\|\\"\)*"', '', 'g')
   let open = substitute(line, '[^' . a:openBracket . ']', '', 'g')
@@ -38,7 +44,11 @@ function! scala#ConditionalConfirm(msg)
 endfunction
 
 function! scala#GetLineThatMatchesBracket(openBracket, closedBracket)
+  let savedpos = getpos('.')
+  call setpos('.', [savedpos[0], savedpos[1], 9999, savedpos[3]])
+  call searchpos(a:closedBracket, 'Wb')
   let [lnum, colnum] = searchpairpos(a:openBracket, '', a:closedBracket, 'Wbn')
+  call setpos('.', savedpos)
   return lnum
 endfunction
 
@@ -71,11 +81,11 @@ function! GetScalaIndent()
   endif
 
   let ind = indent(lnum)
-  let prevline = getline(lnum)
+  let prevline = scala#GetLine(lnum)
   call scala#ConditionalConfirm("computed indent is: " . ind)
 
   " If this line starts with a { then make it indent the same as the previous line
-  let curline = getline(v:lnum)
+  let curline = scala#GetLine(v:lnum)
   if curline =~ '^\s*{'
     call scala#ConditionalConfirm("1")
     " Unless, of course, the previous one is a { as well
@@ -118,7 +128,7 @@ function! GetScalaIndent()
       let completeLine = scala#LineCompletesBrackets(bracketType[0], bracketType[1])
       if completeLine != -1
         call scala#ConditionalConfirm("8")
-        let prevCompleteLine = getline(prevnonblank(completeLine - 1))
+        let prevCompleteLine = scala#GetLine(prevnonblank(completeLine - 1))
         " However, what actually started this part looks like it was a function
         " definition, so we need to indent to that line instead.  This is 
         " actually pretty weak at the moment.
@@ -135,13 +145,12 @@ function! GetScalaIndent()
   endfor
 
   " Subtract a 'shiftwidth' on '}' or html
-  let thisline = getline(v:lnum)
-  let curCurlyCount = scala#CountCurlies(thisline)
+  let curCurlyCount = scala#CountCurlies(curline)
   if curCurlyCount < 0
     call scala#ConditionalConfirm("14a")
     let matchline = scala#GetLineThatMatchesBracket('{', '}')
     return indent(matchline)
-  elseif thisline =~ '^\s*</[a-zA-Z][^>]*>'
+  elseif curline =~ '^\s*</[a-zA-Z][^>]*>'
     call scala#ConditionalConfirm("14c")
     let ind = ind - &shiftwidth
   endif
