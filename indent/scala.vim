@@ -1,7 +1,7 @@
 " Vim indent file
 " Language   : Scala (http://scala-lang.org/)
 " Maintainer : Stefan Matthias Aust
-" Last Change: 2011 Feb 12 (Derek Wyatt)
+" Last Change: 2011 Mar 04 (Derek Wyatt)
 
 "if exists("b:did_indent")
 "  finish
