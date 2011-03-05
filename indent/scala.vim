@@ -82,10 +82,13 @@ function! GetScalaIndent()
 
   let ind = indent(lnum)
   let prevline = scala#GetLine(lnum)
-  call scala#ConditionalConfirm("computed indent is: " . ind)
+  let curline = scala#GetLine(v:lnum)
+
+  if prevline =~ '^\s*/\*\*'
+    return ind + 1
+  endif
 
   " If this line starts with a { then make it indent the same as the previous line
-  let curline = scala#GetLine(v:lnum)
   if curline =~ '^\s*{'
     call scala#ConditionalConfirm("1")
     " Unless, of course, the previous one is a { as well

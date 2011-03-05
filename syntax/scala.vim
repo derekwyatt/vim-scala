@@ -69,6 +69,9 @@ syn region scalaDocComment start="/\*\*" end="\*/" contains=scalaDocTags,scalaTo
 syn region scalaDocTags start="{@\(link\|linkplain\|inherit[Dd]oc\|doc[rR]oot\|value\)" end="}" contained
 syn match scalaDocTags "@[a-z]\+" contained
 
+" annotations
+syn match scalaAnnotation "@[a-zA-Z]\+"
+
 syn match scalaEmptyString "\"\""
 
 " multi-line string literals
@@ -103,8 +106,10 @@ syn sync fromstart
 
 " map Scala groups to standard groups
 hi link scalaKeyword Keyword
+hi link scalaAnnotation Include
 hi link scalaPackage Include
 hi link scalaImport Include
+hi link scalaDocTags Include
 hi link scalaBoolean Boolean
 hi link scalaOperator Normal
 hi link scalaNumber Number
@@ -118,7 +123,6 @@ hi link scalaUnicode Special
 hi link scalaComment Comment
 hi link scalaLineComment Comment
 hi link scalaDocComment Comment
-hi link scalaDocTags Special
 hi link scalaTodo Todo
 hi link scalaType Type
 hi link scalaTypeSpecializer scalaType
