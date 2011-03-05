@@ -37,6 +37,18 @@ function! scala#CountCurlies(line)
   return scala#CountBrackets(a:line, '{', '}')
 endfunction
 
+function! scala#IsParentCase()
+  let savedpos = getpos('.')
+  call setpos('.', [savedpos[0], savedpos[1], 0, savedpos[3]])
+  let [l, c] = searchpos('^\s*\%(\%(\<def\>\)\|\%(\<case\>\)\)', 'bnW')
+  let retvalue = -1
+  if l != 0 && search('\%' . l . 'l\s*\<case\>', 'bnW')
+    let retvalue = l
+  endif 
+  call setpos('.', savedpos)
+  return retvalue
+endfunction
+
 function! scala#ConditionalConfirm(msg)
   if 0
     call confirm(a:msg)
@@ -81,6 +93,7 @@ function! GetScalaIndent()
   endif
 
   let ind = indent(lnum)
+  let originalIndentValue = ind
   let prevline = scala#GetLine(lnum)
   let curline = scala#GetLine(v:lnum)
 
@@ -147,7 +160,7 @@ function! GetScalaIndent()
     endif
   endfor
 
-  if curline =~ '^\s*}\s*else\s*{\s*$'
+  if curline =~ '^\s*}\?\s*else\s*{\?\s*$'
     let ind = ind - &shiftwidth
   endif
 
@@ -172,6 +185,17 @@ function! GetScalaIndent()
   if prevCurlyCount == 0 && prevline =~ '^.*=>\s*$'
     call scala#ConditionalConfirm("16")
     let ind = ind + &shiftwidth
+  endif
+
+  if ind == originalIndentValue && curline =~ '^\s*\<case\>'
+    let parentCase = scala#IsParentCase()
+    if parentCase != -1
+      let ind = indent(parentCase)
+    endif
+  endif
+
+  if prevline =~ '^\s*\*/'
+    let ind = ind - 1
   endif
 
   call scala#ConditionalConfirm("returning " . ind)
