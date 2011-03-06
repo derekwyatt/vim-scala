@@ -49,6 +49,10 @@ function! scala#IsParentCase()
   return retvalue
 endfunction
 
+function! scala#IsSingleStatementValDef(lnum)
+  if 
+endfunction
+
 function! scala#ConditionalConfirm(msg)
   if 0
     call confirm(a:msg)
@@ -196,6 +200,11 @@ function! GetScalaIndent()
 
   if prevline =~ '^\s*\*/'
     let ind = ind - 1
+  endif
+
+  let justAboveLine = getline(v:lnum - 1)
+  if ind == originalIndentValue && justAboveLine =~ '^\s*$'
+    let ind = ind - &shiftwidth
   endif
 
   call scala#ConditionalConfirm("returning " . ind)

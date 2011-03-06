@@ -18,7 +18,13 @@ class SomeClass {
 
   def aSingleLineDef = someval + 12
 
-  def aMultiLineSingleStatementDef =
+  // This
+  def aMultiLineSingleStatementDefWithBraces = {
+    SomeObject.makeWithSomething
+  }
+
+  // This
+  def aMultiLineSingleStatementDefWithNoBraces =
     SomeObject.makeWithSomething
 
   /**
