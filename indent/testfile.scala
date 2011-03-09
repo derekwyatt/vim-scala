@@ -25,10 +25,15 @@ class SomeClass {
 
   // This
   def aMultiLineSingleStatementDefWithNoBraces =
+    new X {
+      def something = 5
+    }
+
+  def aMultiLineSingleStatementDefWithNoBraces =
     SomeObject.makeWithSomething
 
   /**
-   * This doesn't dedent properly
+   * This
    */
   def SomeOtherFunc = ...
 }

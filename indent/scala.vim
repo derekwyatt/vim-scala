@@ -1,7 +1,8 @@
 " Vim indent file
-" Language   : Scala (http://scala-lang.org/)
-" Maintainer : Stefan Matthias Aust
-" Last Change: 2011 Mar 04 (Derek Wyatt)
+" Language         : Scala (http://scala-lang.org/)
+" Original Author  : Stefan Matthias Aust
+" Modifications by : Derek Wyatt
+" Last Change: 2011 Mar 09 (Derek Wyatt)
 
 "if exists("b:did_indent")
 "  finish
@@ -40,17 +41,13 @@ endfunction
 function! scala#IsParentCase()
   let savedpos = getpos('.')
   call setpos('.', [savedpos[0], savedpos[1], 0, savedpos[3]])
-  let [l, c] = searchpos('^\s*\%(\%(\<def\>\)\|\%(\<case\>\)\)', 'bnW')
+  let [l, c] = searchpos('^\s*\%(\%(\%(abstract\s\+\)\?\%(override\s\+\)\?\<def\>\)\|\%(\<case\>\)\)', 'bnW')
   let retvalue = -1
   if l != 0 && search('\%' . l . 'l\s*\<case\>', 'bnW')
     let retvalue = l
   endif 
   call setpos('.', savedpos)
   return retvalue
-endfunction
-
-function! scala#IsSingleStatementValDef(lnum)
-  if 
 endfunction
 
 function! scala#ConditionalConfirm(msg)
@@ -66,6 +63,64 @@ function! scala#GetLineThatMatchesBracket(openBracket, closedBracket)
   let [lnum, colnum] = searchpairpos(a:openBracket, '', a:closedBracket, 'Wbn')
   call setpos('.', savedpos)
   return lnum
+endfunction
+
+function! scala#MatchesDefValr(line)
+  if a:line =~ '^\s*\%(\%(\%(abstract\s\+\)\?\%(override\s\+\)\?\<def\>\)\|\<va[lr]\>\)'
+    return 1
+  else
+    return 0
+  endif
+endfunction
+
+function! scala#LineCompletesDefValr(lnum, line)
+  let bracketCount = scala#CountBrackets(a:line, '{', '}')
+  if bracketCount < 0
+    let matchedBracket = scala#GetLineThatMatchesBracket('{', '}')
+    if ! scala#MatchesDefValr(scala#GetLine(matchedBracket))
+      let possibleDefValr = scala#GetLine(prevnonblank(matchedBracket - 1))
+      if matchedBracket != -1 && scala#MatchesDefValr(possibleDefValr)
+        return 1
+      else
+        return 0
+      endif
+    else
+      return 0
+    endif
+  elseif bracketCount == 0
+    let bracketCount = scala#CountBrackets(a:line, '(', ')')
+    if bracketCount < 0
+      let matchedBracket = scala#GetLineThatMatchesBracket('(', ')')
+      if ! scala#MatchesDefValr(scala#GetLine(matchedBracket))
+        let possibleDefValr = scala#GetLine(prevnonblank(matchedBracket - 1))
+        if matchedBracket != -1 && scala#MatchesDefValr(possibleDefValr)
+          return 1
+        else
+          return 0
+        endif
+      else
+        return 0
+      endif
+    elseif bracketCount == 0
+      let possibleDefValr = scala#GetLine(prevnonblank(a:lnum - 1))
+      if scala#MatchesDefValr(possibleDefValr) && possibleDefValr =~ '^.*=\s*$'
+        return 1
+      else
+        return 0
+      endif
+    else
+      return 0
+    endif
+  endif
+endfunction
+
+function! scala#SpecificLineCompletesBrackets(lnum, openBracket, closedBracket)
+  let savedpos = getpos('.')
+  call setpos('.', [savedpos[0], a:lnum, 9999, savedpos[3]])
+  let retv = scala#LineCompletesBrackets(a:openBracket, a:closedBracket)
+  call setpos('.', savedpos)
+
+  return retv
 endfunction
 
 function! scala#LineCompletesBrackets(openBracket, closedBracket)
@@ -89,16 +144,16 @@ endfunction
 
 function! GetScalaIndent()
   " Find a non-blank line above the current line.
-  let lnum = prevnonblank(v:lnum - 1)
+  let prevlnum = prevnonblank(v:lnum - 1)
 
   " Hit the start of the file, use zero indent.
-  if lnum == 0
+  if prevlnum == 0
     return 0
   endif
 
-  let ind = indent(lnum)
+  let ind = indent(prevlnum)
   let originalIndentValue = ind
-  let prevline = scala#GetLine(lnum)
+  let prevline = scala#GetLine(prevlnum)
   let curline = scala#GetLine(v:lnum)
 
   if prevline =~ '^\s*/\*\*'
@@ -111,7 +166,7 @@ function! GetScalaIndent()
     " Unless, of course, the previous one is a { as well
     if prevline !~ '^\s*{'
       call scala#ConditionalConfirm("2")
-      return indent(lnum)
+      return indent(prevlnum)
     endif
   endif
 
@@ -126,7 +181,7 @@ function! GetScalaIndent()
   " If 'val', 'var', 'def' end with =, this is a one-line block
   let inOneLineBlock = 0
   if prevline =~ '^\s*\<\(\(else\s\+\)\?if\|for\|while\)\>.*[)=]\s*$'
-        \ || prevline =~ '^\s*\<def\>.*[)=]\s*$'
+        \ || prevline =~ '^\s*\%(abstract\s\+\)\?\%(override\s\+\)\?\<def\>.*[)=]\s*$'
         \ || prevline =~ '^\s*\<va[lr]\>.*[=]\s*$'
         \ || prevline =~ '^\s*\<else\>\s*$'
         \ || prevline =~ '=\s*$'
@@ -182,7 +237,7 @@ function! GetScalaIndent()
   let prevParenCount = scala#CountParens(prevline)
   if prevline =~ '^\s*\<for\>.*$' && prevParenCount > 0
     call scala#ConditionalConfirm("15")
-    let ind = indent(lnum) + 5
+    let ind = indent(prevlnum) + 5
   endif
 
   let prevCurlyCount = scala#CountCurlies(prevline)
@@ -192,8 +247,10 @@ function! GetScalaIndent()
   endif
 
   if ind == originalIndentValue && curline =~ '^\s*\<case\>'
+    call scala#ConditionalConfirm("17")
     let parentCase = scala#IsParentCase()
     if parentCase != -1
+      call scala#ConditionalConfirm("17a")
       let ind = indent(parentCase)
     endif
   endif
@@ -202,8 +259,8 @@ function! GetScalaIndent()
     let ind = ind - 1
   endif
 
-  let justAboveLine = getline(v:lnum - 1)
-  if ind == originalIndentValue && justAboveLine =~ '^\s*$'
+  if ind == originalIndentValue && scala#LineCompletesDefValr(prevlnum, prevline)
+    call scala#ConditionalConfirm("18")
     let ind = ind - &shiftwidth
   endif
 
@@ -211,3 +268,5 @@ function! GetScalaIndent()
 
   return ind
 endfunction
+" vim:set ts=2 sts=2 sw=2:
+" vim600:fdm=marker fdl=1 fdc=0:
