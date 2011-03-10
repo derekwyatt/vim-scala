@@ -210,15 +210,13 @@ function! GetScalaIndent()
   " Add a 'shiftwidth' after lines that start a block
   " If 'if', 'for' or 'while' end with ), this is a one-line block
   " If 'val', 'var', 'def' end with =, this is a one-line block
-  let inOneLineBlock = 0
   if prevline =~ '^\s*\<\%(\%(}\?\s*else\s\+\)\?if\|for\|while\)\>.*[)=]\s*$'
-        \ || prevline =~ '^\s*\%(abstract\s\+\)\?\%(override\s\+\)\?\<def\>.*[)=]\s*$'
+        \ || prevline =~ '^\s*\%(abstract\s\+\)\?\%(override\s\+\)\?\<def\>.*=\s*$'
         \ || prevline =~ '^\s*\<va[lr]\>.*[=]\s*$'
         \ || prevline =~ '^\s*\%(}\s*\)\?\<else\>\s*$'
         \ || prevline =~ '=\s*$'
     call scala#ConditionalConfirm("4")
     let ind = ind + &shiftwidth
-    let inOneLineBlock = 1
   endif
 
   for bracketType in [ ['(', ')'], ['{', '}'] ]

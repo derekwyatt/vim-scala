@@ -17,6 +17,8 @@ class SomeClass {
 
   def aSingleLineDef = someval + 12
 
+  def main(args: Array[String]) = run(20000, 20000)
+
   // This
   def aMultiLineSingleStatementDefWithBraces = {
     SomeObject.makeWithSomething
