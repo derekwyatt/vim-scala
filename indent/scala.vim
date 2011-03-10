@@ -65,8 +65,8 @@ function! scala#GetLineThatMatchesBracket(openBracket, closedBracket)
   return lnum
 endfunction
 
-function! scala#MatchesDefValr(line)
-  if a:line =~ '^\s*\%(\%(\%(abstract\s\+\)\?\%(override\s\+\)\?\<def\>\)\|\<va[lr]\>\)'
+function! scala#MatchesIncompleteDefValr(line)
+  if a:line =~ '^\s*\%(\%(\%(abstract\s\+\)\?\%(override\s\+\)\?\<def\>\)\|\<va[lr]\>\).*[=(]\s*$'
     return 1
   else
     return 0
@@ -98,9 +98,9 @@ function! scala#LineCompletesDefValr(lnum, line)
   let bracketCount = scala#CountBrackets(a:line, '{', '}')
   if bracketCount < 0
     let matchedBracket = scala#GetLineThatMatchesBracket('{', '}')
-    if ! scala#MatchesDefValr(scala#GetLine(matchedBracket))
+    if ! scala#MatchesIncompleteDefValr(scala#GetLine(matchedBracket))
       let possibleDefValr = scala#GetLine(prevnonblank(matchedBracket - 1))
-      if matchedBracket != -1 && scala#MatchesDefValr(possibleDefValr)
+      if matchedBracket != -1 && scala#MatchesIncompleteDefValr(possibleDefValr)
         return 1
       else
         return 0
@@ -112,9 +112,9 @@ function! scala#LineCompletesDefValr(lnum, line)
     let bracketCount = scala#CountBrackets(a:line, '(', ')')
     if bracketCount < 0
       let matchedBracket = scala#GetLineThatMatchesBracket('(', ')')
-      if ! scala#MatchesDefValr(scala#GetLine(matchedBracket))
+      if ! scala#MatchesIncompleteDefValr(scala#GetLine(matchedBracket))
         let possibleDefValr = scala#GetLine(prevnonblank(matchedBracket - 1))
-        if matchedBracket != -1 && scala#MatchesDefValr(possibleDefValr)
+        if matchedBracket != -1 && scala#MatchesIncompleteDefValr(possibleDefValr)
           return 1
         else
           return 0
@@ -124,13 +124,13 @@ function! scala#LineCompletesDefValr(lnum, line)
       endif
     elseif bracketCount == 0
       let possibleDefValr = scala#GetLine(prevnonblank(a:lnum - 1))
-      if scala#MatchesDefValr(possibleDefValr) && possibleDefValr =~ '^.*=\s*$'
+      if scala#MatchesIncompleteDefValr(possibleDefValr) && possibleDefValr =~ '^.*=\s*$'
         return 1
       else
         let possibleIfElse = scala#LineCompletesIfElse(a:lnum, a:line)
         if possibleIfElse != 0
           let possibleDefValr = scala#GetLine(prevnonblank(possibleIfElse - 1))
-          if scala#MatchesDefValr(possibleDefValr) && possibleDefValr =~ '^.*=\s*$'
+          if scala#MatchesIncompleteDefValr(possibleDefValr) && possibleDefValr =~ '^.*=\s*$'
             return 2
           else
             return 0
@@ -219,34 +219,65 @@ function! GetScalaIndent()
     let ind = ind + &shiftwidth
   endif
 
-  for bracketType in [ ['(', ')'], ['{', '}'] ]
-    let bracketCount = scala#CountBrackets(prevline, bracketType[0], bracketType[1])
-    if bracketCount > 0 || prevline =~ '.*{\s*$' || prevline =~ '.*(\s*$'
-      call scala#ConditionalConfirm("5")
+  let bracketCount = scala#CountBrackets(prevline, '(', ')')
+  if bracketCount > 0 || prevline =~ '.*(\s*$'
+    call scala#ConditionalConfirm("5a")
+    let ind = ind + &shiftwidth
+    break
+  elseif bracketCount < 0
+    call scala#ConditionalConfirm("6a")
+    " if the closing brace actually completes the braces entirely, then we
+    " have to indent to line that started the whole thing
+    let completeLine = scala#LineCompletesBrackets('(', ')')
+    if completeLine != -1
+      call scala#ConditionalConfirm("8a")
+      let prevCompleteLine = scala#GetLine(prevnonblank(completeLine - 1))
+      " However, what actually started this part looks like it was a function
+      " definition, so we need to indent to that line instead.  This is 
+      " actually pretty weak at the moment.
+      if prevCompleteLine =~ '=\s*$'
+        call scala#ConditionalConfirm("9a")
+        let ind = indent(prevnonblank(completeLine - 1))
+      else
+        call scala#ConditionalConfirm("10a")
+        let ind = indent(completeLine)
+      endif
+    else
+      " This is the only part that's different from from the '{', '}' one below
+      " Yup... some refactoring is necessary at some point.
+      let ind = ind + (bracketCount * &shiftwidth)
+    endif
+    break
+  endif
+
+  if ind == originalIndentValue
+    let bracketCount = scala#CountBrackets(prevline, '{', '}')
+    if bracketCount > 0 || prevline =~ '.*{\s*$'
+      call scala#ConditionalConfirm("5b")
       let ind = ind + &shiftwidth
       break
     elseif bracketCount < 0
-      call scala#ConditionalConfirm("6")
+      call scala#ConditionalConfirm("6b")
       " if the closing brace actually completes the braces entirely, then we
       " have to indent to line that started the whole thing
-      let completeLine = scala#LineCompletesBrackets(bracketType[0], bracketType[1])
+      let completeLine = scala#LineCompletesBrackets('{', '}')
       if completeLine != -1
-        call scala#ConditionalConfirm("8")
+        call scala#ConditionalConfirm("8b")
         let prevCompleteLine = scala#GetLine(prevnonblank(completeLine - 1))
         " However, what actually started this part looks like it was a function
         " definition, so we need to indent to that line instead.  This is 
         " actually pretty weak at the moment.
         if prevCompleteLine =~ '=\s*$'
-          call scala#ConditionalConfirm("9")
+          call scala#ConditionalConfirm("9b")
           let ind = indent(prevnonblank(completeLine - 1))
         else
-          call scala#ConditionalConfirm("10")
+          call scala#ConditionalConfirm("10b")
           let ind = indent(completeLine)
         endif
       endif
       break
     endif
-  endfor
+  endif
 
   if curline =~ '^\s*}\?\s*\<else\>\%(\s\+\<if\>\s*(.*)\)\?\s*{\?\s*$' && ! scala#LineIsCompleteIf(prevline)
     let ind = ind - &shiftwidth

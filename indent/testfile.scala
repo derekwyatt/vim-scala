@@ -106,4 +106,54 @@ class SomeClass {
    * This
    */
   def SomeOtherFunc = ...
+
+  def func = {
+    val reply = new Something()
+    some.block {
+      new X {
+        statement
+        statement
+      }
+    }
+    () => goAndDo.something
+  }
+
+  def func(param: Int) = new this.Something.Or.Other(
+    new SillyObject {
+      override def booger() = {
+        statement
+        statement
+      }
+    },
+  otherParam) // comment
+
+  /**
+   * Pulled this stuff from the fors.scala example file in the source distribution
+   */
+  def findNums(n: Int): Iterable[(Int, Int)] =
+    for (i <- 1 until n;
+         j <- 1 until (i-1);
+         if isPrime(i+j)) yield (i, j)
+
+  val books = List(
+    Elem(prefix, "book", e, scope,
+      Elem(prefix, "title", e, scope,
+        Text("Structure and Interpretation of Computer Programs")),
+      Elem(prefix, "author", e, scope,
+        Text("Abelson, Harald")),
+      Elem(prefix, "author", e, scope,
+        Text("Sussman, Gerald J."))),
+    Elem(prefix, "book", e, scope,
+      Elem(prefix, "title", e, scope,
+        Text("Principles of Compiler Design")),
+      Elem(prefix, "author", e, scope,
+        Text("Aho, Alfred")),
+      Elem(prefix, "author", e, scope,
+        Text("Ullman, Jeffrey"))),
+    Elem(prefix, "book", e, scope,
+      Elem(prefix, "title", e, scope,
+        Text("Programming in Modula-2")),
+      Elem(prefix, "author", e, scope,
+        Text("Wirth, Niklaus")))
+    )
 }
