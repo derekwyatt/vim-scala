@@ -1,4 +1,3 @@
-
 /**
  * Commets are here
  */
@@ -31,6 +30,15 @@ class SomeClass {
 
   def aMultiLineSingleStatementDefWithNoBraces =
     SomeObject.makeWithSomething
+
+  def someFunc = {
+    if (b) 1
+    else {
+      if (b) 2
+      else
+        3
+    }
+  }
 
   /**
    * This

@@ -10,7 +10,7 @@
 "let b:did_indent = 1
 
 setlocal indentexpr=GetScalaIndent()
-setlocal indentkeys=0{,0},0),!^F,<>>,o,O,<CR>
+setlocal indentkeys=0{,0},0),!^F,<>>,o,O,e",<CR>
 setlocal autoindent
 
 "if exists("*GetScalaIndent")
@@ -71,6 +71,20 @@ function! scala#MatchesDefValr(line)
   else
     return 0
   endif
+endfunction
+
+function! scala#LineIsCompleteIf(line)
+  if scala#CountBrackets(a:line, '{', '}') == 0 &&
+   \ scala#CountBrackets(a:line, '(', ')') == 0 &&
+   \ a:line =~ '^\s*\<if\>\s*([^)]*)\s*\S.*$'
+    return 1
+  else
+    return 0
+  endif
+endfunction
+
+function! scala#LineCompletesIfElse(lnum, line)
+  " to be written
 endfunction
 
 function! scala#LineCompletesDefValr(lnum, line)
@@ -219,7 +233,7 @@ function! GetScalaIndent()
     endif
   endfor
 
-  if curline =~ '^\s*}\?\s*else\s*{\?\s*$'
+  if curline =~ '^\s*}\?\s*else\s*{\?\s*$' && ! scala#LineIsCompleteIf(prevline)
     let ind = ind - &shiftwidth
   endif
 
