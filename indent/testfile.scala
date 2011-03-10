@@ -54,6 +54,30 @@ class SomeClass {
         3
     }
 
+    if (b) {
+      statement
+      statement
+    } else if (b) {
+      statement
+      statement
+    } else if (c) {
+      statement
+      statement
+    } else
+      dohicky
+
+    if (b) { // comment
+      statement
+      statement
+    } else if (b) { // comment
+      statement
+      statement
+    } else if (c) { // comment
+      statement
+      statement
+    } else // comment
+      dohicky
+
     if (b) 1
     else 2
 
@@ -61,9 +85,19 @@ class SomeClass {
       1
     else if (b)
       2
+    else if (b)
+      2
     else
       3
-      4
+    4
+
+    if (b)
+      1
+    else if (b)
+      2
+    else
+      3
+    4
   }
 
   /**

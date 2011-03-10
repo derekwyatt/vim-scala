@@ -84,17 +84,14 @@ function! scala#LineIsCompleteIf(line)
 endfunction
 
 function! scala#LineCompletesIfElse(lnum, line)
-  let s = search('^\s*if\s*(.*)\s*\n.*\n\s*else\s*\n\%' . a:lnum . 'l', 'Wbn')
-  if s != 0
-    return s
-  else
-    let s = search('^\s*if\s*(.*).*\n\s*else\s*\n\%' . a:lnum . 'l', 'Wbn')
-    if s != 0
-      return s
-    else
-      return 0
-    endif
+  if a:line =~ '^\s*\%(\<if\>\|\%(}\s*\)\?\<else\>\)'
+    return 0
   endif
+  let result = search('^\%(\s*if\s*(.*).*\n\|\s*if\s*(.*)\s*\n.*\n\)\%(\s*else\s*if\s*(.*)\s*\n.*\n\)*\%(\s*else\s*\n\|\s*else\s*\S.*\n\)\%' . a:lnum . 'l', 'Wbn')
+  if result != 0
+    return result
+  endif
+  return 0
 endfunction
 
 function! scala#LineCompletesDefValr(lnum, line)
@@ -214,10 +211,10 @@ function! GetScalaIndent()
   " If 'if', 'for' or 'while' end with ), this is a one-line block
   " If 'val', 'var', 'def' end with =, this is a one-line block
   let inOneLineBlock = 0
-  if prevline =~ '^\s*\<\(\(else\s\+\)\?if\|for\|while\)\>.*[)=]\s*$'
+  if prevline =~ '^\s*\<\%(\%(}\?\s*else\s\+\)\?if\|for\|while\)\>.*[)=]\s*$'
         \ || prevline =~ '^\s*\%(abstract\s\+\)\?\%(override\s\+\)\?\<def\>.*[)=]\s*$'
         \ || prevline =~ '^\s*\<va[lr]\>.*[=]\s*$'
-        \ || prevline =~ '^\s*\<else\>\s*$'
+        \ || prevline =~ '^\s*\%(}\s*\)\?\<else\>\s*$'
         \ || prevline =~ '=\s*$'
     call scala#ConditionalConfirm("4")
     let ind = ind + &shiftwidth
@@ -253,7 +250,7 @@ function! GetScalaIndent()
     endif
   endfor
 
-  if curline =~ '^\s*}\?\s*else\s*{\?\s*$' && ! scala#LineIsCompleteIf(prevline)
+  if curline =~ '^\s*}\?\s*\<else\>\%(\s\+\<if\>\s*(.*)\)\?\s*{\?\s*$' && ! scala#LineIsCompleteIf(prevline)
     let ind = ind - &shiftwidth
   endif
 
@@ -301,7 +298,11 @@ function! GetScalaIndent()
       let ind = ind - (indentMultiplier * &shiftwidth)
     else
       call scala#ConditionalConfirm("19b")
-      if scala#LineCompletesIfElse(prevlnum, prevline)
+      if scala#GetLine(prevnonblank(prevlnum - 1)) =~ '^.*\<else\>\s*\%(//.*\)\?$'
+        call scala#ConditionalConfirm("19c")
+        let ind = ind - &shiftwidth
+      elseif scala#LineCompletesIfElse(prevlnum, prevline)
+        call scala#ConditionalConfirm("19d")
         let ind = ind - &shiftwidth
       endif
     endif
