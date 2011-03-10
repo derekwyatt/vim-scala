@@ -80,6 +80,13 @@ class SomeClass {
     } else // comment
       dohicky
 
+    if (b)
+      statement
+    else {
+      statement
+      statement
+    }
+
     if (b) 1
     else 2
 
