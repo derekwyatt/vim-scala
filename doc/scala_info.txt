@@ -3082,6 +3082,69 @@ example of this is to specify that a type inherit from the {Ordered} type.
 Here we're passing in a {List[T]} but are stipulating that {T} must inherit
 from {Ordered[T]} so that we can do some comparisons on it later.
 
+11.4 Manifest Stuff                                      *scala-manifest* {{{2
+------------------------------------------------------------------------------
+
+This is pretty vague at the moment.  The JVM erases type information, which
+makes it impossible for Scala to do some of the stuff it wants to do.  This is
+very different than I've experienced in C++ with templates - I've just never
+run into the situation where a "manifest" would be needed but with Scala it
+appears to be needed a lot.
+
+For example, the following was not possible -> I wanted to wrap up the
+following calls into a helpful function (these are defined in |akka|,
+specifically the |akka-actor-registry|):
+!sc!
+  val actors = registry.actorsFor[ChatClient]
+  val mboxSize = (0 /: actors)((i, a) => i + a.mailboxSize)
+!/sc!
+It /looks/ like the type parameter is {ChatClient} but it's subtly different.
+First of all, the {actorsFor} function has intelligently placed a
+|scala-upper-bound| on the type parameter, so writing the following won't
+work:
+!sc!
+  def mboxSize[A] = (0 /: registry.actorsFor[A])((i, a) => i + a.mailboxSize)
+!/sc!
+instead, we need to specify the upper bound for {A}:
+!sc!
+  def mboxSize[A <: akka.actor.ActorRef] =
+    (0 /: registry.actorsFor[A])((i, a) => i + a.mailboxSize)
+!/sc!
+Now, the surprise (at least for my naive, young Scala mind) is that this
+doesn't work either.  You get the following:
+>
+  could not find implicit value for parameter
+  manifest: scala.reflect.Manifest[A]
+<
+Not exactly the most helpful error message in the world, especially when you
+consider that the "Programming in Scala 2nd Edition" book does not mention the
+manifest whatsoever.  So, it's not the {ChatClient} parameter that's the only
+thing the compiler needs, it's the {ChatClient} and the manifest for
+{ChatClient}.  Scala helps the library /user/ by providing a mechanism for
+hiding that fact but it can't help the library /developer/ because the
+developer must supply it implicitly.
+
+I don't understand that details of the manifest entirely at this point but
+suffice it to say that the compiler needs it and it can't just "get it" on its
+own - it must be specified.  There are two ways to do this:
+
+- The first is from pre-Scala 2.8 as an implicit parameter
+  (|scala-implicit-parameters|).
+!sc!
+  def mboxSize[A <: akka.actor.ActorRef](implicit manifest: Manifest[A]) ...
+!/sc!
+  This is what the Akka source, in fact, already does (and I would have been
+  wise to consult the source code of that before heading to Stack Overflow).
+
+- The second way is to use Scala 2.8.x syntactic sugar:
+!sc!
+  def mboxSize[A <: akka.actor.Actor : Manifest] ...
+!/sc!
+  It compiles to the exact same thing (apparently) but it looks nicer, which
+  is still pretty hideous, but this ugliness allows Scala to do something
+  cool, so we forgive it.
+
+
 ==============================================================================
 12. Pattern Matching                            *scala-pattern-matching* {{{1
 ------------------------------------------------------------------------------
