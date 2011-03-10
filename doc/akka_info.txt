@@ -21,6 +21,7 @@ Copyright: (c) 2011 by Derek Wyatt
       1.6.2 !!...............................: |akka-actor-!!|
       1.6.3 !!!..............................: |akka-actor-!!!|
       1.6.4 Unifying Pattern.................: |akka-actor-unifying-msg|
+      1.6.5 Forwarding a Future..............: |akka-actor-future-fwd|
     1.7 Actor Control........................: |akka-actor-control|
       1.7.1 Starting and Stopping............: |akka-actor-start-stop|
       1.7.2 Poison Pill......................: |akka-actor-poisonpill|
@@ -39,6 +40,8 @@ Copyright: (c) 2011 by Derek Wyatt
       1.11.6 Session Based Servers...........: |akka-actor-remote-sessions|
       1.11.7 Event Listening.................: |akka-actor-remote-events|
       1.11.8 Messge Serialization............: |akka-actor-remote-serialization|
+    1.12 Scheduler...........................: |akka-actor-scheduler|
+    1.13 Mailboxes...........................: |akka-actor-mailboxes|
   2. Actor Supervision.......................: |akka-supervision|
   3. Actor Routing...........................: |akka-routing|
     3.1 Simple Dispatching...................: |akka-routing-dispatching|
@@ -1146,6 +1149,129 @@ And the same types of events are availble for server-related objects:
 
 
 ==============================================================================
+1.12 Scheduler                                     *akka-actor-scheduler* {{{2
+------------------------------------------------------------------------------
+
+The {akka.actor.Scheduler} object has a few neat methods on it that provide
+some really great "timer" functions.  I used this recently to push test data
+through the system at random intervals.
+!sc!
+  import akka.actor.{Scheduler, Actor}
+  import java.util.concurrent.TimeUnit
+
+  case class PostNewMessage(msg: String)
+  case class PushTo(to: ActorRef, msgs: List[String])
+
+  class Pusher extends Actor {
+    val r = new Random
+    def receive = {
+      case PushTo(to, msgs) =>
+        if (!msgs.isEmpty) {
+          // The goal function - post the message
+          to ! PostNewMessage(msgs.head)
+          // But not too quickly.  Send the rest of the messages to ourself
+          // within the next 30 seconds so that we can call
+          // "to ! PostNewMessage" again.
+          Scheduler.scheduleOnce(() => self ! PushTo(to, msgs.tail),
+                                 r.nextInt(30), TimeUnit.SECONDS)
+        } else {
+          self.stop
+        }
+    }
+  }
+!/sc!
+
+1.13 Mailboxes                                     *akka-actor-mailboxes* {{{2
+------------------------------------------------------------------------------
+
+	*Todo	this is a placeholder
+
+    What I really want to know at this point is how to create a priority
+    mailbox.  The current use-case is that I want to be able to put in a
+    "DrainYourself" message, but I want it to be pulled out of the mailbox
+    only if there are no other messages in there.
+
+1.13.1 Viktor's Priority Mailbox                  *akka-priority-mailbox* {{{3
+------------------------------------------------------------------------------
+
+Viktor Klang threw this together, an I've pulled it from the original post at
+https://groups.google.com/group/akka-user/browse_thread/thread/67077cad1b2bc4b2.
+It may completely suck, but I've put it here for instructional purposes:
+!sc!
+class UnboundedPriorityMessageQueue(
+             blockDequeue: Boolean,
+             cmp: Comparator[MessageInvocation]) extends
+  PriorityBlockingQueue[MessageInvocation](11, cmp) with MessageQueue {
+
+  final def enqueue(handle: MessageInvocation) {
+    this add handle
+  }
+
+  final def dequeue(): MessageInvocation = {
+    if (blockDequeue) this.take()
+    else this.poll()
+  }
+}
+
+class BoundedPriorityMessageQueue(
+              capacity: Int,
+              pushTimeOut: Duration,
+              blockDequeue: Boolean,
+              cmp: Comparator[MessageInvocation]) extends
+  PriorityBlockingQueue[MessageInvocation](capacity, cmp) with
+    MessageQueue {
+
+  final def enqueue(handle: MessageInvocation) {
+    if (pushTimeOut.toMillis > 0) {
+      if (!this.offer(handle, pushTimeOut.length, pushTimeOut.unit))
+        throw new MessageQueueAppendFailedException(
+          "Couldn't enqueue message " + handle + " to " + toString)
+    } else {
+      this.put(handle)
+    }
+  }
+
+  final def dequeue(): MessageInvocation =
+    if (blockDequeue) this.take()
+    else this.poll()
+}
+
+class PriorityExecutorBasedEventDrivenDispatcher(
+  name: String,
+  comparator: Comparator[MessageInvocation],
+  throughput: Int = Dispatchers.THROUGHPUT,
+  throughputDeadlineTime: Int = Dispatchers.THROUGHPUT_DEADLINE_TIME_MILLIS,
+  mailboxType: MailboxType = Dispatchers.MAILBOX_TYPE,
+  config: ThreadPoolConfig = ThreadPoolConfig()
+  ) extends ExecutorBasedEventDrivenDispatcher(
+      name,
+      throughput,
+      throughputDeadlineTime, mailboxType, config) {
+
+    override def createMailbox(actorRef: ActorRef): AnyRef =
+      mailboxType match {
+        case UnboundedMailbox(blocking) =>
+          new UnboundedPriorityMessageQueue(blocking, comparator) with ExecutableMailbox {
+            def dispatcher = PriorityExecutorBasedEventDrivenDispatcher.this
+          }
+
+        case BoundedMailbox(blocking, capacity, pushTimeOut) =>
+          new BoundedPriorityMessageQueue(capacity, pushTimeOut, blocking, comparator) with ExecutableMailbox {
+            def dispatcher = PriorityExecutorBasedEventDrivenDispatcher.this
+          }
+      }
+}
+
+
+scala> object PriorityMessageDispatcher {
+     |   val comparator = new Comparator[MessageInvocation] ...
+     |   val instance = new PriorityExecutorBasedEventDrivenDispatcher("PriorityMessageDispatcher",comparator)
+     | }
+
+scala> val a = actorOf(...)
+scala> a.dispatcher = PriorityMessageDispatcher.instance
+scala> a.start 
+
 2. Actor Supervision                                   *akka-supervision* {{{1
 ------------------------------------------------------------------------------
 
@@ -1327,6 +1453,19 @@ number of different parameters to enhance the routing strategy.
 	*Error	it turns out these aren't in 1.0 yet.  I can see them in the git
 	*Error	repository but they're not in the distribution yet. I'm going to
 	*Error	hold off on these for the moment.
+
+
+==============================================================================
+4. Cloudy Akka                                         *akka-cloudy-akka* {{{1
+------------------------------------------------------------------------------
+
+Akka also provides a "cloud" product called "Cloudy Akka".  I don't know too
+much about it at this point but the information can be found here:
+http://scalablesolutions.se/products.html.
+
+Essentially it supports clustering and management of the cluster with the
+standard Akka features of remote execution and the like.
+
 
 Modelines: {{{1
 vim:tw=78:ts=4:ft=help:fdm=marker:fdl=0

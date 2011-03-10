@@ -102,6 +102,9 @@ syn region scalaXmlEscape matchgroup=scalaXmlEscapeSpecial start="{" matchgroup=
 syn match scalaXmlQuote "&[^;]\+;" contained
 syn match scalaXmlComment "<!--\_[^>]*-->" contained
 
+" REPL
+syn match scalaREPLCmdLine "\<scala>\>"
+
 syn sync fromstart
 
 " map Scala groups to standard groups
@@ -109,6 +112,7 @@ hi link scalaKeyword Keyword
 hi link scalaAnnotation Include
 hi link scalaPackage Include
 hi link scalaImport Include
+hi link scalaREPLCmdLine Include
 hi link scalaDocTags Include
 hi link scalaBoolean Boolean
 hi link scalaOperator Normal
