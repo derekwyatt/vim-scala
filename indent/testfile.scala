@@ -58,6 +58,22 @@ class SomeClass {
 
     if (b) {
       statement
+    }
+    else
+      thing
+
+    bare_statement
+
+    if (b) {
+      statement
+    }
+    else {
+      thing
+      that
+    }
+
+    if (b) {
+      statement
       statement
     } else if (b) {
       statement

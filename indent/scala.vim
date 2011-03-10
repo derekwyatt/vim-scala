@@ -286,7 +286,9 @@ function! GetScalaIndent()
     endif
   endif
 
-  if curline =~ '^\s*}\?\s*\<else\>\%(\s\+\<if\>\s*(.*)\)\?\s*{\?\s*$' && ! scala#LineIsCompleteIf(prevline)
+  if curline =~ '^\s*}\?\s*\<else\>\%(\s\+\<if\>\s*(.*)\)\?\s*{\?\s*$' &&
+   \ ! scala#LineIsCompleteIf(prevline) &&
+   \ prevline !~ '^.*}\s*$'
     let ind = ind - &shiftwidth
   endif
 
