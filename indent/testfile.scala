@@ -56,6 +56,64 @@ class SomeClass {
         3
     }
 
+    /**
+     * The following stuff doesn't work, but honestly, it's pretty
+     * pathological stuff... format your code differently.
+     *
+     * ---- 1. ----
+     *
+     *    if (b) 1
+     *    else
+     *      if (c) 2
+     *    else 3 // Should be the same as the above 'if'
+     *
+     *    Do this instead:
+     *
+     *    if (b) 1
+     *    else {
+     *      if (c) 2
+     *      else 3
+     *    }
+     *    
+     *
+     * ---- 2. ----
+     *
+     *    if (b) 1
+     *    else
+     *      if (c)
+     *        2
+     *        else 3
+     *
+     *    Do this instead:
+     *
+     *    if (b) 1
+     *    else {
+     *      if (c) 2
+     *      else 3
+     *    }
+     *
+     *    or this...
+     *    
+     *    if (b) 1
+     *    else {
+     *      if (c)
+     *        2
+     *      else
+     *        3
+     *    }
+     *
+     * ---- 3. ----
+     *    
+     *    if (b) 1
+     *    else {
+     *      if (c)
+     *        2
+     *        else 3
+     *    }
+     *
+     *    Do the same as in number 2
+     */
+
     if (b) {
       statement
     }

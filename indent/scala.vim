@@ -198,6 +198,10 @@ function! GetScalaIndent()
     return ind + 1
   endif
 
+  if curline =~ '^\s*\*'
+    return cindent(curlnum)
+  endif
+
   " If this line starts with a { then make it indent the same as the previous line
   if curline =~ '^\s*{'
     call scala#ConditionalConfirm("1")
