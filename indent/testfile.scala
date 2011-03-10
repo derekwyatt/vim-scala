@@ -87,6 +87,18 @@ class SomeClass {
       statement
     }
 
+    val a = if (b) {
+      10
+    } else { statement }
+
+    val a = func(
+      10
+    ).goThere()
+
+    val a = func(
+      10
+    )
+
     if (b) 1
     else 2
 

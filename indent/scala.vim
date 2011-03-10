@@ -17,6 +17,12 @@ setlocal autoindent
 "    finish
 "endif
 
+function! scala#ConditionalConfirm(msg)
+  if 0
+    call confirm(a:msg)
+  endif
+endfunction
+
 function! scala#GetLine(lnum)
   let line = substitute(getline(a:lnum), '//.*$', '', '')
   let line = substitute(line, '"[^"]*"', '""', 'g')
@@ -50,16 +56,16 @@ function! scala#IsParentCase()
   return retvalue
 endfunction
 
-function! scala#ConditionalConfirm(msg)
-  if 0
-    call confirm(a:msg)
-  endif
-endfunction
-
 function! scala#GetLineThatMatchesBracket(openBracket, closedBracket)
   let savedpos = getpos('.')
-  call setpos('.', [savedpos[0], savedpos[1], 9999, savedpos[3]])
-  call searchpos(a:closedBracket, 'Wb')
+  let curline = scala#GetLine(line('.'))
+  if curline =~ a:closedBracket . '.*' . a:openBracket . '.*' . a:closedBracket
+    call setpos('.', [savedpos[0], savedpos[1], 0, savedpos[3]])
+    call searchpos(a:closedBracket . '\ze[^' . a:closedBracket . a:openBracket . ']*' . a:openBracket, 'W')
+  else
+    call setpos('.', [savedpos[0], savedpos[1], 9999, savedpos[3]])
+    call searchpos(a:closedBracket, 'Wb')
+  endif
   let [lnum, colnum] = searchpairpos(a:openBracket, '', a:closedBracket, 'Wbn')
   call setpos('.', savedpos)
   return lnum
@@ -185,7 +191,8 @@ function! GetScalaIndent()
   let ind = indent(prevlnum)
   let originalIndentValue = ind
   let prevline = scala#GetLine(prevlnum)
-  let curline = scala#GetLine(v:lnum)
+  let curlnum = v:lnum
+  let curline = scala#GetLine(curlnum)
 
   if prevline =~ '^\s*/\*\*'
     return ind + 1
@@ -332,6 +339,20 @@ function! GetScalaIndent()
         let ind = ind - &shiftwidth
       elseif scala#LineCompletesIfElse(prevlnum, prevline)
         call scala#ConditionalConfirm("19d")
+        let ind = ind - &shiftwidth
+      elseif scala#CountParens(curline) < 0 && scala#GetLine(scala#GetLineThatMatchesBracket('(', ')')) =~ '.*(\s*$'
+        " Handles situations that look like this:
+        " 
+        "   val a = func(
+        "     10
+        "   )
+        "
+        " or
+        "
+        "   val a = func(
+        "     10
+        "   ).somethingHere()
+        call scala#ConditionalConfirm("19e")
         let ind = ind - &shiftwidth
       endif
     endif
