@@ -40,6 +40,32 @@ class SomeClass {
     }
   }
 
+  def someOtherFunc =
+    if (this)
+      that
+    else
+      theOther
+
+  def someOtherOtherFunc = {
+    if (b) 1
+    else {
+      if (b) 2
+      else
+        3
+    }
+
+    if (b) 1
+    else 2
+
+    if (b)
+      1
+    else if (b)
+      2
+    else
+      3
+      4
+  }
+
   /**
    * This
    */

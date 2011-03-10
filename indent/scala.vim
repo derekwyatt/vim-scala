@@ -84,7 +84,17 @@ function! scala#LineIsCompleteIf(line)
 endfunction
 
 function! scala#LineCompletesIfElse(lnum, line)
-  " to be written
+  let s = search('^\s*if\s*(.*)\s*\n.*\n\s*else\s*\n\%' . a:lnum . 'l', 'Wbn')
+  if s != 0
+    return s
+  else
+    let s = search('^\s*if\s*(.*).*\n\s*else\s*\n\%' . a:lnum . 'l', 'Wbn')
+    if s != 0
+      return s
+    else
+      return 0
+    endif
+  endif
 endfunction
 
 function! scala#LineCompletesDefValr(lnum, line)
@@ -120,7 +130,17 @@ function! scala#LineCompletesDefValr(lnum, line)
       if scala#MatchesDefValr(possibleDefValr) && possibleDefValr =~ '^.*=\s*$'
         return 1
       else
-        return 0
+        let possibleIfElse = scala#LineCompletesIfElse(a:lnum, a:line)
+        if possibleIfElse != 0
+          let possibleDefValr = scala#GetLine(prevnonblank(possibleIfElse - 1))
+          if scala#MatchesDefValr(possibleDefValr) && possibleDefValr =~ '^.*=\s*$'
+            return 2
+          else
+            return 0
+          endif
+        else
+          return 0
+        endif
       endif
     else
       return 0
@@ -270,12 +290,21 @@ function! GetScalaIndent()
   endif
 
   if prevline =~ '^\s*\*/'
+    call scala#ConditionalConfirm("18")
     let ind = ind - 1
   endif
 
-  if ind == originalIndentValue && scala#LineCompletesDefValr(prevlnum, prevline)
-    call scala#ConditionalConfirm("18")
-    let ind = ind - &shiftwidth
+  if ind == originalIndentValue
+    let indentMultiplier = scala#LineCompletesDefValr(prevlnum, prevline)
+    if indentMultiplier != 0
+      call scala#ConditionalConfirm("19a")
+      let ind = ind - (indentMultiplier * &shiftwidth)
+    else
+      call scala#ConditionalConfirm("19b")
+      if scala#LineCompletesIfElse(prevlnum, prevline)
+        let ind = ind - &shiftwidth
+      endif
+    endif
   endif
 
   call scala#ConditionalConfirm("returning " . ind)
