@@ -156,4 +156,11 @@ class SomeClass {
       Elem(prefix, "author", e, scope,
         Text("Wirth, Niklaus")))
     )
+
+  def receive = {
+    case Something =>
+    case OrOther =>
+      here
+    case There =>
+  }
 }

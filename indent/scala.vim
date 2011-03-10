@@ -2,7 +2,7 @@
 " Language         : Scala (http://scala-lang.org/)
 " Original Author  : Stefan Matthias Aust
 " Modifications by : Derek Wyatt
-" Last Change: 2011 Mar 09 (Derek Wyatt)
+" Last Change: 2011 Mar 10 (Derek Wyatt)
 
 "if exists("b:did_indent")
 "  finish
@@ -10,7 +10,7 @@
 "let b:did_indent = 1
 
 setlocal indentexpr=GetScalaIndent()
-setlocal indentkeys=0{,0},0),!^F,<>>,o,O,e",<CR>
+setlocal indentkeys=0{,0},0),!^F,<>>,o,O,e,=case,<CR>
 setlocal autoindent
 
 "if exists("*GetScalaIndent")
@@ -301,7 +301,7 @@ function! GetScalaIndent()
   endif
 
   let prevCurlyCount = scala#CountCurlies(prevline)
-  if prevCurlyCount == 0 && prevline =~ '^.*=>\s*$'
+  if prevCurlyCount == 0 && prevline =~ '^.*=>\s*$' && curline !~ '^\s*\<case\>'
     call scala#ConditionalConfirm("16")
     let ind = ind + &shiftwidth
   endif
