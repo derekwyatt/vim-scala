@@ -93,8 +93,8 @@ function! scala#LineCompletesIfElse(lnum, line)
   if a:line =~ '^\s*\%(\<if\>\|\%(}\s*\)\?\<else\>\)'
     return 0
   endif
-  let result = search('^\%(\s*\<if\>\s*(.*).*\n\|\s*\<if\>\s*(.*)\s*\n.*\n\)\%(\s*\<else\>\s*\<if\>\s*(.*)\s*\n.*\n\)*\%(\s*\<else\>\s*\n\|\s*\<else\>[^{]*\n\)\%' . a:lnum . 'l', 'Wbn')
-  if result != 0
+  let result = search('^\%(\s*\<if\>\s*(.*).*\n\|\s*\<if\>\s*(.*)\s*\n.*\n\)\%(\s*\<else\>\s*\<if\>\s*(.*)\s*\n.*\n\)*\%(\s*\<else\>\s*\n\|\s*\<else\>[^{]*\n\)\?\%' . a:lnum . 'l', 'Wbn')
+  if result != 0 && scala#GetLine(prevnonblank(a:lnum - 1)) !~ '{\s*$'
     return result
   endif
   return 0

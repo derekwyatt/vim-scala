@@ -120,6 +120,9 @@ class SomeClass {
     else
       thing
 
+    if (b)
+      statement
+
     bare_statement
 
     if (b) {
