@@ -13,13 +13,40 @@ syn case match
 syn sync minlines=50
 
 " most Scala keywords
-syn keyword scalaKeyword abstract case catch do else extends final finally for forSome if implicit lazy match new null override private protected requires return sealed super this throw try type while with yield
+syn keyword scalaKeyword case
+syn keyword scalaKeyword catch
+syn keyword scalaKeyword do
+syn keyword scalaKeyword else
+syn keyword scalaKeyword extends
+syn keyword scalaKeyword final
+syn keyword scalaKeyword finally
+syn keyword scalaKeyword for
+syn keyword scalaKeyword forSome
+syn keyword scalaKeyword if
+syn keyword scalaKeyword match
+syn keyword scalaKeyword new
+syn keyword scalaKeyword null
+syn keyword scalaKeyword require
+syn keyword scalaKeyword return
+syn keyword scalaKeyword super
+syn keyword scalaKeyword this
+syn keyword scalaKeyword throw
+syn keyword scalaKeyword try
+syn keyword scalaKeyword type
+syn keyword scalaKeyword while
+syn keyword scalaKeyword with
+syn keyword scalaKeyword yield
+syn keyword scalaKeywordModifier abstract
+syn keyword scalaKeywordModifier override
+syn keyword scalaKeywordModifier final
+syn keyword scalaKeywordModifier implicit
+syn keyword scalaKeywordModifier lazy
+syn keyword scalaKeywordModifier private
+syn keyword scalaKeywordModifier protected
+syn keyword scalaKeywordModifier sealed
 syn match scalaKeyword "=>"
 syn match scalaKeyword "<-"
 syn match scalaKeyword "\<_\>"
-
-" well known 'names'
-syn keyword scalaWellKnowns Actor ActorRef
 
 syn match scalaOperator ":\{2,\}" "this is not a type
 
@@ -63,7 +90,6 @@ syn match scalaLineComment "//.*" contains=scalaTodo
 syn region scalaComment start="/\*" end="\*/" contains=scalaTodo
 syn case ignore
 syn include @scalaHtml syntax/html.vim
-unlet b:current_syntax
 syn case match
 syn region scalaDocComment start="/\*\*" end="\*/" contains=scalaDocTags,scalaTodo,@scalaHtml keepend
 syn region scalaDocTags start="{@\(link\|linkplain\|inherit[Dd]oc\|doc[rR]oot\|value\)" end="}" contained
@@ -109,6 +135,7 @@ syn sync fromstart
 
 " map Scala groups to standard groups
 hi link scalaKeyword Keyword
+hi link scalaKeywordModifier Function
 hi link scalaAnnotation Include
 hi link scalaPackage Include
 hi link scalaImport Include
@@ -150,7 +177,6 @@ hi link scalaClassName Special
 hi link scalaClassSpecializer Special
 hi link scalaConstructor Special
 hi link scalaConstructorSpecializer scalaConstructor
-hi link scalaWellKnowns Function
 
 let b:current_syntax = "scala"
 

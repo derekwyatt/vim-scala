@@ -10,50 +10,167 @@ Copyright: (c) 2011 by Derek Wyatt
 0. Contents                                              *akka* *akka-contents*
 ------------------------------------------------------------------------------
 
-  1. Actors..................................: |akka-actors|
-    1.1 Actor Lifecycle......................: |akka-actor-lifecycle|
-    1.2 Actor Companion Object...............: |akka-actor-object|
-    1.3 Defining by Derivation...............: |akka-actor-derive|
-    1.4 Anonymous Creation...................: |akka-actor-anonymous|
-    1.5 Actor vs. ActorRef...................: |akka-actor-actorref|
-    1.6 !, !!, and !!!.......................: |akka-actor-send-message|
-      1.6.1 !................................: |akka-actor-!|
-      1.6.2 !!...............................: |akka-actor-!!|
-      1.6.3 !!!..............................: |akka-actor-!!!|
-      1.6.4 Unifying Pattern.................: |akka-actor-unifying-msg|
-      1.6.5 Forwarding a Future..............: |akka-actor-future-fwd|
-    1.7 Actor Control........................: |akka-actor-control|
-      1.7.1 Starting and Stopping............: |akka-actor-start-stop|
-      1.7.2 Poison Pill......................: |akka-actor-poisonpill|
-      1.7.3 Actor Murder.....................: |akka-actor-murder|
-    1.8 Hot-Swapping.........................: |akka-actor-hotswap|
-      1.8.1 Invoking the Hot-Swap............: |akka-actor-invoke-hotswap|
-      1.8.2 Reverting the Hot-Swap...........: |akka-actor-revert-hotswap|
-    1.9 PartialFunction Chaining.............: |akka-actor-partialfunc-chaining|
-    1.10 Actor Registry......................: |akka-actor-registry|
-    1.11 Remote Actors.......................: |akka-actor-remote|
-      1.11.1 Starting Up Remote..............: |akka-actor-remote-startup|
-      1.11.2 Registering Actors..............: |akka-actor-remote-register|
-      1.11.3 Invoking Actors Remotely........: |akka-actor-remote-invoke|
-      1.11.4 Connection Fault Tolerance......: |akka-actor-remote-resilience|
-      1.11.5 Remote Security.................: |akka-actor-remote-security|
-      1.11.6 Session Based Servers...........: |akka-actor-remote-sessions|
-      1.11.7 Event Listening.................: |akka-actor-remote-events|
-      1.11.8 Messge Serialization............: |akka-actor-remote-serialization|
-    1.12 Scheduler...........................: |akka-actor-scheduler|
-    1.13 Mailboxes...........................: |akka-actor-mailboxes|
-  2. Actor Supervision.......................: |akka-supervision|
-  3. Actor Routing...........................: |akka-routing|
-    3.1 Simple Dispatching...................: |akka-routing-dispatching|
-    3.2 Simple Load Balancing................: |akka-routing-loadbalance|
-    3.3 Actor Pools..........................: |akka-routing-pools|
-
+  1. Manifesto...............................: |akka-manifesto|
+    1.3 Core Services........................: |akka-core-services|
+    1.4 Deployed Use Cases...................: |akka-deploy-use-cases|
+    1.2 Scalability..........................: |akka-scalability|
+    1.2 Fault-tolerance......................: |akka-fault-tolerance|
+  2. Actors..................................: |akka-actors|
+    2.1 Actor Lifecycle......................: |akka-actor-lifecycle|
+    2.2 Actor Companion Object...............: |akka-actor-object|
+    2.3 Defining by Derivation...............: |akka-actor-derive|
+    2.4 Anonymous Creation...................: |akka-actor-anonymous|
+    2.5 Actor vs. ActorRef...................: |akka-actor-actorref|
+    2.6 !, !!, and !!!.......................: |akka-actor-send-message|
+      2.6.1 !................................: |akka-actor-!|
+      2.6.2 !!...............................: |akka-actor-!!|
+      2.6.3 !!!..............................: |akka-actor-!!!|
+      2.6.4 Unifying Pattern.................: |akka-actor-unifying-msg|
+      2.6.5 Forwarding a Future..............: |akka-actor-future-fwd|
+    2.7 Actor Control........................: |akka-actor-control|
+      2.7.1 Starting and Stopping............: |akka-actor-start-stop|
+      2.7.2 Poison Pill......................: |akka-actor-poisonpill|
+      2.7.3 Actor Murder.....................: |akka-actor-murder|
+    2.8 Hot-Swapping.........................: |akka-actor-hotswap|
+      2.8.1 Invoking the Hot-Swap............: |akka-actor-invoke-hotswap|
+      2.8.2 Reverting the Hot-Swap...........: |akka-actor-revert-hotswap|
+    2.9 PartialFunction Chaining.............: |akka-actor-partialfunc-chaining|
+    2.10 Actor Registry......................: |akka-actor-registry|
+    2.11 Remote Actors.......................: |akka-actor-remote|
+      2.11.1 Starting Up Remote..............: |akka-actor-remote-startup|
+      2.11.2 Registering Actors..............: |akka-actor-remote-register|
+      2.11.3 Invoking Actors Remotely........: |akka-actor-remote-invoke|
+      2.11.4 Connection Fault Tolerance......: |akka-actor-remote-resilience|
+      2.11.5 Remote Security.................: |akka-actor-remote-security|
+      2.11.6 Session Based Servers...........: |akka-actor-remote-sessions|
+      2.11.7 Event Listening.................: |akka-actor-remote-events|
+      2.11.8 Messge Serialization............: |akka-actor-remote-serialization|
+    2.12 Scheduler...........................: |akka-actor-scheduler|
+    2.13 Mailboxes...........................: |akka-actor-mailboxes|
+      2.13.1 Viktor's Priority Mailbox.......: |akka-priority-mailbox|
+  3. Actor Supervision.......................: |akka-supervision|
+    3.1 So Why Not Just Use Erlang/OTP?......: |akka-why-not-erlang|
+    3.2 Designing for Failure................: |akka-design-for-failure|
+    3.3 Setting Up Supervision...............: |akka-setting-up-supervision|
+      3.3.1 Fault Handling Strategies........: |akka-fault-handling-strategies|
+      3.3.2 Restart LifeCycles...............: |akka-restart-lifecycles|
+      3.3.3 Declarative Setup................: |akka-supervision-declarative-setup|
+      3.3.3.1 Declarative Example............: |akka-supervision-declarative-example|
+      3.3.4 Programmatic Setup...............: |akka-supervision-programmatic-setup|
+    3.4 Non-Blocking Failure.................: |akka-non-blocking-failure|
+  4. Actor Routing...........................: |akka-routing|
+    4.1 Simple Dispatching...................: |akka-routing-dispatching|
+    4.2 Simple Load Balancing................: |akka-routing-loadbalance|
+    4.3 Actor Pools..........................: |akka-routing-pools|
+  5. Cloudy Akka.............................: |akka-cloudy-akka|
 
 ==============================================================================
-1. Actors                                                   *akka-actors* {{{1
+1. Manifesto                                             *akka-manifesto* {{{1
 ------------------------------------------------------------------------------
 
-1.1 Actor Lifecycle                                *akka-actor-lifecycle* {{{2
+Akka (http://akka.io) was created to focus on solving specific problems with
+building applications.  The problem:
+
+    It's way too hard to build:
+        1. Correctly, highly concurrent systems
+        2. Truly scalable systems
+        3. Fault-tolerant systems that self heal
+
+    ... using "state-of-the-art" tools
+
+The vision is to provide a single unified Programming Model and Runtime
+Service.  Jonas specifically avoids the use of "Framework" here in order to
+try and avoid some of the notions that come along with that word -
+specifically the concept of being 'boxed in' to a programming style or some
+other type of rigid concept.  The idea of a "toolkit" is much more applicable
+here.
+
+Akka claims to provide the ability to "transparently"
+
+  - scale up and out
+  - load balance
+  - handle failures
+  - provide remoting
+  - provide java and scala interfaces
+
+Akka specifically does not promote notions of shared state for concurrency and
+is designed from the ground up to use message-based concurrency.
+
+
+1.3 Core Services                                    *akka-core-services* {{{2
+------------------------------------------------------------------------------
+
+"Concurrency"
+
+  - Actors
+  - Software Transactional Memory (STM)
+  - Agents
+  - Dataflow
+
+"Scalability"
+
+"Fault-tolerance"
+
+
+1.4 Deployed Use Cases                            *akka-deploy-use-cases* {{{2
+------------------------------------------------------------------------------
+
+Akka is being used in the following use cases (although these aren't backed up
+by the actual deployed sites, by name):
+
+Finance
+
+    - Stock trend Analysis & Simulation
+    - Event-driven messaging systems
+
+Betting and Gaming
+
+    - Massive multiplayer online gaming
+    - High throughput and transactional betting
+
+Telecom
+
+    - Streaming media network gateways
+
+Simulation
+
+    - 3D simluation engines
+
+E-Commerce
+
+    - Social media community sites
+
+
+1.2 Scalability                                        *akka-scalability* {{{2
+------------------------------------------------------------------------------
+
+Akka aims to handle system overload by both scaling up (utilizing multiple
+cores) and scaling out (utlizing multiple nodes).
+
+1.2 Fault-tolerance                                *akka-fault-tolerance* {{{2
+------------------------------------------------------------------------------
+
+==============================================================================
+2. Actors                                                   *akka-actors* {{{1
+------------------------------------------------------------------------------
+
+The Actor Model has the following, arguable, benefits:
+
+    - Easier to reason about
+    - Raised abstraction level
+    - Easier to avoid:
+        - Race conditions
+        - Deadlocks
+        - Live locks
+        - Starvations
+
+There are typed and untyped Actors.  At this time, I've only ever dealt with
+untyped Actors but, of course untyped entities are both a blessing and a
+curse, so while I've gone a long with the untyped Actors I will eventually
+need to investigate typed Actors.
+
+
+2.1 Actor Lifecycle                                *akka-actor-lifecycle* {{{2
 ------------------------------------------------------------------------------
 
 NEW (newly created actor) - can't receive messages (yet)
@@ -61,7 +178,7 @@ NEW (newly created actor) - can't receive messages (yet)
         => SHUT DOWN (when 'exit' or 'stop' is invoked) - can't do anything
 
 
-1.2 Actor Companion Object                            *akka-actor-object* {{{2
+2.2 Actor Companion Object                            *akka-actor-object* {{{2
 ------------------------------------------------------------------------------
 
 The {Actor} object provides some convenience methods for constructing some
@@ -139,7 +256,7 @@ spawn(body: => Unit)(implicit dispatcher: MessageDispatcher = ...) : Unit
             ... // do stuff
         }
 !/sc!
-1.3 Defining by Derivation                            *akka-actor-derive* {{{2
+2.3 Defining by Derivation                            *akka-actor-derive* {{{2
 ------------------------------------------------------------------------------
 !sc!
     scala> import akka.actor._
@@ -160,7 +277,7 @@ spawn(body: => Unit)(implicit dispatcher: MessageDispatcher = ...) : Unit
     scala> a.stop 
 !/sc!
 
-1.4 Anonymous Creation                             *akka-actor-anonymous* {{{2
+2.4 Anonymous Creation                             *akka-actor-anonymous* {{{2
 ------------------------------------------------------------------------------
 !sc!
     scala> var a = actorOf(new Actor {
@@ -176,7 +293,7 @@ spawn(body: => Unit)(implicit dispatcher: MessageDispatcher = ...) : Unit
     scala> a.stop
 !/sc!
 
-1.5 Actor vs. ActorRef                              *akka-actor-actorref* {{{2
+2.5 Actor vs. ActorRef                              *akka-actor-actorref* {{{2
 ------------------------------------------------------------------------------
 
 One derives from {Actor} but the meat of things happens in the {ActorRef}, due
@@ -235,13 +352,13 @@ members directly, if you want:
     }
 !/sc!
 
-1.6 !, !!, and !!!                              *akka-actor-send-message* {{{2
+2.6 !, !!, and !!!                              *akka-actor-send-message* {{{2
 ------------------------------------------------------------------------------
 
 Actors are all about passing messages around and the !, !! and !!! methods are
 the {Actor}'s mechanisms for passing messages.
 
-1.6.1 !                                                    *akka-actor-!* {{{3
+2.6.1 !                                                    *akka-actor-!* {{{3
 ------------------------------------------------------------------------------
 
 The simple ! message is the best way to send something - it's the one-way
@@ -298,7 +415,7 @@ would always like to see one there, then it's easiest to simply force it in
 the message and then it's there all the time.
 
 
-1.6.2 !!                                                  *akka-actor-!!* {{{3
+2.6.2 !!                                                  *akka-actor-!!* {{{3
 ------------------------------------------------------------------------------
 
 The !! method is a blocking call.  The implication is that the reciever is
@@ -357,7 +474,7 @@ because it's easy, but we have to remember that it is an {Option} object, so
 it may not be valid to do that.
 
 
-1.6.3 !!!                                                *akka-actor-!!!* {{{3
+2.6.3 !!!                                                *akka-actor-!!!* {{{3
 ------------------------------------------------------------------------------
 
 The !!! method returns a {Future}.  This is a non-blocking call but requires
@@ -377,7 +494,7 @@ need not be an {Actor}, as is the case in the !! call.  Using the exact same
       Some(You said, 'Hithere, SyncServerActor', and I say 'Thanks')
 !/sc!
 
-1.6.4 Unifying Pattern                          *akka-actor-unifying-msg* {{{3
+2.6.4 Unifying Pattern                          *akka-actor-unifying-msg* {{{3
 ------------------------------------------------------------------------------
 
 Ideally we should be able to unify the !, !!, !!! usage into a single pattern,
@@ -425,7 +542,7 @@ pattern that can use some work to generalize a bit more with some generics:
   Client got -> Hithere : dood
 !/sc!
 
-1.6.5 Forwarding a Future                         *akka-actor-future-fwd* {{{3
+2.6.5 Forwarding a Future                         *akka-actor-future-fwd* {{{3
 ------------------------------------------------------------------------------
 
 There are times when we may want to synchronize an asynchronous call.
@@ -494,7 +611,7 @@ We can do that with the following:
     res1: String = Here's some results
 !/sc!
 
-1.7 Actor Control                                    *akka-actor-control* {{{2
+2.7 Actor Control                                    *akka-actor-control* {{{2
 ------------------------------------------------------------------------------
 
 {Actor}s can be started easily enough and, in fact /must/ be started before
@@ -502,7 +619,7 @@ you can do anything with them.  If you try to send a message to an {Actor}
 that has not been started then you're going to get yourself a big fat
 {akka.actor.ActorInitializationException}.
 
-1.7.1 Starting and Stopping                       *akka-actor-start-stop* {{{3
+2.7.1 Starting and Stopping                       *akka-actor-start-stop* {{{3
 ------------------------------------------------------------------------------
 
 Both {Actor} and {ActorRef} have a {start} method on them.
@@ -558,7 +675,7 @@ Class Loader nonsense without checking for them first.  The bottom line
 appears to be that the one {Actor} I had running is definitely stopped.
 
 
-1.7.2 Poison Pill                                 *akka-actor-poisonpill* {{{3
+2.7.2 Poison Pill                                 *akka-actor-poisonpill* {{{3
 ------------------------------------------------------------------------------
 
 Another way to kill an {Actor} off is to send it a {PoisonPill}:
@@ -571,7 +688,7 @@ Another way to kill an {Actor} off is to send it a {PoisonPill}:
     { ... shutdown messages here ... }
 !/sc!
 
-1.7.3 Actor Murder                                    *akka-actor-murder* {{{3
+2.7.3 Actor Murder                                    *akka-actor-murder* {{{3
 ------------------------------------------------------------------------------
 
 This was meant to hold the {Kill} message, but it looks like it's an old API
@@ -585,7 +702,7 @@ sure why there are two of these... they both seem to do the same thing.
 	*Todo	investigate this more by doing some experiments with the callbacks
 
 
-1.8 Hot-Swapping                                     *akka-actor-hotswap* {{{2
+2.8 Hot-Swapping                                     *akka-actor-hotswap* {{{2
 ------------------------------------------------------------------------------
 
 Hot-swapping allows the application to swap in new {Actor} message loops at
@@ -594,7 +711,7 @@ function that is normally created statically by defining the {receive}
 function.  There are two ways you can do it:
 
 
-1.8.1 Invoking the Hot-Swap                   *akka-actor-invoke-hotswap* {{{3
+2.8.1 Invoking the Hot-Swap                   *akka-actor-invoke-hotswap* {{{3
 ------------------------------------------------------------------------------
 
 - Send a "HotSwap" message to the {Actor}
@@ -650,7 +767,7 @@ an example of using hot-swapping:
     swap ! Swap // prints Ho
 !/sc!
 
-1.8.2 Reverting the Hot-Swap                  *akka-actor-revert-hotswap* {{{3
+2.8.2 Reverting the Hot-Swap                  *akka-actor-revert-hotswap* {{{3
 ------------------------------------------------------------------------------
 
 Because the implementations are shoved on a {Stack}, you can also revert them.
@@ -670,7 +787,7 @@ and to do it with the {unbecome} method:
     }
 !/sc!
 
-1.9 PartialFunction Chaining            *akka-actor-partialfunc-chaining* {{{2
+2.9 PartialFunction Chaining            *akka-actor-partialfunc-chaining* {{{2
 ------------------------------------------------------------------------------
 
 Here we can use the {orElse} method on {PartialFunction} to chain things
@@ -696,7 +813,7 @@ together and allow for some extensibility:
     }
 !/sc!
 
-1.10 Actor Registry                                 *akka-actor-registry* {{{2
+2.10 Actor Registry                                 *akka-actor-registry* {{{2
 ------------------------------------------------------------------------------
 
 Every time an {Actor} is started it is added to the {ActorRegistry} and every
@@ -831,7 +948,7 @@ out in a single {Array}:
     Actor[sameId:6852ce10-4404-11e0-a132-005056c00008])
 !/sc!
 
-1.11 Remote Actors                                    *akka-actor-remote* {{{2
+2.11 Remote Actors                                    *akka-actor-remote* {{{2
 ------------------------------------------------------------------------------
 
 {Actor}s can be launched, connected-to, and managed remotely, and the work
@@ -842,7 +959,7 @@ Remote {Actor}s are built on an efficient and scalable network I/O
 implementation based on JBoss Netty and Google Protocol Buffers.
 
 
-1.11.1 Starting Up Remote                    *akka-actor-remote-startup* {{{3
+2.11.1 Starting Up Remote                    *akka-actor-remote-startup* {{{3
 ------------------------------------------------------------------------------
 
 The {remote} subsystem is accessible via the |akka-actor-object|.  It's pretty
@@ -915,7 +1032,7 @@ configuration and just let it default construct:
     Shutting down remote server on localhost:2552
 !/sc!
 
-1.11.2 Registering Actors                    *akka-actor-remote-register* {{{3
+2.11.2 Registering Actors                    *akka-actor-remote-register* {{{3
 ------------------------------------------------------------------------------
 
 If your code is taking the role of the "server" then it's reasonable to
@@ -951,7 +1068,7 @@ You can also register {Actor}s by their {UUID} instead of by their {Id} or
     remote.unregister("uuid:" + actor.uuid)
 !/sc!
 
-1.11.3 Invoking Actors Remotely                *akka-actor-remote-invoke* {{{3
+2.11.3 Invoking Actors Remotely                *akka-actor-remote-invoke* {{{3
 ------------------------------------------------------------------------------
 
 If you're the "client" then it might be reasonable to request that an {Actor}
@@ -987,7 +1104,7 @@ launch {Actor}s remotely:
   res1: Option[Any] = Some(Some(Pong))
 !/sc!
 
-1.11.4 Connection Fault Tolerance          *akka-actor-remote-resilience* {{{3
+2.11.4 Connection Fault Tolerance          *akka-actor-remote-resilience* {{{3
 ------------------------------------------------------------------------------
 
 Remote clients automatically perform reconnection upon failure.  You can
@@ -1017,7 +1134,7 @@ It's probably easier to register a listener that will list for the
 "wherever it may occur".
 
 
-1.11.5 Remote Security                       *akka-actor-remote-security* {{{3
+2.11.5 Remote Security                       *akka-actor-remote-security* {{{3
 ------------------------------------------------------------------------------
 
 It's possible to run the server in "untrusted mode".  Essentially, this stops
@@ -1075,7 +1192,7 @@ When connecting, a client will send its cookie across SSL and, assuming it
 matches the server's version, the client will be granted full access and, if
 not you will get a {java.lang.SecurityException}.
 
-1.11.6 Session Based Servers                 *akka-actor-remote-sessions* {{{3
+2.11.6 Session Based Servers                 *akka-actor-remote-sessions* {{{3
 ------------------------------------------------------------------------------
 
 You can specify that Server-side {Actor}s be created on a "session" basis,
@@ -1103,7 +1220,7 @@ According to the ScalaDoc for the {registerPerSession} method, we must
 {unregister} the actor by this {Id} on our own.
 
 
-1.11.7 Event Listening                         *akka-actor-remote-events* {{{3
+2.11.7 Event Listening                         *akka-actor-remote-events* {{{3
 ------------------------------------------------------------------------------
 
 The remote node will publish client-related events to registered listeners:
@@ -1142,14 +1259,14 @@ And the same types of events are availble for server-related objects:
   remote.removeListener(listener)
 !/sc!
 
-1.11.8 Messge Serialization             *akka-actor-remote-serialization* {{{3
+2.11.8 Messge Serialization             *akka-actor-remote-serialization* {{{3
 ------------------------------------------------------------------------------
 
 	*Todo	needs to be investigated
 
 
 ==============================================================================
-1.12 Scheduler                                     *akka-actor-scheduler* {{{2
+2.12 Scheduler                                     *akka-actor-scheduler* {{{2
 ------------------------------------------------------------------------------
 
 The {akka.actor.Scheduler} object has a few neat methods on it that provide
@@ -1181,7 +1298,7 @@ through the system at random intervals.
   }
 !/sc!
 
-1.13 Mailboxes                                     *akka-actor-mailboxes* {{{2
+2.13 Mailboxes                                     *akka-actor-mailboxes* {{{2
 ------------------------------------------------------------------------------
 
 	*Todo	this is a placeholder
@@ -1191,7 +1308,7 @@ through the system at random intervals.
     "DrainYourself" message, but I want it to be pulled out of the mailbox
     only if there are no other messages in there.
 
-1.13.1 Viktor's Priority Mailbox                  *akka-priority-mailbox* {{{3
+2.13.1 Viktor's Priority Mailbox                  *akka-priority-mailbox* {{{3
 ------------------------------------------------------------------------------
 
 Viktor Klang threw this together, an I've pulled it from the original post at
@@ -1271,12 +1388,403 @@ scala> object PriorityMessageDispatcher {
 scala> val a = actorOf(...)
 scala> a.dispatcher = PriorityMessageDispatcher.instance
 scala> a.start 
-
-2. Actor Supervision                                   *akka-supervision* {{{1
-------------------------------------------------------------------------------
+!/sc!
 
 ==============================================================================
-3. Actor Routing                                           *akka-routing* {{{1
+3. Actor Supervision                                   *akka-supervision* {{{1
+------------------------------------------------------------------------------
+
+The core of the Akka supervision subsystem is shamelessly ripped off from
+Erlang's Open Telecom Platform (http://trapexit.org).  The OTP is a system
+that brings concurrency and failure together into a single unified platform
+where the key point is that failure is designed in to the system.  The
+brilliance is that we no long ignore failure and then try to design it out of
+the systems we build - which never works, of course.  Instead, we expect
+failure and handle it appropriately.  It's this philosophy, coupled with live
+upgrades that takes a system from 3 9's uptime, or even 5 9's uptime to 9 9's
+uptime.
+
+
+3.1 So Why Not Just Use Erlang/OTP?                 *akka-why-not-erlang* {{{2
+------------------------------------------------------------------------------
+
+It's simple pragmatism: Akka is built for the JVM and, as such, has access to
+the entire Java community.  This means developers (many more Java developers
+than Erlang developers) and toolkits / frameworks.
+
+It's really that simple.
+
+
+3.2 Designing for Failure                       *akka-design-for-failure* {{{2
+------------------------------------------------------------------------------
+
+Fortunately, because Akka takes a page out of Erlang's playbook here, we can
+use all of Erlang's already proven design principles.
+
+The idea is to layer your system design like an onion; keep the most critical
+state in the centre and build out less reliable services on top of it.  The
+only thing that's really critical is 'state' that cannot be reconstructed, and
+an {Actor} that is responsible for managing this state is clearly destined for
+the iron-clad centre of the design.
+
+Anything that operates on that data, and could therefore throw exceptions
+(e.g. a simple Parsing exception) should be delegated to an {Actor} that can
+fail gracefully and be restarted by a {Supervisor}.
+
+
+3.3 Setting Up Supervision                  *akka-setting-up-supervision* {{{2
+------------------------------------------------------------------------------
+
+There are a number of ways to do this, so it can be a bit confusing.  First we
+need to cover some terminology and package details.
+
+Any {Actor} can supervise any other {Actor}, so without going into the details
+just yet, we observe that an {Actor} does not supervise itself.  An {Actor} is
+supervised by another {Actor} through a process of "linking".  An {Actor}
+which has another {Actor} linked to it takes on the role of the {Supervisor}.
+The {Actor} which has been linked to is being supervised and will be managed
+by the {Supervisor}.
+
+This can occur in as deep of a hierarchy as you like, and can occur across
+nodes in a cluster as well.
+
+
+3.3.1 Fault Handling Strategies          *akka-fault-handling-strategies* {{{3
+------------------------------------------------------------------------------
+
+There are currently two fault handling strategies in Akka:
+!sc!
+  import akka.config.Supervision.AllForOneStrategy
+  import akka.config.Supervision.OneForOneStrategy
+!/sc!
+To understand this we need to remember that a single {Supervisor} may be
+supervising a number of {Actor}s simultaneously.  These two strategies discuss
+what should happen when any of the supervised {Actors} has a failure.  The
+{AllForOneStrategy} states that a single failed {Actor} requires the restart
+of all {Actors} being supervised by the {Supervisor}.  The {OneForOneStrategy}
+states that only the failed {Actor} will be restarted.
+
+
+3.3.2 Restart LifeCycles                        *akka-restart-lifecycles* {{{3
+------------------------------------------------------------------------------
+
+An {Actor} may or may not be restarted by a {Supervisor} depending on how it
+its {LifeCycle} is defined:
+!sc!
+  import akka.config.Supervision.Permanent
+  import akka.config.Supervision.Temporary
+!/sc!
+A {Permanent} {LifeCycle} indicates that the {Actor} must be restarted every
+time it fails while a {Temporary} {LifeCycle} indicates that a failed {Actor}
+must be properly {stopped} after the failure.  This ensures orderly shutdown
+of a failed {Actor}.
+
+
+3.3.3 Declarative Setup              *akka-supervision-declarative-setup* {{{3
+------------------------------------------------------------------------------
+
+The documentation at http://bit.ly/eNTJSm states the following:
+!sc!
+  val supervisor = Supervisor(
+    SupervisorConfig(
+      AllForOneStrategy(List(classOf[Exception]), 3, 1000),
+      Supervise(
+        actorOf[MyActor1],
+        Permanent) ::
+      Supervise(
+        actorOf[MyActor2],
+        Permanent) ::
+      Nil))
+!/sc!
+However, this doesn't seem to work - perhaps something changed in 1.1 (as
+that's what I'm currently using).  What does work is the following:
+!sc!
+  val supervisor = Supervisor(
+    SupervisorConfig(
+      AllForOneStrategy(List(classOf[Exception]), 3, 1000),
+      Supervise(
+        actorOf(new MyActor1),
+        Permanent) ::
+      Supervise(
+        actorOf(new MyActor2),
+        Permanent) ::
+      Nil))
+!/sc!
+Note that the only way you're going to get access to the {Actor}s after this
+is through the |akka-actor-registry| so that approach may not be the most
+pragmatic, depending on how you identify your {Actor}s.
+
+You can easily do this, of course:
+!sc!
+  val actor1 = actorOf[MyActor1]
+  val actor2 = actorOf[MyActor2]
+  val supervisor = Supervisor(
+    SupervisorConfig(
+      AllForOneStrategy(List(classOf[Exception]), 3, 1000),
+      Supervise(actor1, Permanent) ::
+      Supervise(actor2, Permanent) ::
+      Nil))
+!/sc!
+
+3.3.3.1 Declarative Example        *akka-supervision-declarative-example* {{{4
+------------------------------------------------------------------------------
+!sc!
+  import akka.config.Supervision._
+  import akka.actor.Actor._
+  import akka.actor._
+  
+  class MyActor extends Actor {
+    def receive = {
+      case "throw" => throw new RuntimeException("Die, bastard!")
+      case msg => println(msg)
+    }
+  
+    override def postRestart(reason: scala.Throwable) {
+      println(self.id + ": restarting with reason - " + reason.getMessage)
+    }
+  
+    override def postStop {
+      println(self.id + ": stopping normally")
+    }
+  }
+  
+  var supervisor = Supervisor(SupervisorConfig(
+    AllForOneStrategy(List(classOf[Exception]), 3, 1000),
+    Supervise(actorOf(new MyActor {
+       self.id = "MyActor1 Permanent"
+    }), Permanent) ::
+    Supervise(actorOf(new MyActor {
+       self.id = "MyActor2 Permanent"
+    }), Permanent) ::
+    Supervise(actorOf(new MyActor {
+       self.id = "MyActor3 Temporary"
+    }), Permanent) ::
+    Supervise(actorOf(new MyActor {
+       self.id = "MyActor4 Permanent"
+    }), Permanent) ::
+    Supervise(actorOf(new MyActor {
+       self.id = "MyActor5 Permanent"
+    }), Permanent) ::
+    Nil))
+
+  registry.actors.head ! "throw"
+  Thread.sleep(200)
+  registry.actors.foreach(_ ! "booger")
+  Thread.sleep(2000)
+  registry.shutdownAll
+!/sc!
+The above outputs the following:
+>
+ MyActor3 Temporary: stopping normally
+ MyActor4 Permanent: restarting with reason - Die, bastard!
+ MyActor2 Permanent: restarting with reason - Die, bastard!
+ MyActor1 Permanent: restarting with reason - Die, bastard!
+ MyActor5 Permanent: restarting with reason - Die, bastard!
+ booger
+ booger
+ booger
+ booger
+ MyActor4 Permanent: stopping normally
+ MyActor2 Permanent: stopping normally
+ MyActor1 Permanent: stopping normally
+ MyActor5 Permanent: stopping normally
+<
+
+3.3.4 Programmatic Setup            *akka-supervision-programmatic-setup* {{{3
+------------------------------------------------------------------------------
+
+Things can be done more programmatically and thus more flexibly with the
+following:
+!sc!
+  class MySupervisor extends Actor {
+    self.faultHandler = OneForOneStrategy(List(classOf[Throwable]), 5, 5000)
+   
+    def receive = {
+      case Register(actor) =>
+        self.link(actor)
+    }
+  }
+!/sc!
+See the programmatic setup of the {FaultHandlingStrategy} by setting
+{self.faultHandler} and the dynamic linking of {Actor}s using the {self.link}
+call.
+
+3.3.5 Getting Your Supervisor       *akka-supervision-getting-supervisor* {{{3
+------------------------------------------------------------------------------
+
+It can be useful to be able to talk to your {Supervisor}, as in the following
+example:
+!sc!
+  case PleaseDie =>
+    supervisor.foreach(_ ! Unlink(this))
+!/sc!
+
+3.3.6 Chained Restarts                *akka-supervision-chained-restarts* {{{3
+------------------------------------------------------------------------------
+
+	*Error	i have a bug filed against Akka for this
+
+There is undefined behaviour here.  I have filed ticket "707: Chained
+supervisors fail to restart Actors properly" (http://bit.ly/fiAB7u).
+
+My assumption was that, if you have a chain, defined like this:
+!sc!
+  import akka.actor.Actor._
+  import akka.actor._
+  import akka.config.Supervision._
+  
+  case object Die
+  
+  class Chainer(myId: String, a: Option[ActorRef] = None) extends Actor {
+    self.id = myId
+    self.lifeCycle = Permanent
+    self.faultHandler = OneForOneStrategy(List(classOf[Exception]), 3, 1000)
+    a.foreach(self.link(_))
+    a.foreach((a) => println(self.id + " starting up with a = " + a.id))
+  
+    def receive = {
+      case Die => throw new Exception(self.id + ": Blurgh!")
+    }
+  
+    override def preRestart(reason: scala.Throwable) {
+      println(reason.getMessage + ": " + self.mailboxSize)
+    }
+  }
+  
+  val lastActor   = actorOf(new Chainer("lastActor")).start
+  val middleActor = actorOf(new Chainer("middleActor", Some(lastActor))).start
+  val headActor   = actorOf(new Chainer("headActor", Some(middleActor))).start
+  val supervisor = Supervisor(
+    SupervisorConfig(
+      OneForOneStrategy(List(classOf[Exception]), 3, 1000),
+      Supervise(headActor, Permanent) :: Nil
+    )).start
+  
+  lastActor ! Die
+  Thread.sleep(100)
+  middleActor ! Die
+  Thread.sleep(100)
+  supervisor.shutdown
+!/sc!
+Then the death of {lastActor} would have it restarted, as would {middleActor}
+or {headActor}; I wouldn't expect others to get restarted at all.  What's
+happening isn't either of those things:
+>
+  middleActor starting up with a = lastActor
+  headActor starting up with a = middleActor
+  lastActor: Blurgh!: 0
+  middleActor: Blurgh!: 0
+  middleActor: Blurgh!: 0
+  middleActor: Blurgh!: 0
+<
+
+3.4 Non-Blocking Failure                      *akka-non-blocking-failure* {{{2
+------------------------------------------------------------------------------
+
+Akka 1.1 has introduced a very important feature that allows for greater use
+of non-blocking calls that are resilient in the face of failure.
+
+The typical problem is this:
+!sc!
+  class ServerActor extends Actor {
+    def receive = {
+      case Ping =>
+        if (currentTime % 10000 == 0)
+          throw RuntimeException("Die, you devil!")
+        self.sender.foreach(_ ! Pong)
+    }
+  }
+  
+  class ClientActor(server: ActorRef) extends Actor {
+    def receive = {
+      case Ping =>
+        server ! Ping
+      case Pong =>
+        print("I'm so happy")
+    }
+  }
+!/sc!
+Here we see that, should the current time happen to be divisible by 10000
+milliseconds when a {Ping} message comes in, the {ServerActor} is going to
+throw a {RuntimeException}.  Now, even if a {Supervisor} is watching it and
+restarts it, the {Ping} message is going to be lost.  And, because we have a
+non-blocking Request / Response paradigm going on here, the {ClientActor} is
+going to be left in the dark.
+
+A possible answer to this problem is to spool up a slave {Actor} to be
+dedicated to receive the response and forward that back to the originator,
+retrying the initial send on a timeout:
+!sc!
+  class ClientActor extends Actor {
+    def receive = {
+      case Ping =>
+        val originator = self
+        self.startLink(actorOf(new Actor {
+          self.receiveTimeout = Some(5000L)
+          def recieve = {
+            case PingTo(server) =>
+              server ! Ping
+            case pong @ Pong =>
+              originator forward pong
+              supervisor.foreach(_ ! Unlink(this))
+            case ReceiveTimeout =>
+              server ! Ping
+          }
+        })
+      case Pong =>
+        print("I'm so happy")
+    }
+  }
+!/sc!
+This is, of course, not ideal because it assumes that the {ServerActor} has
+croaked.  If it hasn't, and is merely slow, then the {ServerActor} now has two
+{Ping} messages waiting to be processed, which causes two problems:
+
+    1) The {ClientActor}'s slave is going to get two {Pong}s.  In the case of
+       a {Pong} it's not such a big deal, but with a more substantial message,
+       it could be an issue.
+    2) The (already slow) {ServerActor} has even more work to do.
+
+Akka 1.0 has a way to deal with this, but it assumes a blocking call:
+!sc!
+  // or postRestart
+  override def preRestart(reason: scala.Throwable) {
+    // reply_? is a "safe" reply that doesn't fail if there's nothing
+    // to reply to 
+    self.reply_?(reason.getMessage)
+  }
+!/sc!
+However a {reply} by definition requires a {Future} to reply to, and that
+assumes some fashion of blocking call is taking place, which is something
+we're trying to avoid.  Fortunately, Akka 1.1 (still in SNAPSHOT phase)
+provides access to the original {sender} as well, which makes the following
+possible:
+!sc!
+  class ServerActor extends Actor {
+    def recieve = {
+      case Ping =>
+        if (currentTime % 10000 == 0) throw PingException("Die, you devil!")
+        self.sender.foreach(_ ! Pong)
+    }
+
+    override def preRestart(reason: scala.Throwable) {
+      reason match {
+        case PingException(message) =>
+          self.sender.foreach(_ ! PingServerActorRestarted(message))
+        case _ =>
+      }
+    }
+  }
+!/sc!
+Now, we can create the {ClientActor} (or a trait that it mixes in) capable of
+receiving the {PingServerActorRestarted} message and react accordingly.  One
+could easily envision a trait that retries the failed operation since the
+{ClientActor} is (arguably) the entity in the best position to understand the
+context of its request enough to initiate the retry.
+
+
+==============================================================================
+4. Actor Routing                                           *akka-routing* {{{1
 ------------------------------------------------------------------------------
 
 Routing is tightly coupled with |akka-actors| but are technically in their own
@@ -1289,7 +1797,7 @@ multiple {Actor}s in order to increase the liklihood of a response message in
 the face of "interesting" failures.
 
 
-3.1 Simple Dispatching                         *akka-routing-dispatching* {{{2
+4.1 Simple Dispatching                         *akka-routing-dispatching* {{{2
 ------------------------------------------------------------------------------
 
 There are a couple of ways to get a dispatcher up and running.  The first way
@@ -1358,7 +1866,7 @@ is to mix in the {Dispatcher} trait and define the {routes} method:
   Ponger: Pong
 !/sc!
 
-3.2 Simple Load Balancing                      *akka-routing-loadbalance* {{{2
+4.2 Simple Load Balancing                      *akka-routing-loadbalance* {{{2
 ------------------------------------------------------------------------------
 
 Another way to route information is using a {LoadBalancer}.  Again, there are
@@ -1439,7 +1947,7 @@ these is as simple as the above:
         List(pinger, ponger)))
 !/sc!
 
-3.3 Actor Pools                                      *akka-routing-pools* {{{2
+4.3 Actor Pools                                      *akka-routing-pools* {{{2
 ------------------------------------------------------------------------------
 
 {Actor} Pools are more complex than the simple mechanisms described above, but
@@ -1456,7 +1964,7 @@ number of different parameters to enhance the routing strategy.
 
 
 ==============================================================================
-4. Cloudy Akka                                         *akka-cloudy-akka* {{{1
+5. Cloudy Akka                                         *akka-cloudy-akka* {{{1
 ------------------------------------------------------------------------------
 
 Akka also provides a "cloud" product called "Cloudy Akka".  I don't know too
