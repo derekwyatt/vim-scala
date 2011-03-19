@@ -11,7 +11,7 @@ class SomeClass {
     case AMultiLineCase =>
       if (this)
         then
-      else // This doesn't dedent immediately
+      else
         that
   }
 
@@ -273,4 +273,20 @@ class SomeClass {
       here
     case There =>
   }
+
+  def somethingWithDots = {
+    SomeObject.build
+      .withSomething
+      .withSomethingElse
+      .withSomethingElseAgain
+  }
+
+  def someFunction[T <: U](
+    x: Int): SomeType = {
+      val someValue: Option[Int] = {
+        someValue match {
+          some stuff here
+        }
+      }
+    }
 }

@@ -2,7 +2,7 @@
 " Language         : Scala (http://scala-lang.org/)
 " Original Author  : Stefan Matthias Aust
 " Modifications by : Derek Wyatt
-" Last Change: 2011 Mar 10 (Derek Wyatt)
+" Last Change: 2011 Mar 19 (Derek Wyatt)
 
 "if exists("b:did_indent")
 "  finish
@@ -243,6 +243,15 @@ function! GetScalaIndent()
     endif
   endif
 
+  " '.' continuations
+  if curline =~ '^\s*\.'
+    if prevline =~ '^\s*\.'
+      return ind
+    else
+      return ind + &shiftwidth
+    endif
+  endif
+
   " Indent html literals
   if prevline !~ '/>\s*$' && prevline =~ '^\s*<[a-zA-Z][^>]*>\s*$'
     call scala#ConditionalConfirm("3")
@@ -261,66 +270,63 @@ function! GetScalaIndent()
     let ind = ind + &shiftwidth
   endif
 
-  let bracketCount = scala#CountBrackets(prevline, '(', ')')
-  if bracketCount > 0 || prevline =~ '.*(\s*$'
-    call scala#ConditionalConfirm("5a")
+  let lineCompletedBrackets = 0
+  let bracketCount = scala#CountBrackets(prevline, '{', '}')
+  if bracketCount > 0 || prevline =~ '.*{\s*$'
+    call scala#ConditionalConfirm("5b")
     let ind = ind + &shiftwidth
-    break
   elseif bracketCount < 0
-    call scala#ConditionalConfirm("6a")
+    call scala#ConditionalConfirm("6b")
     " if the closing brace actually completes the braces entirely, then we
     " have to indent to line that started the whole thing
-    let completeLine = scala#LineCompletesBrackets('(', ')')
+    let completeLine = scala#LineCompletesBrackets('{', '}')
     if completeLine != -1
-      call scala#ConditionalConfirm("8a")
+      call scala#ConditionalConfirm("8b")
       let prevCompleteLine = scala#GetLine(prevnonblank(completeLine - 1))
       " However, what actually started this part looks like it was a function
       " definition, so we need to indent to that line instead.  This is 
       " actually pretty weak at the moment.
       if prevCompleteLine =~ '=\s*$'
-        call scala#ConditionalConfirm("9a")
+        call scala#ConditionalConfirm("9b")
         let ind = indent(prevnonblank(completeLine - 1))
       else
-        call scala#ConditionalConfirm("10a")
+        call scala#ConditionalConfirm("10b")
         let ind = indent(completeLine)
       endif
     else
-      " This is the only part that's different from from the '{', '}' one below
-      " Yup... some refactoring is necessary at some point.
-      let ind = ind + (bracketCount * &shiftwidth)
+      let lineCompletedBrackets = 1
     endif
-    break
   endif
 
-  let lineCompletedBrackets = 0
   if ind == originalIndentValue
-    let bracketCount = scala#CountBrackets(prevline, '{', '}')
-    if bracketCount > 0 || prevline =~ '.*{\s*$'
-      call scala#ConditionalConfirm("5b")
+    let bracketCount = scala#CountBrackets(prevline, '(', ')')
+    if bracketCount > 0 || prevline =~ '.*(\s*$'
+      call scala#ConditionalConfirm("5a")
       let ind = ind + &shiftwidth
-      break
     elseif bracketCount < 0
-      call scala#ConditionalConfirm("6b")
+      call scala#ConditionalConfirm("6a")
       " if the closing brace actually completes the braces entirely, then we
       " have to indent to line that started the whole thing
-      let completeLine = scala#LineCompletesBrackets('{', '}')
-      if completeLine != -1
-        call scala#ConditionalConfirm("8b")
+      let completeLine = scala#LineCompletesBrackets('(', ')')
+      if completeLine != -1 && prevline !~ '^.*{\s*$'
+        call scala#ConditionalConfirm("8a")
         let prevCompleteLine = scala#GetLine(prevnonblank(completeLine - 1))
         " However, what actually started this part looks like it was a function
         " definition, so we need to indent to that line instead.  This is 
         " actually pretty weak at the moment.
         if prevCompleteLine =~ '=\s*$'
-          call scala#ConditionalConfirm("9b")
+          call scala#ConditionalConfirm("9a")
           let ind = indent(prevnonblank(completeLine - 1))
         else
-          call scala#ConditionalConfirm("10b")
+          call scala#ConditionalConfirm("10a")
           let ind = indent(completeLine)
         endif
       else
+        " This is the only part that's different from from the '{', '}' one below
+        " Yup... some refactoring is necessary at some point.
+        let ind = ind + (bracketCount * &shiftwidth)
         let lineCompletedBrackets = 1
       endif
-      break
     endif
   endif
 
