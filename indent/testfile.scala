@@ -133,6 +133,9 @@ class SomeClass {
       that
     }
 
+    if (statement(nested statement(another nested statement))) func(statement)
+    if (statement(nested statement(another nested statement))) statement
+
     if (b) {
       statement
       statement
@@ -175,6 +178,9 @@ class SomeClass {
     val a = func(
       10
     )
+
+    if (b) (statement)
+    else 2
 
     if (b) 1
     else 2
@@ -252,6 +258,14 @@ class SomeClass {
       Elem(prefix, "author", e, scope,
         Text("Wirth, Niklaus")))
     )
+
+  def mufync(statement): Int = {
+    val x = function(thing)
+    if (statement) func(statement)
+    else func(statement)
+  }
+
+  def SomeOtherFunc = statement
 
   def receive = {
     case Something =>

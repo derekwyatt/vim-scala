@@ -71,8 +71,39 @@ function! scala#GetLineThatMatchesBracket(openBracket, closedBracket)
   return lnum
 endfunction
 
+function! scala#NumberOfBraceGroups(line)
+  let line = substitute(a:line, '[^()]', '', 'g')
+  if strlen(line) == 0
+    return 0
+  endif
+  let line = substitute(line, '^)*', '', 'g')
+  if strlen(line) == 0
+    return 0
+  endif
+  let line = substitute(line, '^(', '', 'g')
+  if strlen(line) == 0
+    return 0
+  endif
+  let c = 1
+  let counter = 0
+  let groupCount = 0
+  while counter < strlen(line)
+    let char = strpart(line, counter, 1)
+    if char == '('
+      let c = c + 1
+    elseif char == ')'
+      let c = c - 1
+    endif
+    if c == 0
+      let groupCount = groupCount + 1
+    endif
+    let counter = counter + 1
+  endwhile
+  return groupCount
+endfunction
+
 function! scala#MatchesIncompleteDefValr(line)
-  if a:line =~ '^\s*\%(\%(\%(abstract\s\+\)\?\%(override\s\+\)\?\<def\>\)\|\<va[lr]\>\).*[=(]\s*$'
+  if a:line =~ '^\s*\%(\%(\%(abstract\s\+\)\?\%(override\s\+\)\?\<def\>\)\|\<va[lr]\>\).*[=({]\s*$'
     return 1
   else
     return 0
@@ -221,7 +252,7 @@ function! GetScalaIndent()
   " Add a 'shiftwidth' after lines that start a block
   " If 'if', 'for' or 'while' end with ), this is a one-line block
   " If 'val', 'var', 'def' end with =, this is a one-line block
-  if prevline =~ '^\s*\<\%(\%(}\?\s*else\s\+\)\?if\|for\|while\)\>.*[)=]\s*$'
+  if (prevline =~ '^\s*\<\%(\%(}\?\s*else\s\+\)\?if\|for\|while\)\>.*[)=]\s*$' && scala#NumberOfBraceGroups(prevline) <= 1)
         \ || prevline =~ '^\s*\%(abstract\s\+\)\?\%(override\s\+\)\?\<def\>.*=\s*$'
         \ || prevline =~ '^\s*\<va[lr]\>.*[=]\s*$'
         \ || prevline =~ '^\s*\%(}\s*\)\?\<else\>\s*$'
@@ -261,6 +292,7 @@ function! GetScalaIndent()
     break
   endif
 
+  let lineCompletedBrackets = 0
   if ind == originalIndentValue
     let bracketCount = scala#CountBrackets(prevline, '{', '}')
     if bracketCount > 0 || prevline =~ '.*{\s*$'
@@ -285,6 +317,8 @@ function! GetScalaIndent()
           call scala#ConditionalConfirm("10b")
           let ind = indent(completeLine)
         endif
+      else
+        let lineCompletedBrackets = 1
       endif
       break
     endif
@@ -338,7 +372,7 @@ function! GetScalaIndent()
     if indentMultiplier != 0
       call scala#ConditionalConfirm("19a")
       let ind = ind - (indentMultiplier * &shiftwidth)
-    else
+    elseif lineCompletedBrackets == 0
       call scala#ConditionalConfirm("19b")
       if scala#GetLine(prevnonblank(prevlnum - 1)) =~ '^.*\<else\>\s*\%(//.*\)\?$'
         call scala#ConditionalConfirm("19c")
