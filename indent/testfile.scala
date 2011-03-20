@@ -274,7 +274,28 @@ class SomeClass {
     case There =>
   }
 
-  def somethingWithDots = {
+  def func = oneliner
+  private def func = oneliner
+  private[thing] def func = oneliner
+  protected def func = oneliner
+  protected[thing] def func = oneliner
+  override def func = oneliner
+  abstract override def func = oneliner
+  override abstract def func = oneliner
+  protected override def func = oneliner
+  protected abstract override def func = oneliner
+  protected override abstract def func = oneliner
+  protected[thing] override def func = oneliner
+  protected[thing] abstract override def func = oneliner
+  protected[thing] override abstract def func = oneliner
+  private override def func = oneliner
+  private abstract override def func = oneliner
+  private override abstract def func = oneliner
+  private[thing] override def func = oneliner
+  private[thing] abstract override def func = oneliner
+  private[thing] override abstract def func = oneliner
+
+  private[somepackage] abstract override def somethingWithDots = {
     SomeObject.build
       .withSomething
       .withSomethingElse
@@ -288,5 +309,7 @@ class SomeClass {
           some stuff here
         }
       }
-    }
+  }
+
+  private[this] def followingFunction = oneliner
 }

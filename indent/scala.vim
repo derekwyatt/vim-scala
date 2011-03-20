@@ -17,6 +17,8 @@ setlocal autoindent
 "    finish
 "endif
 
+let s:defMatcher = '\%(\%(private\|protected\)\%(\[[^\]]*\]\)\?\s\+\|abstract\s\+\|override\s\+\)*\<def\>'
+
 function! scala#ConditionalConfirm(msg)
   if 0
     call confirm(a:msg)
@@ -47,13 +49,33 @@ endfunction
 function! scala#IsParentCase()
   let savedpos = getpos('.')
   call setpos('.', [savedpos[0], savedpos[1], 0, savedpos[3]])
-  let [l, c] = searchpos('^\s*\%(\%(\%(abstract\s\+\)\?\%(override\s\+\)\?\<def\>\)\|\%(\<case\>\)\)', 'bnW')
+  let [l, c] = searchpos('^\s*\%(' . s:defMatcher . '\|\%(\<case\>\)\)', 'bnW')
   let retvalue = -1
   if l != 0 && search('\%' . l . 'l\s*\<case\>', 'bnW')
     let retvalue = l
   endif 
   call setpos('.', savedpos)
   return retvalue
+endfunction
+
+function! scala#CurlyMatcher()
+  let matchline = scala#GetLineThatMatchesBracket('{', '}')
+  if scala#CountParens(scala#GetLine(matchline)) < 0
+    let savedpos = getpos('.')
+    call setpos('.', [savedpos[0], matchline, 9999, savedpos[3]])
+    call searchpos('{', 'Wb')
+    call searchpos(')', 'Wb')
+    let [lnum, colnum] = searchpairpos('(', '', ')', 'Wbn')
+    call setpos('.', savedpos)
+    let line = scala#GetLine(lnum)
+    if line =~ '^\s*' . s:defMatcher
+      return lnum
+    else
+      return matchline
+    endif
+  else
+    return matchline
+  endif
 endfunction
 
 function! scala#GetLineThatMatchesBracket(openBracket, closedBracket)
@@ -103,7 +125,7 @@ function! scala#NumberOfBraceGroups(line)
 endfunction
 
 function! scala#MatchesIncompleteDefValr(line)
-  if a:line =~ '^\s*\%(\%(\%(abstract\s\+\)\?\%(override\s\+\)\?\<def\>\)\|\<va[lr]\>\).*[=({]\s*$'
+  if a:line =~ '^\s*\%(' . s:defMatcher . '\|\<va[lr]\>\).*[=({]\s*$'
     return 1
   else
     return 0
@@ -262,7 +284,7 @@ function! GetScalaIndent()
   " If 'if', 'for' or 'while' end with ), this is a one-line block
   " If 'val', 'var', 'def' end with =, this is a one-line block
   if (prevline =~ '^\s*\<\%(\%(}\?\s*else\s\+\)\?if\|for\|while\)\>.*[)=]\s*$' && scala#NumberOfBraceGroups(prevline) <= 1)
-        \ || prevline =~ '^\s*\%(abstract\s\+\)\?\%(override\s\+\)\?\<def\>.*=\s*$'
+        \ || prevline =~ '^\s*' . s:defMatcher . '.*=\s*$'
         \ || prevline =~ '^\s*\<va[lr]\>.*[=]\s*$'
         \ || prevline =~ '^\s*\%(}\s*\)\?\<else\>\s*$'
         \ || prevline =~ '=\s*$'
@@ -340,7 +362,7 @@ function! GetScalaIndent()
   let curCurlyCount = scala#CountCurlies(curline)
   if curCurlyCount < 0
     call scala#ConditionalConfirm("14a")
-    let matchline = scala#GetLineThatMatchesBracket('{', '}')
+    let matchline = scala#CurlyMatcher()
     return indent(matchline)
   elseif curline =~ '^\s*</[a-zA-Z][^>]*>'
     call scala#ConditionalConfirm("14c")

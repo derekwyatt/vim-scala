@@ -2765,6 +2765,14 @@ And you can combine this with a {for} expression.
     sign: null, integer: 99, decimal: null
     sign: null, integer: 3, decimal: null
 !/sc!
+The "date" example is cool too:
+!sc!
+    scala> val regex = """(\d+)/(\d+)/(\d+)""".r
+    scala> val regex(year, month, day) = "2010/1/13"
+    year: String = 2010
+    month: String = 1
+    day: String = 13
+!/sc!
 
 ==============================================================================
 10. Packages and Access Modifiers                        *scala-packages* {{{1
