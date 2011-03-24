@@ -18,6 +18,11 @@ setlocal autoindent
 "endif
 
 let s:defMatcher = '\%(\%(private\|protected\)\%(\[[^\]]*\]\)\?\s\+\|abstract\s\+\|override\s\+\)*\<def\>'
+let s:funcNameMatcher = '\w\+'
+let s:typeSpecMatcher = '\%(\s*\[\_[^\]]*\]\)'
+let s:defArgMatcher = '\%((\_.\{-})\)'
+let s:returnTypeMatcher = '\%(:\s*\w\+' . s:typeSpecMatcher . '\?\)'
+let g:fullDefMatcher = '^\s*' . s:defMatcher . '\s\+' . s:funcNameMatcher . '\s*' . s:typeSpecMatcher . '\?\s*' . s:defArgMatcher . '\?\s*' . s:returnTypeMatcher . '\?\s*[={]'
 
 function! scala#ConditionalConfirm(msg)
   if 0
@@ -44,6 +49,36 @@ endfunction
 
 function! scala#CountCurlies(line)
   return scala#CountBrackets(a:line, '{', '}')
+endfunction
+
+function! scala#LineEndsInIncomplete(line)
+  if a:line =~ '[.,]\s*$'
+    return 1
+  else
+    return 0
+  endif
+endfunction
+
+function! scala#LineIsAClosingXML(line)
+  if a:line =~ '^\s*</\w'
+    return 1
+  else
+    return 0
+  endif
+endfunction
+
+function! scala#LineCompletesXML(lnum, line)
+  let savedpos = getpos('.')
+  call setpos('.', [savedpos[0], a:lnum, 0, savedpos[3]])
+  let tag = substitute(a:line, '^.*</\([^>]*\)>.*$', '\1', '')
+  let [lineNum, colnum] = searchpairpos('<' . tag . '>', '', '</' . tag . '>', 'Wbn')
+  call setpos('.', savedpos)
+  let pline = scala#GetLine(prevnonblank(lineNum - 1))
+  if pline =~ '=\s*$'
+    return 1
+  else
+    return 0
+  endif
 endfunction
 
 function! scala#IsParentCase()
@@ -78,7 +113,15 @@ function! scala#CurlyMatcher()
   endif
 endfunction
 
-function! scala#GetLineThatMatchesBracket(openBracket, closedBracket)
+function! scala#GetLineAndColumnThatMatchesCurly()
+  return scala#GetLineAndColumnThatMatchesBracket('{', '}')
+endfunction
+
+function! scala#GetLineAndColumnThatMatchesParen()
+  return scala#GetLineAndColumnThatMatchesBracket('(', ')')
+endfunction
+
+function! scala#GetLineAndColumnThatMatchesBracket(openBracket, closedBracket)
   let savedpos = getpos('.')
   let curline = scala#GetLine(line('.'))
   if curline =~ a:closedBracket . '.*' . a:openBracket . '.*' . a:closedBracket
@@ -90,6 +133,19 @@ function! scala#GetLineThatMatchesBracket(openBracket, closedBracket)
   endif
   let [lnum, colnum] = searchpairpos(a:openBracket, '', a:closedBracket, 'Wbn')
   call setpos('.', savedpos)
+  return [lnum, colnum]
+endfunction
+
+function! scala#GetLineThatMatchesCurly()
+  return scala#GetLineThatMatchesBracket('{', '}')
+endfunction
+
+function! scala#GetLineThatMatchesParen()
+  return scala#GetLineThatMatchesBracket('(', ')')
+endfunction
+
+function! scala#GetLineThatMatchesBracket(openBracket, closedBracket)
+  let [lnum, colnum] = scala#GetLineAndColumnThatMatchesBracket(a:openBracket, a:closedBracket)
   return lnum
 endfunction
 
@@ -151,6 +207,80 @@ function! scala#LineCompletesIfElse(lnum, line)
     return result
   endif
   return 0
+endfunction
+
+function! scala#GetPrevCodeLine(lnum)
+  " This needs to skip comment lines
+  return prevnonblank(a:lnum - 1)
+endfunction
+
+function! scala#InvertBracketType(openBracket, closedBracket)
+  if a:openBracket == '('
+    return [ '{', '}' ]
+  else
+    return [ '(', ')' ]
+  endif
+endfunction
+
+function! scala#Testhelper(lnum, line, openBracket, closedBracket, iteration)
+  let bracketCount = scala#CountBrackets(a:line, a:openBracket, a:closedBracket)
+  " There are more '}' braces than '{' on this line so it may be completing the function definition
+  if bracketCount < 0
+    let [matchedLNum, matchedColNum] = scala#GetLineAndColumnThatMatchesBracket(a:openBracket, a:closedBracket)
+    if matchedLNum == a:lnum
+      return -1
+    endif
+    let matchedLine = scala#GetLine(matchedLNum)
+    if ! scala#MatchesIncompleteDefValr(matchedLine)
+      let bracketLine = substitute(substitute(matchedLine, '\%' . matchedColNum . 'c.*$', '', ''), '[^{}()]', '', 'g')
+      if bracketLine =~ '}$'
+        return scala#Testhelper(matchedLNum, matchedLine, '{', '}', a:iteration + 1)
+      elseif bracketLine =~ ')$'
+        return scala#Testhelper(matchedLNum, matchedLine, '(', ')', a:iteration + 1)
+      else
+        let prevCodeLNum = scala#GetPrevCodeLine(matchedLNum)
+        if scala#MatchesIncompleteDefValr(scala#GetLine(prevCodeLNum))
+          return prevCodeLNum
+        else
+          return -1
+        endif
+      endif
+    else
+      " return indent value instead
+      return matchedLNum
+    endif
+  " There's an equal number of '{' and '}' on this line so it may be a single line function definition
+  elseif bracketCount == 0
+    if a:iteration == 0
+      let otherBracketType = scala#InvertBracketType(a:openBracket, a:closedBracket)
+      return scala#Testhelper(a:lnum, a:line, otherBracketType[0], otherBracketType[1], a:iteration + 1)
+    else
+      let prevCodeLNum = scala#GetPrevCodeLine(a:lnum)
+      let prevCodeLine = scala#GetLine(prevCodeLNum)
+      if scala#MatchesIncompleteDefValr(prevCodeLine) && prevCodeLine !~ '{\s*$'
+        return prevCodeLNum
+      else
+        let possibleIfElse = scala#LineCompletesIfElse(a:lnum, a:line)
+        if possibleIfElse != 0
+          let defValrLine = prevnonblank(possibleIfElse - 1)
+          let possibleDefValr = scala#GetLine(defValrLine)
+          if scala#MatchesIncompleteDefValr(possibleDefValr) && possibleDefValr =~ '^.*=\s*$'
+            return possibleDefValr
+          else
+            return -1
+          endif
+        else
+          return -1
+        endif
+      endif
+    endif
+  else
+    return -1
+  endif
+endfunction
+
+function! scala#Test(lnum, line, openBracket, closedBracket)
+  return scala#Testhelper(a:lnum, a:line, a:openBracket, a:closedBracket, 0)
 endfunction
 
 function! scala#LineCompletesDefValr(lnum, line)
@@ -290,6 +420,8 @@ function! GetScalaIndent()
         \ || prevline =~ '=\s*$'
     call scala#ConditionalConfirm("4")
     let ind = ind + &shiftwidth
+  elseif prevline =~ '^\s*\<\%(}\?\s*else\s\+\)\?if\>' && curline =~ '^\s*}\?\s*\<else\>'
+    return ind
   endif
 
   let lineCompletedBrackets = 0
@@ -366,7 +498,7 @@ function! GetScalaIndent()
     return indent(matchline)
   elseif curline =~ '^\s*</[a-zA-Z][^>]*>'
     call scala#ConditionalConfirm("14c")
-    let ind = ind - &shiftwidth
+    return ind - &shiftwidth
   endif
 
   let prevParenCount = scala#CountParens(prevline)
@@ -386,7 +518,7 @@ function! GetScalaIndent()
     let parentCase = scala#IsParentCase()
     if parentCase != -1
       call scala#ConditionalConfirm("17a")
-      let ind = indent(parentCase)
+      return indent(parentCase)
     endif
   endif
 
@@ -395,20 +527,39 @@ function! GetScalaIndent()
     let ind = ind - 1
   endif
 
+  if scala#LineEndsInIncomplete(curline)
+    call scala#ConditionalConfirm("19")
+    return ind
+  endif
+
+  if scala#LineIsAClosingXML(prevline)
+    if scala#LineCompletesXML(prevlnum, prevline)
+      call scala#ConditionalConfirm("20a")
+      return ind - &shiftwidth
+    else
+      call scala#ConditionalConfirm("20b")
+      return ind
+    endif
+  endif
+
   if ind == originalIndentValue
-    let indentMultiplier = scala#LineCompletesDefValr(prevlnum, prevline)
-    if indentMultiplier != 0
-      call scala#ConditionalConfirm("19a")
-      let ind = ind - (indentMultiplier * &shiftwidth)
+    "let indentMultiplier = scala#LineCompletesDefValr(prevlnum, prevline)
+    "if indentMultiplier != 0
+    "  call scala#ConditionalConfirm("19a")
+    "  let ind = ind - (indentMultiplier * &shiftwidth)
+    let defValrLine = scala#Test(prevlnum, prevline, '{', '}')
+    if defValrLine != -1
+      call scala#ConditionalConfirm("21a")
+      let ind = indent(defValrLine)
     elseif lineCompletedBrackets == 0
-      call scala#ConditionalConfirm("19b")
+      call scala#ConditionalConfirm("21b")
       if scala#GetLine(prevnonblank(prevlnum - 1)) =~ '^.*\<else\>\s*\%(//.*\)\?$'
-        call scala#ConditionalConfirm("19c")
+        call scala#ConditionalConfirm("21c")
         let ind = ind - &shiftwidth
       elseif scala#LineCompletesIfElse(prevlnum, prevline)
-        call scala#ConditionalConfirm("19d")
+        call scala#ConditionalConfirm("21d")
         let ind = ind - &shiftwidth
-      elseif scala#CountParens(curline) < 0 && scala#GetLine(scala#GetLineThatMatchesBracket('(', ')')) =~ '.*(\s*$'
+      elseif scala#CountParens(curline) < 0 && curline =~ '^\s*)' && scala#GetLine(scala#GetLineThatMatchesBracket('(', ')')) =~ '.*(\s*$'
         " Handles situations that look like this:
         " 
         "   val a = func(
@@ -420,7 +571,7 @@ function! GetScalaIndent()
         "   val a = func(
         "     10
         "   ).somethingHere()
-        call scala#ConditionalConfirm("19e")
+        call scala#ConditionalConfirm("21e")
         let ind = ind - &shiftwidth
       endif
     endif

@@ -274,6 +274,18 @@ class SomeClass {
     case There =>
   }
 
+  def func[A <: B](one: One, two: Two) : ReturnType = ...
+  def func(one: One, two: Two) : ReturnType = ...
+  def func(one: (A, B) => B) : ReturnType = ...
+  def func(one: One, two: Two) = ...
+  def func(one: One, two: Two) = ...
+  def func[A <: B](one: One,
+    two: Two) : ReturnType = ...
+  def func(one: One, two: Two, three: Three, four: Four,
+    five: Five) : ReturnType = ...
+  def func(one: One, two: Two, three: Three, four: Four,
+    five: Five) = ...
+
   def func = oneliner
   private def func = oneliner
   private[thing] def func = oneliner
@@ -295,6 +307,23 @@ class SomeClass {
   private[thing] abstract override def func = oneliner
   private[thing] override abstract def func = oneliner
 
+  <outertag>
+    <innertag>
+      <in-innertag>
+        Something
+      </in-innertag>
+    </innertag>
+  </outertag>
+
+  val someXML = 
+    <outertag>
+      <innertag>
+        <in-innertag>
+          Something
+        </in-innertag>
+      </innertag>
+    </outertag>
+
   private[somepackage] abstract override def somethingWithDots = {
     SomeObject.build
       .withSomething
@@ -302,8 +331,30 @@ class SomeClass {
       .withSomethingElseAgain
   }
 
+  private def oneLineFunc = actorOf(new Actor {
+    def receive = {
+      case _ => thing
+    }
+  })
+
+  private def oneLineFunc = factory(
+    arg1,
+    arg2,
+    arg3).build
+
   def someFunction[T <: U](
     x: Int): SomeType = {
+      val someValue: Option[Int] = {
+        someValue match {
+          some stuff here
+        }
+      }
+  }
+
+  def someFunction[T <: U](
+    x: Int,
+    y: Int,
+    z: Long): SomeType = {
       val someValue: Option[Int] = {
         someValue match {
           some stuff here
