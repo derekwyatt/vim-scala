@@ -229,6 +229,13 @@ class SomeClass {
     },
   otherParam) // comment
 
+  class AnotherSomeClass {
+    this: Actor =>
+    def func = {
+      booger
+    }
+  }
+
   /**
    * Pulled this stuff from the fors.scala example file in the source distribution
    */

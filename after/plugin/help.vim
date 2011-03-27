@@ -30,3 +30,23 @@ function! BuildTOC()
 endfunction
 
 command! BuildNewTableOfContents silent! call BuildTOC()
+
+function! JustifyCurrentLine()
+    let cline = getline('.')
+    let matches = matchlist(cline, '^\(.*\)\s\+\(\*.*\)$')
+    let st = matches[1]
+    let fin = matches[2]
+    let spcnum = 78 - strlen(st) - strlen(fin)
+    let c = 0
+    let spcs = ""
+    while c < spcnum
+        let spcs = spcs . " "
+        let c = c + 1
+    endwhile
+    let newline = st . spcs . fin
+    :norm dd
+    let lnum = getpos('.')[1]
+    call append(lnum - 1, newline)
+endfunction
+
+nmap ,jt :call JustifyCurrentLine()<cr>
