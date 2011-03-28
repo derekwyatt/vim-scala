@@ -1,0 +1,373 @@
+*scala-quick-ref.txt*            Scala Quick Reference            Mar 26, 2011
+
+Author:    Derek Wyatt <derek@{my first name}{my last name}.org>
+
+Copyright: (c) 2011 by Derek Wyatt
+           No license implied... use it for whatever tickles your particular
+           fancy.
+
+==============================================================================
+0. Contents                                                  *scala-quick-ref*
+------------------------------------------------------------------------------
+
+
+
+==============================================================================
+1. Symbolics                                          *scala-qr-symbolics* {{{1
+------------------------------------------------------------------------------
+
+->                                                          *scala-qr-pairmap*
+    Returns a two-element tuple containing the key and value
+!sc!
+    Map(1 -> "A", 2 -> "B")
+    (1).->("A")
+!/sc!
+_                                                        *scala-qr-placeholder*
+    A placeholder used in imports, function literals, etc...
+!sc!
+    import com.xtech._
+    case _ => valute.toString
+    numbers.filter(_ < 0)
+!/sc!
+:                                                              *scala-qr-colon*
+    Separators between identifiers and type annotations
+!sc!
+    def add(i: Int): Int = ...
+!/sc!
+=                                              *scala-qr-assignment* *scala-qr-=*
+    Assignment
+!sc!
+    val one = "1"
+!/sc!
+=>                                                        *scala-qr-equalarrow*
+    Used in function literals to separate the argument list from the function
+    body.  Also used to separate case conditions from the case body
+!sc!
+    numbers.filter(x => x < 10)
+    case Condition => body
+    def func((A, B) => ReturnValue) = ...
+!/sc!
+<-                                                          *scala-qr-forarrow*
+    Used in for comprehensions in generator expressions
+!sc!
+    for (arg <- args)
+!/sc!
+<:                                                      *scala-qr-upper-bounds*
+    Upper bounds (a subtype of). Used in parameterized and abstract type
+    declarations to constrain the allowed types
+!sc!
+    def apply[T <:U](x: T) = ...
+!/sc!
+>:                                                      *scala-qr-lower-bounds*
+    Lower bounds (supertype of). Used in parameterized and abstract type
+    declarations to constrain the allowed types
+!sc!
+    def append[U >: T](x: U) = ...
+!/sc!
+<%                                                      *scala-qr-view-bounds*
+    View bounds (apply implicit conversion).  Used in parameterized and
+    abstract type declarations to convert the type using view.
+!sc!
+    def m[A <% B](args): R = ...
+!/sc!
+#                                                     *scala-qr-contained-type*
+    Allows you to refer to a type declaration nested in another type
+!sc!
+    val ic: MyClass#myType = ...
+!/sc!
+@                                                         *scala-qr-annotation*
+    Marks an annotation.
+!sc!
+    @deprecated def bad() = ...
+!/sc!
+'                                              *scala-qr-quote* *scala-qr-symbol*
+    Lets you declare / reference a symbol.
+!sc!
+    val s = 'aSymbol
+    def doit(r: Symbol) {
+        println(s.name)
+    }
+!/sc!
+(infix)                                               *scala-qr-infix-notation*
+    Allows you to use any method invocation in an infix notation style.
+!sc!
+    1 + 2 // as opposed to...
+    1.+(2)
+!/sc!
+
+==============================================================================
+2. Variables                                          *scala-qr-variables* {{{1
+------------------------------------------------------------------------------
+
+Immutable (final)                                   *scala-qr-immutable-values*
+    The de-facto standard mechanism for declaring memory storage locations in
+    Scala.
+!sc!
+    val msg = "Hello, World!"
+    val msg: String = "Hello, World!"
+    val big = new java.math.BigInteger("12345")
+!/sc!
+Mutable                                            *scala-qr-mutable-variables*
+    Creates mutable locations that can be reassigned at any time.
+!sc!
+    var greets = "Hello, World!"
+    var greets: String = "Hello, World!"
+!/sc!
+Lazy initialization                                             *scala-qr-lazy*
+    Allows the value to be initialized on first use.
+!sc!
+    object Demo {
+      lazy val x = { println("initializing x"); "done" }
+    }
+!/sc!
+
+==============================================================================
+3. Basic Types                                      *scala-qr-basic-types* {{{1
+------------------------------------------------------------------------------
+
+Byte                                                           *scala-qr-byte*
+    8-bit signed two's complement integer
+    (-2)^7 to (2)^7 - 1, inclusive
+
+Short                                                         *scala-qr-short*
+    16-bit signed two's complement integer
+    (-2)^15 to (2)^15 - 1, inclusive
+
+Int                                                             *scala-qr-int*
+    32-bit signed two's complement integer
+    (-2)^31 to (2)^31 - 1, inclusive
+
+Long                                                           *scala-qr-long*
+    64-bit signed two's complement integer
+    (-2)^63 to (2)^63 - 1, inclusive
+
+Char                                                           *scala-qr-char*
+    16-bit unsigned Unicode character
+    0 to (2)^16 - 1, inclusive
+
+String                                                       *scala-qr-string*
+    A sequence of Chars
+    
+Float                                                         *scala-qr-float*
+    32-bit IEEE 754 single-precision float
+    
+Double                                                       *scala-qr-double*
+    64-bit IEEE 754 double-precision float
+    
+Boolean                                                     *scala-qr-boolean*
+    ture or false
+    
+
+==============================================================================
+4. Operators                                         *scala-qr-operators* {{{1
+------------------------------------------------------------------------------
+
+Technically speaking, Scala has no operators; it only has methods and
+functions.  Scala allows a lot of interesting characters to be used to define
+methods and functions, so they can look like operators.
+
++,-,*,/,%                                               *scala-qr-arithmetics*
+    Arithmetic operations
+!sc!
+    val x = 1 + 2
+    val x = 1 - 2
+    val x = 1 / 2
+    val x = 1 * 2
+    val x = 1 % 2
+!/sc!
+&&,||,!                                                     *scala-qr-logical*
+    Basic logical operations
+!sc!
+    if (that && theother)
+    else if (that || theother)
+    else if (!that)
+!/sc!
+&,|,^,~                                                     *scala-qr-bitwise*
+    Basic bitwise operations
+!sc!
+    val x = 4 & 1 // bitwise AND
+    val x = 4 | 1 // bitwise OR
+    val x = 4 ^ 1 // bitwise XOR
+    val x = ~4 // bitwise XOR
+!/sc!
+<<,>>,>>>                                             *scala-qr-bitwise-shift*
+    Basic bitwise shift operations
+!sc!
+    val x = 4 << 1 // left shift
+    val x = 4 >> 1 // right shift
+    val x = 4 >>> 1 // unsigned right shift
+!/sc!
+>,<,<=,>=,==,!=                                          *scala-qr-relational*
+    Relation operations
+!sc!
+    val x = a < b
+    val x = a > b
+    val x = a <= b
+    val x = a >= b
+    val x = a == b
+    val x = a != b
+!/sc!
+    NOTE: Scala does the right thing with relational operations.  In Java,
+    there's this stupid idea that "==" means something different if you have a
+    primitive type or an object type, but in Scala relational operators are
+    uniform.
+
+    If you do want to check the value of a reference to an object, you must
+    use different operations:
+!sc!
+    val x = a eq b
+    val x = a neq b
+!/sc!
+
+==============================================================================
+5. Rich Operation                               *scala-qr-rich-operation* {{{1
+------------------------------------------------------------------------------
+
+Rich operators come in as wrappers around existing class types using implicit
+conversion.  
+!sc!
+    RichBoolean
+    RichByte
+    RichChar
+    RichDouble
+    RichException
+    RichFloat
+    RichInt
+    RichLong
+    RichShort
+    RichUnit
+!/sc!
+You can thus do things like:
+!sc!
+    0 max 5               // 5
+    0 min 5               // 0
+    -2.7 abs              // 2.7
+    -2.7 round            // -3L
+    1.5 isInfinity        // false
+    (1.0 / 0) isInfinity  // true
+    4 to 6                // Range(4,5,6)
+    "nick" capitalize     // "Nick"
+    "nicolas" drop 2      // "colas"
+!/sc!
+
+==============================================================================
+6. Literals                                           *scala-qr-literals* {{{1
+------------------------------------------------------------------------------
+
+Integer literals                                   *scala-qr-integer-literals*
+!sc!
+    val dec = 31            // decimal integer
+    val hex = 0xFFFF        // hex integer
+    val long = 31L          // long ("I" or "L")
+    val little: Short = 367 // short
+    val littler: Byte = 38  // byte
+!/sc!
+Floating point literals                              *scala-qr-float-literals*
+!sc!
+    val double = 1.2345 // double
+    val e = 1.234e4     // double ("e" or "E")
+    val float = 1.234f  // float ("f" or "F")
+!/sc!
+Character and String literals                       *scala-qr-string-literals*
+!sc!
+    val aChar = 'D'           // char
+    val unicode = '\u0043'    // unicode char
+    val string = "string"     // string
+    val s = """it's 'you'"""  // raw string (it's 'you')
+!/sc!
+    Some literals with special meaning
+
+    \n      line feed (\u000A)
+    \b      backspace (\u0008)
+    \t      tab (\u0009)
+    \f      form feed (\u000C)
+    \r      carriage return (\u000D)
+    \"      double quote (\u0022)
+    \'      single quote (\u0027)
+    \\      backslash (\u005C)
+
+Boolean literals                                   *scala-qr-boolean-literals*
+!sc!
+    val bool = true    // true | false
+!/sc!
+
+==============================================================================
+7. Type Information                                   *scala-qr-typeinfo* {{{1
+------------------------------------------------------------------------------
+
+Type checking                                         *scala-qr-type-checking*
+    Allows you to test the type of any object instance against a given class
+    type
+!sc!
+    "abc".isInstanceOf[String]   // == true
+!/sc!
+Type casting                                           *scala-qr-type-casting*
+    Allows you to cast any type to any other type
+!sc!
+    3.asInstanceOf[Double]    // == 3.0 (as double)
+!/sc!
+Runtime representation                       *scala-qr-runtime-representation*
+    Lets you get class type information at runtime
+!sc!
+    classOf[String]   // java.lang.Class[String] = class java.lang.String
+!/sc!
+
+==============================================================================
+8. Packaging                                         *scala-qr-packaging* {{{1
+------------------------------------------------------------------------------
+
+Import   *scala-qr-import*
+!sc!
+    import java.awt._               // All classes under java.awt
+    import java.io.File           
+    import java.io.File._           // all of File's static methods
+    import java.util.{Map, HashMap} // only the two classes
+
+    def doit() = {
+      import java.math.BigDecimal.{ONE}
+      println(ONE)
+    }
+
+    import java.math.BigDecimal.{
+      ONE => _,      // Exclude ONE
+      ZERO => JZERO  // Rename ZERO to JZERO
+    }
+    println(JZERO)
+!/sc!
+    NOTE: Import statements are relative, not absolute.  To specify an
+    absolute path, start with _root_.
+!sc!
+    import _root_.scala.collectionsjcl._
+!/sc!
+Pacakges   *scala-qr-packages*
+    Filenames don't have to match the type names, the package structure does
+not have to match the directory structure.  So you an define packages in files
+independent of their "physical" location.
+!sc!
+    package com.xtech.scala
+    package com {
+      package scala {
+        class A
+      }
+      package util {
+        class B
+        package file {
+          class C
+        }
+      }
+    }
+!/sc!
+
+==============================================================================
+9. Tuples                                               *scala-qr-tuples* {{{1
+------------------------------------------------------------------------------
+
+Tuples are immutable and can contain different types of elements.
+!sc!
+    val nena = (99, "Luftballons", "1983")
+    println(nena._1)
+    println(nena._2)
+!/sc!
+
+Modelines: {{{1
+vim:tw=78:ts=4:ft=help:fdm=marker:fdl=0
