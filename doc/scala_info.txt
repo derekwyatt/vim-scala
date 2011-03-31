@@ -73,6 +73,8 @@ Copyright: (c) 2011 by Derek Wyatt
   8. Predef..................................: |scala-predef|
   9. Types...................................: |scala-types|
     9.1 Option...............................: |scala-option|
+      9.1.1 Option as Monad..................: |scala-option-monad|
+      9.1.2 Option Cheat Sheet...............: |scala-option-cheat-sheet|
     9.2 Array................................: |scala-array|
     9.3 Range................................: |scala-range|
     9.4 List.................................: |scala-list|
@@ -94,6 +96,7 @@ Copyright: (c) 2011 by Derek Wyatt
      11.1.1 Type Variance Explained..........: |scala-variance-explained|
    11.2 Lower Bound..........................: |scala-lower-bound|
    11.3 Upper Bound..........................: |scala-upper-bound|
+   11.4 Manifest Stuff.......................: |scala-manifest|
  12. Pattern Matching........................: |scala-pattern-matching|
    12.1 Case Classes.........................: |scala-case-classes|
    12.2 Basic Pattern Match..................: |scala-basic-pattern-match|
@@ -1779,10 +1782,10 @@ There is a type {alias} there for each one plus a value that forwards calls
 into the right object.
 
 ==============================================================================
-9. Types                                                   *scala-types* {{{1
+9. Types                                                    *scala-types* {{{1
 ------------------------------------------------------------------------------
 
-9.1 Option                                                *scala-option* {{{2
+9.1 Option                                                 *scala-option* {{{2
 ------------------------------------------------------------------------------
 
 The Option type can have one of two values; either "Some(x)" or "None".  If
@@ -1833,7 +1836,157 @@ Option is a much better alternative for a few reasons.
   an Option[String] as a String, then the compiler will yell at you.
 
 
-9.2 Array                                                  *scala-array* {{{2
+9.1.1 Option as Monad                                *scala-option-monad* {{{3
+------------------------------------------------------------------------------
+
+The {Option} class is a true monad, which gives us the following nice
+consequence (from the scaladoc):
+!sc!
+    val name: Option[String] = request.getParameter("name")
+    val upper = name map { _.trim } filter {
+        _.length != 0 } map { _.toUpperCase }
+    println(upper.getOrElse(""))
+!/sc!
+And that's equivalent to:
+!sc!
+    val upper = for {
+        name <- request.getParameter("name")
+        trimmed <- Some(name.trim)
+        upper <- Some(trimmed.toUpperCase) if trimmed.length != 0
+    } yield upper
+    println(upper.getOrElse(""))
+!/sc!
+The beauty here is that the {None} derivation defines deterministic behaviour
+for the methods used above.  As such, when things fail, the failure is
+propagated throughout such that we get {None} at the end.
+
+
+9.1.2 Option Cheat Sheet                       *scala-option-cheat-sheet* {{{3
+------------------------------------------------------------------------------
+
+flatMap                                                 *scala-option-flatMap*
+!sc!
+      option match {
+        case None => None
+        case Some(x) => foo(x)
+      }
+!/sc!
+  Equivalent to:
+!sc!
+      option.flatMap(foo(_))
+!/sc!
+map                                                         *scala-option-map*
+!sc!
+      option match {
+        case None => None
+        case Some(x) => Some(foo(x))
+      }
+!/sc!
+  Equivalent to:
+!sc!
+      option.map(foo(_))
+!/sc!
+foreach                                                 *scala-option-foreach*
+!sc!
+      option match {
+        case None => {}
+        case Some(x) => foo(x)
+      }
+!/sc!
+  Equivalent to:
+!sc!
+      option.foreach(foo(_))
+!/sc!
+isDefined                                             *scala-option-isDefined*
+!sc!
+      option match {
+        case None => false
+        case Some(_) => true
+      }
+!/sc!
+  Equivalent to:
+!sc!
+      option.isDefined
+!/sc!
+isEmpty                                                 *scala-option-isEmpty*
+!sc!
+      option match {
+        case None => true
+        case Some(_) => false
+      }
+!/sc!
+  Equivalent to:
+!sc!
+      option.isEmpty
+!/sc!
+forall                                                   *scala-option-forall*
+!sc!
+      option match {
+        case None => true
+        case Some(x) => foo(x)
+      }
+!/sc!
+  Equivalent to:
+!sc!
+      option.forall(foo(_))
+!/sc!
+exists                                                   *scala-option-exists*
+!sc!
+      option match {
+        case None => false
+        case Some(x) => foo(x)
+      }
+!/sc!
+  Equivalent to:
+!sc!
+      option.exists(foo(_))
+!/sc!
+orElse                                                   *scala-option-orElse*
+!sc!
+      option match {
+        case None => foo
+        case Some(x) => Some(x)
+      }
+!/sc!
+  Equivalent to:
+!sc!
+      option.orElse(foo)
+!/sc!
+orNull                                                   *scala-option-orNull*
+!sc!
+      option match {
+        case None => null
+        case Some(x) => Some(x)
+      }
+!/sc!
+  Equivalent to:
+!sc!
+      option.orNull
+!/sc!
+getOrElse                                             *scala-option-getOrElse*
+!sc!
+      option match {
+        case None => foo
+        case Some(x) => x
+      }
+!/sc!
+  Equivalent to:
+!sc!
+      option.getOrElse(foo)
+!/sc!
+toList                                                   *scala-option-toList*
+!sc!
+      option match {
+        case None => Nil
+        case Some(x) => x :: Nil
+      }
+!/sc!
+  Equivalent to:
+!sc!
+      option.toList
+!/sc!
+
+9.2 Array                                                   *scala-array* {{{2
 ------------------------------------------------------------------------------
 
 The Scala Array is really just a representation of the Java Array, fixed up to

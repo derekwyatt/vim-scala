@@ -72,6 +72,7 @@ syn match scalaVarName "[^ =:;([]\+" contained
 syn match scalaClassName "[^ =:;(\[]\+" contained nextgroup=scalaClassSpecializer skipwhite
 syn region scalaDefSpecializer start="\[" end="\]" contained contains=scalaDefSpecializer
 syn region scalaClassSpecializer start="\[" end="\]" contained contains=scalaClassSpecializer
+syn match scalaBackTick "`[^`]\+`"
 
 " type constructor (actually anything with an uppercase letter)
 syn match scalaConstructor "\<[A-Z][_$a-zA-Z0-9]*\>" nextgroup=scalaConstructorSpecializer
@@ -141,6 +142,7 @@ hi link scalaPackage Include
 hi link scalaImport Include
 hi link scalaREPLCmdLine Include
 hi link scalaDocTags Include
+hi link scalaBackTick Include
 hi link scalaBoolean Boolean
 hi link scalaOperator Normal
 hi link scalaNumber Number

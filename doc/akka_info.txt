@@ -57,6 +57,8 @@ Copyright: (c) 2011 by Derek Wyatt
       3.3.3 Declarative Setup................: |akka-supervision-declarative-setup|
       3.3.3.1 Declarative Example............: |akka-supervision-declarative-example|
       3.3.4 Programmatic Setup...............: |akka-supervision-programmatic-setup|
+      3.3.5 Getting Your Supervisor..........: |akka-supervision-getting-supervisor|
+      3.3.6 Chained Restarts.................: |akka-supervision-chained-restarts|
     3.4 Non-Blocking Failure.................: |akka-non-blocking-failure|
   4. Actor Routing...........................: |akka-routing|
     4.1 Simple Dispatching...................: |akka-routing-dispatching|
