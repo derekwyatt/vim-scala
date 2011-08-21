@@ -410,6 +410,13 @@ function! GetScalaIndent()
     return ind + &shiftwidth
   endif
 
+  " assumes curly braces around try-block
+  if curline =~ '^\s*}\s*\<catch\>'
+    return ind - &shiftwidth
+  elseif curline =~ '^\s*\<catch\>'
+    return ind
+  endif
+
   " Add a 'shiftwidth' after lines that start a block
   " If 'if', 'for' or 'while' end with ), this is a one-line block
   " If 'val', 'var', 'def' end with =, this is a one-line block
@@ -523,6 +530,7 @@ function! GetScalaIndent()
   endif
 
   if prevline =~ '^\s*\*/'
+   \ || prevline =~ '*/\s*$'
     call scala#ConditionalConfirm("18")
     let ind = ind - 1
   endif
