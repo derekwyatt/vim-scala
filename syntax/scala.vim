@@ -102,7 +102,7 @@ syn match scalaAnnotation "@[a-zA-Z]\+"
 syn match scalaEmptyString "\"\""
 
 " multi-line string literals
-syn region scalaMultiLineString start="\"\"\"" end="\"\"\"" contains=scalaUnicode
+syn region scalaMultiLineString start="\"\"\"" end="\"\"\"\"\@!" contains=scalaUnicode
 syn match scalaUnicode "\\u[0-9a-fA-F]\{4}" contained
 
 " string literals with escapes
