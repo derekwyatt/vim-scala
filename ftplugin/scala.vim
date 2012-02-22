@@ -111,7 +111,7 @@ function! scala#GetRootDirForFuzzyFinder(from)
     return scala#GetDirForFuzzyFinder(a:from, 'src/../')
 endfunction
 
-nnoremap <buffer> <silent> ,ft :FufFile <c-r>=scala#GetTestDirForFuzzyFinder('%:p:h')<cr><cr>
-nnoremap <buffer> <silent> ,fs :FufFile <c-r>=scala#GetMainDirForFuzzyFinder('%:p:h')<cr><cr>
-nnoremap <buffer> <silent> ,fr :FufFile <c-r>=scala#GetRootDirForFuzzyFinder('%:p:h')<cr><cr>
+nnoremap <buffer> <silent> ,ft :<C-u>FufFile <c-r>=scala#GetTestDirForFuzzyFinder('%:p:h')<cr><cr>
+nnoremap <buffer> <silent> ,fs :<C-u>FufFile <c-r>=scala#GetMainDirForFuzzyFinder('%:p:h')<cr><cr>
+nnoremap <buffer> <silent> ,fr :<C-u>FufFile <c-r>=scala#GetRootDirForFuzzyFinder('%:p:h')<cr><cr>
 nnoremap <buffer> ,jt :<C-u>call JustifyCurrentLine()<cr>
