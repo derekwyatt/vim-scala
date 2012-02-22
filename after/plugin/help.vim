@@ -49,4 +49,4 @@ function! JustifyCurrentLine()
     call append(lnum - 1, newline)
 endfunction
 
-nmap ,jt :call JustifyCurrentLine()<cr>
+nnoremap ,jt :<C-u>call JustifyCurrentLine()<cr>
