@@ -48,5 +48,3 @@ function! JustifyCurrentLine()
     let lnum = getpos('.')[1]
     call append(lnum - 1, newline)
 endfunction
-
-nmap ,jt :call JustifyCurrentLine()<cr>
