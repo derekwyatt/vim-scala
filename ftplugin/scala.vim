@@ -112,14 +112,14 @@ if globpath(&rtp, 'plugin/fuf.vim') != ''
         return scala#GetDirForFuzzyFinder(a:from, 'src/../')
     endfunction
 
-    nnoremap <buffer> <silent> ,ft :<C-u>FufFile <c-r>=scala#GetTestDirForFuzzyFinder('%:p:h')<cr><cr>
-    nnoremap <buffer> <silent> ,fs :<C-u>FufFile <c-r>=scala#GetMainDirForFuzzyFinder('%:p:h')<cr><cr>
-    nnoremap <buffer> <silent> ,fr :<C-u>FufFile <c-r>=scala#GetRootDirForFuzzyFinder('%:p:h')<cr><cr>
+    nnoremap <buffer> <silent> ,ft :FufFile <c-r>=scala#GetTestDirForFuzzyFinder('%:p:h')<cr><cr>
+    nnoremap <buffer> <silent> ,fs :FufFile <c-r>=scala#GetMainDirForFuzzyFinder('%:p:h')<cr><cr>
+    nnoremap <buffer> <silent> ,fr :FufFile <c-r>=scala#GetRootDirForFuzzyFinder('%:p:h')<cr><cr>
 endif
 
 " If you want to disable the default key mappings, write the following line in
 " your ~/.vimrc
 "     let g:scala_use_default_keymappings = 0
 if get(g:, 'scala_use_default_keymappings', 1)
-    nnoremap <buffer> ,jt :<C-u>call JustifyCurrentLine()<cr>
+    nnoremap <buffer> ,jt :call JustifyCurrentLine()<cr>
 endif
