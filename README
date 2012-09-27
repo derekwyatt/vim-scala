@@ -10,3 +10,11 @@ You really should be using Tim Pope's Pathogen module for Vim
 http://tammersaleh.com/posts/the-modern-vim-config-with-pathogen) if you're
 going to clone this repository because, well... you should.
 
+Alternatively, you can use Vundle (https://github.com/gmarik/vundle) to
+manage your plugins.
+
+If you have Vundle installed, simply add the following to your .vimrc:
+  Bundle 'derekwyatt/vim-scala'
+and then run
+  :BundleInstall
+to install it.
