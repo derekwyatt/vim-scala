@@ -74,7 +74,7 @@ class SomeClass {
      *      if (c) 2
      *      else 3
      *    }
-     *    
+     *
      *
      * ---- 2. ----
      *
@@ -93,7 +93,7 @@ class SomeClass {
      *    }
      *
      *    or this...
-     *    
+     *
      *    if (b) 1
      *    else {
      *      if (c)
@@ -103,7 +103,7 @@ class SomeClass {
      *    }
      *
      * ---- 3. ----
-     *    
+     *
      *    if (b) 1
      *    else {
      *      if (c)
@@ -322,7 +322,7 @@ class SomeClass {
     </innertag>
   </outertag>
 
-  val someXML = 
+  val someXML =
     <outertag>
       <innertag>
         <in-innertag>
@@ -370,4 +370,7 @@ class SomeClass {
   }
 
   private[this] def followingFunction = oneliner
+
+  val someFunction: List[(Option[T], Option[U])] = TODO
 }
+
