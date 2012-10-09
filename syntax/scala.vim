@@ -83,7 +83,7 @@ syn match scalaRoot "\<[a-zA-Z][_$a-zA-Z0-9]*\."me=e-1
 syn match scalaMethodCall "\.[a-z][_$a-zA-Z0-9]*"ms=s+1
 
 " type declarations in val/var/def
-syn match scalaType ":\s*\(=>\s*\)\?[._$a-zA-Z0-9]\+\(\[[^]]*\]\+\)\?\(\s*\(<:\|>:\|#\|=>\)\s*[._$a-zA-Z0-9]\+\(\[[^]]*\]\+\)*\)*"ms=s+1
+syn match scalaType ":\s*\(=>\s*\)\?[._$a-zA-Z0-9]\+\(\[.*\]\+\)\?\(\s*\(<:\|>:\|#\|=>\)\s*[._$a-zA-Z0-9]\+\(\[.*\]\+\)*\)*"ms=s+1
 
 " comments
 syn match scalaTodo "[tT][oO][dD][oO]" contained
