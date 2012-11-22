@@ -70,7 +70,7 @@ syn match scalaDefName "[^ =:;([]\+" contained nextgroup=scalaDefSpecializer ski
 syn match scalaValName "[^ =:;([]\+" contained
 syn match scalaVarName "[^ =:;([]\+" contained 
 syn match scalaClassName "[^ =:;(\[]\+" contained nextgroup=scalaClassSpecializer skipwhite
-syn match scalaDefSpecializer "[^\]]\+" contained contains=scalaDefSpecializer
+syn match scalaDefSpecializer "([^\]]\+)?" contained contains=scalaDefSpecializer
 syn region scalaDefSpecializer start="\[" end="\]" contained contains=scalaDefSpecializer
 syn region scalaClassSpecializer start="\[" end="\]" contained contains=scalaClassSpecializer
 syn match scalaBackTick "`[^`]\+`"
