@@ -132,7 +132,7 @@ syn match scalaXmlComment "<!--\_[^>]*-->" contained
 " REPL
 syn match scalaREPLCmdLine "\<scala>\>"
 
-syn sync fromstart
+syn sync minlines=100 maxlines=100
 
 " map Scala groups to standard groups
 hi link scalaKeyword Keyword
