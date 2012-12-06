@@ -10,7 +10,7 @@ elseif exists("b:current_syntax")
 endif
 
 syn case match
-syn sync minlines=50
+syn sync minlines=50 maxlines=100
 
 " most Scala keywords
 syn keyword scalaKeyword case
@@ -131,8 +131,6 @@ syn match scalaXmlComment "<!--\_[^>]*-->" contained
 
 " REPL
 syn match scalaREPLCmdLine "\<scala>\>"
-
-syn sync fromstart
 
 " map Scala groups to standard groups
 hi link scalaKeyword Keyword
