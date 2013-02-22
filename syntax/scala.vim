@@ -83,7 +83,7 @@ syn match scalaRoot "\<[a-zA-Z][_$a-zA-Z0-9]*\."me=e-1
 syn match scalaMethodCall "\.[a-z][_$a-zA-Z0-9]*"ms=s+1
 
 " type declarations in val/var/def
-syn match scalaType ":\s*\%(=>\s*\)\?\%([\._$a-zA-Z0-9]\+\|([^)]\{-1,})\)\%(\[[^:]\{-1,}\]\+\%()\]\+\)*\)\?\%(\s*\%(<:\|>:\|#\|=>\|⇒\)\s*\%([\._$a-zA-Z0-9]\+\|([^)]\{-1,})\)\%(\[[^:]\{-1,}\]\+\%()\]\+\)*\)*\)*"ms=s+1
+syn match scalaType ":\s*\%(=>\s*\)\?\%([\._$a-zA-Z0-9]\+\|([^)]\{-1,})\)\%(\[[^\]]\{-1,}\]\+\%([^)]*)\]\+\)\?\)\?\%(\s*\%(<:\|>:\|#\|=>\|⇒\)\s*\%([\._$a-zA-Z0-9]\+\|([^)]\{-1,})\)\%(\[[^\]]\{-1,}\]\+\%([^)]*)\]\+\)\?\)*\)*"ms=s+1
 " type declarations in case statements
 syn match scalaCaseType "\(case\s\+[_a-zA-Z0-9]\+\)\@<=:\s*[\._$a-zA-Z0-9]\+\(\[[^:]\{-1,}\]\+\)\?"ms=s+1
 
