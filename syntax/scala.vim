@@ -68,7 +68,7 @@ syn keyword scalaObject object nextgroup=scalaClassName skipwhite
 syn keyword scalaTrait trait nextgroup=scalaClassName skipwhite
 syn match scalaDefName "[^ =:;([]\+" contained nextgroup=scalaDefSpecializer skipwhite
 syn match scalaValName "[^ =:;([]\+" contained
-syn match scalaVarName "[^ =:;([]\+" contained 
+syn match scalaVarName "[^ =:;([]\+" contained
 syn match scalaClassName "[^ =:;(\[]\+" contained nextgroup=scalaClassSpecializer skipwhite
 syn region scalaDefSpecializer start="\[" end="\]" contained contains=scalaDefSpecializer
 syn region scalaClassSpecializer start="\[" end="\]" contained contains=scalaClassSpecializer
@@ -83,7 +83,9 @@ syn match scalaRoot "\<[a-zA-Z][_$a-zA-Z0-9]*\."me=e-1
 syn match scalaMethodCall "\.[a-z][_$a-zA-Z0-9]*"ms=s+1
 
 " type declarations in val/var/def
-syn match scalaType ":\s*\(=>\s*\)\?[\._$a-zA-Z0-9]\+\(\[[^:]*\]\+\)\?\(\s*\(<:\|>:\|#\|=>\)\s*[\._$a-zA-Z0-9]\+\(\[[^:]*\]\+\)*\)*"ms=s+1
+syn match scalaType ":\s*\%(=>\s*\)\?\%([\._$a-zA-Z0-9]\+\|([^)]\{-1,})\)\%(\[[^\]]\{-1,}\]\+\%([^)]*)\]\+\)\?\)\?\%(\s*\%(<:\|>:\|#\|=>\|⇒\)\s*\%([\._$a-zA-Z0-9]\+\|([^)]\{-1,})\)\%(\[[^\]]\{-1,}\]\+\%([^)]*)\]\+\)\?\)*\)*"ms=s+1
+" type declarations in case statements
+syn match scalaCaseType "\(case\s\+[_a-zA-Z0-9]\+\)\@<=:\s*[\._$a-zA-Z0-9]\+\(\[[^:]\{-1,}\]\+\)\?"ms=s+1
 
 " comments
 syn match scalaTodo "[tT][oO][dD][oO]" contained
@@ -156,6 +158,7 @@ hi link scalaLineComment Comment
 hi link scalaDocComment Comment
 hi link scalaTodo Todo
 hi link scalaType Type
+hi link scalaCaseType Type
 hi link scalaTypeSpecializer scalaType
 hi link scalaXml String
 hi link scalaXmlTag Include
