@@ -51,17 +51,23 @@ function! SortScalaImports()
   let to_delete = last_line - first_line + 2
   execute 'd'to_delete
 
-  call sort(java_scala_imports)
-  call sort(first_party_imports)
-  call sort(third_party_imports)
+  call s:sortAndPrint(first_party_imports)
+  call s:sortAndPrint(third_party_imports)
+  call s:sortAndPrint(java_scala_imports)
 
-  call append(line("."), "")
-  call append(line("."), first_party_imports)
-  call append(line("."), "")
-  call append(line("."), third_party_imports)
-  call append(line("."), "")
-  call append(line("."), java_scala_imports)
+endfunction
 
+function! s:sortAndPrint(imports)
+  call sort(a:imports, "s:sortIgnoreCase")
+  call append(line("."), "")
+  call append(line("."), a:imports)
+endfunction
+
+" this useless function exists purely so the sort() ignores case
+" case ignoring is needed to scalaz/Scalaz appears next
+" to each other
+function! s:sortIgnoreCase(i1, i2)
+  return a:i1 == a:i2 ? 0 : a:i1 > a:i2 ? 1 : -1
 endfunction
 
 command SortScalaImports call SortScalaImports()
