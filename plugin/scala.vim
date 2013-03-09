@@ -29,7 +29,7 @@ function! SortScalaImports()
 
       if line =~ '^import \(java\(x\)\?\|scala\)\.'
         call add(java_scala_imports, line)
-      elseif line =~ '^import \(de.\|controller\|util\)'
+      elseif line =~ '^import \(de.\|controller\|util\|views\)'
         call add(first_party_imports, line)
       else
         call add(third_party_imports, line)
