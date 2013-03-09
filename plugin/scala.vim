@@ -58,9 +58,11 @@ function! SortScalaImports()
 endfunction
 
 function! s:sortAndPrint(imports)
-  call sort(a:imports, "s:sortIgnoreCase")
-  call append(line("."), "")
-  call append(line("."), a:imports)
+  if len(a:imports) > 0
+    call sort(a:imports, "s:sortIgnoreCase")
+    call append(line("."), "")
+    call append(line("."), a:imports)
+  endif
 endfunction
 
 " this useless function exists purely so the sort() ignores case
