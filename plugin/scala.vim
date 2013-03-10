@@ -3,7 +3,7 @@
 "
 " 1. Java/Scala imports like java.util.UUID
 " 2. Third party libraries
-" 3. First party libraries
+" 3. First party libraries (ie. your own stuff)
 "
 " author: Leonard Ehrenfried <leonard.ehrenfried@gmail.com>
 "
