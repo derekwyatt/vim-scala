@@ -29,8 +29,13 @@ function! SortScalaImports()
 
       if line =~ '^import \(java\(x\)\?\|scala\)\.'
         call add(java_scala_imports, line)
-      elseif line =~ '^import \(de.\|controller\|util\|views\)'
-        call add(first_party_imports, line)
+      elseif exists('g:scala_first_party_namespaces')
+        let regex = '^import '.g:scala_first_party_namespaces
+        if line =~ regex
+          call add(first_party_imports, line)
+        else
+          call add(third_party_imports, line)
+        endif
       else
         call add(third_party_imports, line)
       endif
