@@ -6,7 +6,7 @@ Syntax highlighting and helper functions for the scala language.
 
 COMMANDS                                        *scala-commands*
 
-                                                *scala-:SortScalaImports*
+                                                *:SortScalaImports*
 :SortScalaImports       Groups the imports a the top of the file and sorts
                         them alphabetically.
                         The three groups in which the imports can fall are:
