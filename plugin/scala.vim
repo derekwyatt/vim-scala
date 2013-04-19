@@ -52,13 +52,22 @@ function! SortScalaImports()
     let curr = curr + 1
   endwhile
 
-  call cursor(first_line - 1, 0)
-  let to_delete = last_line - first_line + 2
+  if first_line > 1
+    call cursor(first_line - 1, 0)
+    let to_delete = last_line - first_line + 2
+  else
+    call cursor(1,0)
+    let to_delete = last_line - first_line + 1
+  endif
   execute 'd'to_delete
 
   call s:sortAndPrint(first_party_imports)
   call s:sortAndPrint(third_party_imports)
   call s:sortAndPrint(java_scala_imports)
+
+  if first_line < 2
+    execute 'delete'
+  endif
 
 endfunction
 
