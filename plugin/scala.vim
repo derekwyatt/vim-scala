@@ -9,6 +9,7 @@
 "
 
 function! SortScalaImports()
+  let save_cursor = getpos(".")
   let curr = 0
   let first_line = -1
   let last_line = -1
@@ -68,6 +69,9 @@ function! SortScalaImports()
   if first_line < 2
     execute 'delete'
   endif
+
+  "move cursor to where it was before the function call
+  call setpos('.', save_cursor)
 
 endfunction
 
