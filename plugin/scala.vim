@@ -1,15 +1,25 @@
 "
 " Sort imports
 "
-" 1. Java/Scala imports like java.util.UUID
-" 2. Third party libraries
-" 3. First party libraries (ie. your own stuff)
-"
 " author: Leonard Ehrenfried <leonard.ehrenfried@gmail.com>
 "
 
 function! SortScalaImports()
   let save_cursor = getpos(".")
+
+  call s:sortAcrossGroups()
+  "move cursor to where it was before the function call
+  call setpos('.', save_cursor)
+
+endfunction
+
+" Iterates over _all_ imports and puts them into 3 groups
+"
+" 1. Java/Scala imports like java.util.UUID
+" 2. Third party libraries
+" 3. First party libraries (ie. your own stuff)
+"
+function! s:sortAcrossGroups()
   let curr = 0
   let first_line = -1
   let last_line = -1
@@ -69,10 +79,6 @@ function! SortScalaImports()
   if first_line < 2
     execute 'delete'
   endif
-
-  "move cursor to where it was before the function call
-  call setpos('.', save_cursor)
-
 endfunction
 
 function! s:sortAndPrint(imports)
