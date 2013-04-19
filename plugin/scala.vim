@@ -7,7 +7,13 @@
 function! SortScalaImports()
   let save_cursor = getpos(".")
 
-  call s:sortAcrossGroups()
+
+  if exists('g:scala_sort_across_groups') && g:scala_sort_across_groups
+    call s:sortAcrossGroups()
+  else
+    call s:sortInsideGroups()
+  end
+
   "move cursor to where it was before the function call
   call setpos('.', save_cursor)
 
@@ -81,6 +87,24 @@ function! s:sortAcrossGroups()
   endif
 endfunction
 
+function! s:sortInsideGroups()
+  call cursor(1, 1)
+
+  while(1)
+    let pos = line(".")
+    let start = search('^import') "find first line with import
+    let end = search('^\import.*\n\(import\)\@!') "find first non-import line
+
+    " if the next match is above the current cursor position we're done
+    if start < pos
+      break
+    end
+
+    execute start','end'sort i'
+    call cursor(end,0)
+  endwhile
+endfunction
+
 function! s:sortAndPrint(imports)
   if len(a:imports) > 0
     call sort(a:imports, "s:sortIgnoreCase")
@@ -90,8 +114,7 @@ function! s:sortAndPrint(imports)
 endfunction
 
 " this useless function exists purely so the sort() ignores case
-" case ignoring is needed to scalaz/Scalaz appears next
-" to each other
+" this is needed so scalaz/Scalaz appears next to each other
 function! s:sortIgnoreCase(i1, i2)
   return a:i1 == a:i2 ? 0 : a:i1 > a:i2 ? 1 : -1
 endfunction
