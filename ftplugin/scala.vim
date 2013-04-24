@@ -1,8 +1,3 @@
-setlocal textwidth=140
-setlocal shiftwidth=2
-setlocal softtabstop=2
-setlocal expandtab
-setlocal formatoptions=tcqr
 setlocal commentstring=//%s
 
 set makeprg=sbt\ -Dsbt.log.noformat=true\ compile
