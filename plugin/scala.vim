@@ -95,8 +95,11 @@ function! s:sortInsideGroups()
     let start = search('^import') "find first line with import
     let end = search('^\import.*\n\(import\)\@!') "find first non-import line
 
-    " if the next match is above the current cursor position we're done
-    if start < pos
+    " if the next match is above the current cursor position the search has
+    " wrapped and we're done
+    " also covered is the case when the import is the last line in the file
+    " with no blank line after it
+    if start < pos || end < start
       break
     end
 
