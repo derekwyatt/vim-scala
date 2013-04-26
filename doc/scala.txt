@@ -1,0 +1,43 @@
+scala.txt* Syntax highlighting and helper functions for the Scala language.
+
+INTRODUCTION                                    *scala*
+
+Syntax highlighting and helper functions for the scala language.
+
+COMMANDS                                        *scala-commands*
+
+                                                *:SortScalaImports*
+:SortScalaImports       There are two modes in which this command can operate.
+                        By default it walks all import groups at the top of
+                        the Scala file and orders their lines alphabetically.
+                        A group is a series of lines starting with the
+                        import keyword separated by one or more blank lines.
+
+                        The second, more advanced mode, can be activated by
+                        setting
+
+                          let g:scala_sort_across_groups=1
+
+                        This makes this command include all imports in the
+                        sorting regardless of blank lines in between them and
+                        puts them in three predefined groups instead.
+                        The three groups in which the imports can fall are:
+
+                          1. Scala and Java core
+                          2. Third party libraries
+                          3. First party code (ie. your own)
+
+                        Java and Scala core imports are identified by the
+                        java(x) and scala namespaces.
+                        Everything else that isn't a first party namespace
+                        will be a third party import.
+                        You can define a regex that matches first party
+                        namespaces by setting
+
+                          g:scala_first_party_namespaces
+
+                        For example in a standard Play app this would be
+                        set to
+                          g:scala_first_party_namespaces='\(controllers\|views\|models\)'
+
+

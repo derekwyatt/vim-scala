@@ -18,3 +18,8 @@ If you have Vundle installed, simply add the following to your .vimrc:
 and then run
   :BundleInstall
 to install it.
+
+Sorting of imports with :SortScalaImports
+
+Please consult the help with
+:help :SortScalaImports
