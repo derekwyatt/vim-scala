@@ -7,7 +7,6 @@
 function! SortScalaImports()
   let save_cursor = getpos(".")
 
-
   if exists('g:scala_sort_across_groups') && g:scala_sort_across_groups
     call s:sortAcrossGroups()
   else
@@ -81,8 +80,10 @@ function! s:sortAcrossGroups()
   " remove extra blank line at top
   execute 'delete'
 
-  call cursor(last_line + 1, 0)
-  execute 'delete'
+  call cursor(last_line + 2, 0)
+  if empty(getline(line(".")))
+    execute 'delete'
+  endif
 
 endfunction
 
