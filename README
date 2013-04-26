@@ -21,18 +21,5 @@ to install it.
 
 Sorting of imports with :SortScalaImports
 
-This sorts your imports alphabetically and puts them into three groups separeted
-by a blank line.
-
-1. Scala and Java imports
-2. Third party library namespaces (com.mongodb, scalaz._)
-3. First party namespaces
-
-What is considered a first party namespace can be configured through a regex that
-matches the part after the import statement, like this
-
-let g:scala_first_party_namespaces='\(controllers\|views\|models\|util\|de.\)'
-
-Help is available with
-
-:help SortScalaImports
+Please consult the help with
+:help :SortScalaImports
