@@ -26,7 +26,7 @@ endfunction
 " 3. First party libraries (ie. your own stuff)
 "
 function! s:sortAcrossGroups()
-  let curr = 0
+  let curr = 1
   let first_line = -1
   let last_line = -1
   let trailing_newlines = 0
@@ -35,7 +35,7 @@ function! s:sortAcrossGroups()
   let third_party_imports = []
 
   " loop over lines in buffer
-  while curr < line('$')
+  while curr <= line('$')
 
     let line = getline(curr)
 
@@ -62,29 +62,28 @@ function! s:sortAcrossGroups()
       let trailing_newlines = trailing_newlines + 1
     elseif first_line != -1
       let last_line = curr - trailing_newlines - 1
-      " break out when you have found the first non-import line
+      " break out when you have found the first non-import, non-empty line
       break
     endif
 
     let curr = curr + 1
   endwhile
 
-  if first_line > 1
-    call cursor(first_line - 1, 0)
-    let to_delete = last_line - first_line + 2
-  else
-    call cursor(1,0)
-    let to_delete = last_line - first_line + 1
-  endif
+  call cursor(first_line, 0)
+  let to_delete = last_line - first_line
+
   execute 'd'to_delete
 
   call s:sortAndPrint(first_party_imports)
   call s:sortAndPrint(third_party_imports)
   call s:sortAndPrint(java_scala_imports)
 
-  if first_line < 2
-    execute 'delete'
-  endif
+  " remove extra blank line at top
+  execute 'delete'
+
+  call cursor(last_line + 1, 0)
+  execute 'delete'
+
 endfunction
 
 function! s:sortInsideGroups()
