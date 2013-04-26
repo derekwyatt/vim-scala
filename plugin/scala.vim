@@ -90,21 +90,28 @@ endfunction
 function! s:sortInsideGroups()
   call cursor(1, 1)
 
-  while(1)
-    let pos = line(".")
-    let start = search('^import') "find first line with import
-    let end = search('^\import.*\n\(import\)\@!') "find first non-import line
+  let start = 1
+  let end = 1
 
-    " if the next match is above the current cursor position the search has
-    " wrapped and we're done
-    " also covered is the case when the import is the last line in the file
-    " with no blank line after it
-    if start < pos || end < start
-      break
-    end
+  " repeat until we find no more matches
+  while(start > 0 && end > 0)
+    let pos = line(".")
+    " find first line with import
+    let start = search('^import', 'cW')
+    " find next line which starts with an import, ends with a newline
+    " and the next line is not an import
+    " the 'c' flag accepts matches at the current position allowing single line groups
+    let end = search('^\import.*\n\(import\)\@!', 'cW')
 
     execute start','end'sort i'
-    call cursor(end,0)
+
+    call cursor(end + 1, 0)
+
+    " stop if end is the last line in the file
+    if line("$") == end
+      break
+    endif
+
   endwhile
 endfunction
 
