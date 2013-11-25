@@ -90,7 +90,7 @@ syn match scalaCaseType "\(case\s\+[_a-zA-Z0-9]\+\)\@<=:\s*[\._$a-zA-Z0-9]\+\(\[
 " comments
 syn match scalaTodo "[tT][oO][dD][oO]" contained
 syn match scalaLineComment "//.*" contains=scalaTodo
-syn region scalaComment start="/\*" end="\*/" contains=scalaTodo
+syn region scalaComment start="/\*" end="\*/" contains=scalaTodo,scalaComment
 syn case ignore
 syn include @scalaHtml syntax/html.vim
 syn case match
