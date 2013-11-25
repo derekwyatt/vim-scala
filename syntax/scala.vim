@@ -10,7 +10,7 @@ elseif exists("b:current_syntax")
 endif
 
 syn case match
-syn sync minlines=50 maxlines=100
+syn sync minlines=200 maxlines=1000
 
 " most Scala keywords
 syn keyword scalaKeyword case
@@ -104,10 +104,18 @@ syn match scalaAnnotation "@[a-zA-Z]\+"
 syn match scalaEmptyString "\"\""
 
 " multi-line string literals
+syn region scalaMultiLineSString start="s\"\"\"" end="\"\"\"\"\@!" contains=scalaUnicode,scalaStringEscape,scalaSStringInterpolations
+syn region scalaMultiLineFString start="f\"\"\"" end="\"\"\"\"\@!" contains=scalaUnicode,scalaStringEscape,scalaFStringInterpolations
 syn region scalaMultiLineString start="\"\"\"" end="\"\"\"\"\@!" contains=scalaUnicode
 syn match scalaUnicode "\\u[0-9a-fA-F]\{4}" contained
 
 " string literals with escapes
+syn region scalaFString start="f\"[^"]" end="\"" contains=scalaFStringInterpolations,scalaStringEscape
+syn match scalaFStringInterpolations "$\w\+" contained
+syn match scalaFStringInterpolations "${\w\+}%\[a-z0-9\.]\+" contained
+syn region scalaSString start="s\"[^"]" end="\"" contains=scalaSStringInterpolations,scalaStringEscape
+syn match scalaSStringInterpolations "$\w\+" contained
+syn match scalaSStringInterpolations "${[^}]\+}" contained
 syn region scalaString start="\"[^"]" skip="\\\"" end="\"" contains=scalaStringEscape " TODO end \n or not?
 syn match scalaStringEscape "\\u[0-9a-fA-F]\{4}" contained
 syn match scalaStringEscape "\\[nrfvb\\\"]" contained
@@ -148,11 +156,17 @@ hi link scalaOperator Normal
 hi link scalaNumber Number
 hi link scalaEmptyString String
 hi link scalaString String
+hi link scalaFString String
+hi link scalaSString String
 hi link scalaChar String
+hi link scalaMultiLineFString String
+hi link scalaMultiLineSString String
 hi link scalaMultiLineString String
 hi link scalaStringEscape Special
 hi link scalaSymbol Special
 hi link scalaUnicode Special
+hi link scalaFStringInterpolations Type
+hi link scalaSStringInterpolations Type
 hi link scalaComment Comment
 hi link scalaLineComment Comment
 hi link scalaDocComment Comment
