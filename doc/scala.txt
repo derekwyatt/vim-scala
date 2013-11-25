@@ -1,4 +1,4 @@
-scala.txt* Syntax highlighting and helper functions for the Scala language.
+*scala.txt* Syntax highlighting and helper functions for the Scala language.
 
 INTRODUCTION                                    *scala*
 
@@ -38,6 +38,7 @@ COMMANDS                                        *scala-commands*
 
                         For example in a standard Play app this would be
                         set to
-                          g:scala_first_party_namespaces='\(controllers\|views\|models\)'
+                          g:scala_first_party_namespaces=
+                             \ '\(controllers\|views\|models\)'
 
 
