@@ -5,9 +5,6 @@ This is a "bundle" for Vim that builds off of the initial Scala plugin modules
 by Stefan Matthias Aust and adds some more "stuff" that I find useful, including
 all of my notes and customizations.
 
-It's free for anyone to fork, clone, etc... no licensing or whatever... just do
-whatever you want with it, but you can't take credit for my stuff :)
-
 ##Installation
 
 You really should be using Tim Pope's [Pathogen](https://github.com/tpope/vim-pathogen) module for Vim (http://tammersaleh.com/posts/the-modern-vim-config-with-pathogen) if you're going to clone this repository because, well... you should.
