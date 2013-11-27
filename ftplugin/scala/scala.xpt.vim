@@ -1,3 +1,6 @@
+if !exists("g:__XPTEMPLATE_VIM__")
+    finish
+endif
 
 XPTemplate priority=lang
 
