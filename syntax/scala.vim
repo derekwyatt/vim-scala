@@ -61,13 +61,15 @@ syn keyword scalaBoolean true false
 
 " definitions
 syn keyword scalaDef def nextgroup=scalaDefName skipwhite
-syn keyword scalaVal val nextgroup=scalaValName skipwhite
+syn keyword scalaVal val nextgroup=scalaValName,scalaQuasiQuote,scalaTripleQuasiQuote skipwhite
 syn keyword scalaVar var nextgroup=scalaVarName skipwhite
 syn keyword scalaClass class nextgroup=scalaClassName skipwhite
 syn keyword scalaObject object nextgroup=scalaClassName skipwhite
 syn keyword scalaTrait trait nextgroup=scalaClassName skipwhite
 syn match scalaDefName "[^ =:;([]\+" contained nextgroup=scalaDefSpecializer skipwhite
 syn match scalaValName "[^ =:;([]\+" contained
+syn match scalaQuasiQuote "q\"[^\"]*\"" contained
+syn match scalaTripleQuasiQuote "q\"\"\"[^\"]*\"\"\"" contained
 syn match scalaVarName "[^ =:;([]\+" contained
 syn match scalaClassName "[^ =:;(\[]\+" contained nextgroup=scalaClassSpecializer skipwhite
 syn region scalaDefSpecializer start="\[" end="\]" contained contains=scalaDefSpecializer
@@ -106,17 +108,17 @@ syn match scalaEmptyString "\"\""
 " multi-line string literals
 syn region scalaMultiLineSString start="s\"\"\"" end="\"\"\"\"\@!" contains=scalaUnicode,scalaStringEscape,scalaSStringInterpolations
 syn region scalaMultiLineFString start="f\"\"\"" end="\"\"\"\"\@!" contains=scalaUnicode,scalaStringEscape,scalaFStringInterpolations
-syn region scalaMultiLineString start="\"\"\"" end="\"\"\"\"\@!" contains=scalaUnicode
+syn region scalaMultiLineString start="[a-eg-rt-z]\?\"\"\"" end="\"\"\"\"\@!" contains=scalaUnicode
 syn match scalaUnicode "\\u[0-9a-fA-F]\{4}" contained
 
 " string literals with escapes
 syn region scalaFString start="f\"[^"]" end="\"" contains=scalaFStringInterpolations,scalaStringEscape
-syn match scalaFStringInterpolations "$\w\+" contained
-syn match scalaFStringInterpolations "${\w\+}%\[a-z0-9\.]\+" contained
+syn match scalaFStringInterpolations "${[^}]\+}\%(%[0-9a-z\.]\+\)\?" contained
+syn match scalaFStringInterpolations "$\w\+\%(%[0-9a-z\.]\+\)\?" contained
 syn region scalaSString start="s\"[^"]" end="\"" contains=scalaSStringInterpolations,scalaStringEscape
 syn match scalaSStringInterpolations "$\w\+" contained
 syn match scalaSStringInterpolations "${[^}]\+}" contained
-syn region scalaString start="\"[^"]" skip="\\\"" end="\"" contains=scalaStringEscape " TODO end \n or not?
+syn region scalaString start="[a-eg-rt-z]\?\"[^"]" skip="\\\"" end="\"" contains=scalaStringEscape " TODO end \n or not?
 syn match scalaStringEscape "\\u[0-9a-fA-F]\{4}" contained
 syn match scalaStringEscape "\\[nrfvb\\\"]" contained
 
@@ -156,6 +158,8 @@ hi link scalaOperator Normal
 hi link scalaNumber Number
 hi link scalaEmptyString String
 hi link scalaString String
+hi link scalaQuasiQuote String
+hi link scalaTripleQuasiQuote String
 hi link scalaFString String
 hi link scalaSString String
 hi link scalaChar String
