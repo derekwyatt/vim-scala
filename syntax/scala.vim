@@ -30,8 +30,8 @@ syn keyword scalaKeywordModifier abstract override final implicit lazy private p
 hi link scalaKeywordModifier Function
 
 syn keyword scalaSpecial this new true false package import
-syn match scalaSpecial "\%(=>\|<-\|->\|⇒\)"
-syn match scalaSpecial /package object/
+syn match scalaSpecial "\%(=>\|⇒\|<-\|←\|->\|→\)"
+syn match scalaSpecial /`[^`]*`/  " Backtick literals
 hi link scalaSpecial PreProc
 
 syn region scalaString start=/"/ skip=/\\"/ end=/"/
