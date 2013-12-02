@@ -17,34 +17,34 @@ syn keyword scalaKeyword val nextgroup=scalaNameDefinition,scalaQuasiQuotes skip
 syn keyword scalaKeyword def var nextgroup=scalaNameDefinition skipwhite
 hi link scalaKeyword Keyword
 
-syn match scalaNameDefinition /\<[A-Za-z0-9$]\+\>/ contained
+syn match scalaNameDefinition /\<[_A-Za-z0-9$]\+\>/ contained
 hi link scalaNameDefinition Normal
 
-syn match scalaInstanceDeclaration /\<[A-Za-z0-9$]\+\>/ contained
+syn match scalaInstanceDeclaration /\<[_A-Za-z0-9$]\+\>/ contained
 hi link scalaInstanceDeclaration Special
 
-syn match scalaCaseFollowing /\<[A-Z][A-Za-z0-9$]*\>/ contained
+syn match scalaCaseFollowing /\<[A-Z_][_A-Za-z0-9$]*\>/ contained
 hi link scalaCaseFollowing Special
 
 syn keyword scalaKeywordModifier abstract override final implicit lazy private protected sealed null require super
 hi link scalaKeywordModifier Function
 
 syn keyword scalaSpecial this new true false package import
-syn match scalaSpecial "\%(=>\|<-\|->\)"
+syn match scalaSpecial "\%(=>\|<-\|->\|⇒\)"
 syn match scalaSpecial /package object/
 hi link scalaSpecial PreProc
 
 syn region scalaString start=/"/ skip=/\\"/ end=/"/
 hi link scalaString String
 
-syn region scalaSString matchgroup=PreProc start=/s"/ skip=/\\"/ end=/"/ contains=scalaInterpolation
-syn match scalaInterpolation /\$[a-zA-Z0-9$]\+/ contained
+syn region scalaSString matchgroup=Special start=/s"/ skip=/\\"/ end=/"/ contains=scalaInterpolation
+syn match scalaInterpolation /\$[a-zA-Z0-9_$]\+/ contained
 syn match scalaInterpolation /\${[^}]\+}/ contained
 hi link scalaSString String
 hi link scalaInterpolation Function
 
-syn region scalaFString matchgroup=PreProc start=/f"/ skip=/\\"/ end=/"/ contains=scalaInterpolation,scalaFInterpolation
-syn match scalaFInterpolation /\$[a-zA-Z0-9$]\+%[-A-Za-z0-9\.]\+/ contained
+syn region scalaFString matchgroup=Special start=/f"/ skip=/\\"/ end=/"/ contains=scalaInterpolation,scalaFInterpolation
+syn match scalaFInterpolation /\$[a-zA-Z0-9_$]\+%[-A-Za-z0-9\.]\+/ contained
 syn match scalaFInterpolation /\${[^}]\+}%[-A-Za-z0-9\.]\+/ contained
 hi link scalaFString String
 hi link scalaFInterpolation Function
@@ -64,17 +64,33 @@ hi link scalaTripleString String
 hi link scalaTripleSString String
 hi link scalaTripleFString String
 
-syn match scalaNumber /\<[1-9]\d*[dDfFlL]\?\>/ containedin=ALL,scalaInterpolation,scalaFInterpolation
-syn match scalaNumber /\<0[xX][0-9a-fA-F]\+[dDfFlL]\?\>/ containedin=ALL,scalaInterpolation,scalaFInterpolation
-syn match scalaNumber "\%(\<\d\+\.\d*\|\.\d\+\)\%([eE][-+]\=\d\+\)\=[fFdD]\=" containedin=ALL,scalaInterpolation,scalaFInterpolation
-syn match scalaNumber "\<\d\+[eE][-+]\=\d\+[fFdD]\=\>" containedin=ALL,scalaInterpolation,scalaFInterpolation
-syn match scalaNumber "\<\d\+\%([eE][-+]\=\d\+\)\=[fFdD]\>" containedin=ALL,scalaInterpolation,scalaFInterpolation
+syn match scalaNumber /\<[1-9]\d*[dDfFlL]\?\>/
+syn match scalaNumber /\<0[xX][0-9a-fA-F]\+[dDfFlL]\?\>/
+syn match scalaNumber "\%(\<\d\+\.\d*\|\.\d\+\)\%([eE][-+]\=\d\+\)\=[fFdD]\="
+syn match scalaNumber "\<\d\+[eE][-+]\=\d\+[fFdD]\=\>"
+syn match scalaNumber "\<\d\+\%([eE][-+]\=\d\+\)\=[fFdD]\>"
 hi link scalaNumber Number
 
 syn region scalaSquareBrackets matchgroup=Type start="\[" end="\]" contains=scalaSpecial,scalaTypeParameter,scalaSquareBrackets,scalaTypeOperator
-syn match scalaTypeAnnotation /\%(:\s*\)\@<=[A-Za-z0-9$]\+/
-syn match scalaTypeParameter /[A-Za-z0-9$]\+/ contained
+syn match scalaTypeAnnotation /\%(:\s*\)\@<=[_A-Za-z0-9$]\+/
+syn match scalaTypeParameter /[_A-Za-z0-9$]\+/ contained
 syn match scalaTypeOperator /[=:<>]\+/ contained
 hi link scalaTypeAnnotation Type
 hi link scalaTypeParameter Type
 hi link scalaTypeOperator Type
+
+syn region scalaMultilineComment start="/\*" end="\*/" contains=scalaMultilineComment,scalaDocLinks,scalaParameterAnnotation,scalaCommentAnnotation,scalaCommentCodeBlock,@scalaHtml keepend
+syn match scalaCommentAnnotation "@[_A-Za-z0-9$]\+" contained
+syn match scalaParameterAnnotation "@param" nextgroup=scalaParamAnnotationValue skipwhite contained
+syn match scalaParamAnnotationValue /[_A-Za-z0-9$]\+/ contained
+syn region scalaDocLinks start="\[\[" end="\]\]" contained
+syn region scalaCommentCodeBlock matchgroup=Keyword start="{{{" end="}}}" contained
+hi link scalaMultilineComment Comment
+hi link scalaDocLinks Function
+hi link scalaParameterAnnotation Function
+hi link scalaParamAnnotationValue Keyword
+hi link scalaCommentAnnotation Function
+hi link scalaCommentCodeBlock String
+
+syn match scalaTrailingComment "//.*$"
+hi link scalaTrailingComment Comment

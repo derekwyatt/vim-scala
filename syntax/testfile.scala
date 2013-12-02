@@ -6,15 +6,28 @@ package object SomeObject[A <: B] extends Implicits {
 }
 
 class ScalaClass(i: Int = 12, b: Trait[A, Trait[B, C]]) extends B with SomeTrait[A, B[String], D] {
-  val thing = "A String"
+  /**
+   * I forgot comments! [[scala.Option]]
+   *
+   * {{{
+   * scala> This is a REPL line
+   * scala> and this is another one
+   * }}}
+   *
+   * <li></li>
+   *
+   * @param parameter Explanation of the parameter.
+   * @return 
+   */
+  val thing = "A String" // this is a trailing comment
   val thing = "A String with a \" in it"
-  val intString = "A string with $stuff in it"
-  val intString = s"A string with $stuff and ${stuff} in it"
+  val intString = "A string with $stuff // and a comment in it"
+  val intString = s"A string /* a comment and */ with $stuff and ${stuff} in it"
   val intFString = f"A string with $stuff and ${stuff} and ${eval this}%-2.2f and $stuff%2d in it"
   val otherThings = """|This is a string
                        |that spans multiple lines.
                        |""".stripMargin
-  def number = 0xaf903adeL
+  def number = 0xAf903adeL
   def float = 1f
   def float = 1F
   def float = 1.1f
