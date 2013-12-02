@@ -29,7 +29,8 @@ hi link scalaCaseFollowing Special
 syn keyword scalaKeywordModifier abstract override final implicit lazy private protected sealed null require super
 hi link scalaKeywordModifier Function
 
-syn keyword scalaSpecial this new true false package import
+syn keyword scalaSpecial this true false package import
+syn keyword scalaSpecial new nextgroup=scalaInstanceDeclaration skipwhite
 syn match scalaSpecial "\%(=>\|⇒\|<-\|←\|->\|→\)"
 syn match scalaSpecial /`[^`]*`/  " Backtick literals
 hi link scalaSpecial PreProc
