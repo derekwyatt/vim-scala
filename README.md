@@ -30,7 +30,7 @@ to install it.
 ##Sorting of import statements
     :SortScalaImports
 
-There are differenct modes for import sorting available. For details, please
+There are different modes for import sorting available. For details, please
 consult the vimdoc help with
 
     :help :SortScalaImports
