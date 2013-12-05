@@ -18,7 +18,7 @@ syn keyword scalaKeyword def var nextgroup=scalaNameDefinition skipwhite
 hi link scalaKeyword Keyword
 
 syn match scalaNameDefinition /\<[_A-Za-z0-9$]\+\>/ contained
-hi link scalaNameDefinition Normal
+hi link scalaNameDefinition Statement
 
 syn match scalaInstanceDeclaration /\<[_A-Za-z0-9$]\+\>/ contained
 hi link scalaInstanceDeclaration Special
