@@ -25,7 +25,7 @@ syn match scalaInstanceDeclaration /\<[_\.A-Za-z0-9$]\+\>/ contained
 syn match scalaInstanceDeclaration /`[^`]\+`/ contained
 hi link scalaInstanceDeclaration Special
 
-syn match scalaCaseFollowing /\<[A-Z_][_A-Za-z0-9$]*\>/ contained
+syn match scalaCaseFollowing /\<[_\.A-Za-z0-9$]*\>/ contained
 syn match scalaCaseFollowing /`[^`]\+`/ contained
 hi link scalaCaseFollowing Special
 
@@ -96,6 +96,9 @@ hi link scalaParameterAnnotation Function
 hi link scalaParamAnnotationValue Keyword
 hi link scalaCommentAnnotation Function
 hi link scalaCommentCodeBlock String
+
+syn match scalaAnnotation /@\<[`_A-Za-z0-9$]\+\>/
+hi link scalaAnnotation PreProc
 
 syn match scalaTrailingComment "//.*$"
 hi link scalaTrailingComment Comment
