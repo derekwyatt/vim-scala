@@ -119,4 +119,6 @@ class ScalaClass(i: Int = 12, b: Trait[A, Trait[B, C]]) extends B with SomeTrait
   pq"return this $thing"
 
   def someFunc[A <: B, X =:= Y]
+
+  val soManyEscapes = CharPredicate("\\\"\n\b\r\f\t") // and a comment
 }

@@ -44,8 +44,12 @@ syn match scalaSpecial "\%(=>\|⇒\|<-\|←\|->\|→\)"
 syn match scalaSpecial /`[^`]*`/  " Backtick literals
 hi link scalaSpecial PreProc
 
-syn region scalaString start=/"/ skip=/\\"/ end=/"/
+syn match scalaStringEmbeddedQuote /\\[\\"']/ contained
+syn match scalaStringSpecialChar /\\[ntbrf]/ contained
+syn region scalaString start=/"/ end=/"/ contains=scalaStringEmbeddedQuote,scalaStringSpecialChar
 hi link scalaString String
+hi link scalaStringEmbeddedQuote String
+hi link scalaStringSpecialChar Function
 
 syn region scalaSString matchgroup=Special start=/s"/ skip=/\\"/ end=/"/ contains=scalaInterpolation
 syn match scalaInterpolation /\$[a-zA-Z0-9_$]\+/ contained
