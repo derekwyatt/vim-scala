@@ -11,7 +11,8 @@ syn sync minlines=200 maxlines=1000
 
 syn keyword scalaKeyword catch do else final finally for forSome if
 syn keyword scalaKeyword match return throw try while yield
-syn keyword scalaKeyword class trait object extends with type nextgroup=scalaInstanceDeclaration skipwhite
+syn keyword scalaKeyword class trait object extends with nextgroup=scalaInstanceDeclaration skipwhite
+syn keyword scalaKeyword type nextgroup=scalaTypeDeclaration skipwhite
 syn keyword scalaKeyword case nextgroup=scalaKeyword,scalaCaseFollowing skipwhite
 syn keyword scalaKeyword val nextgroup=scalaNameDefinition,scalaQuasiQuotes skipwhite
 syn keyword scalaKeyword def var nextgroup=scalaNameDefinition skipwhite
@@ -34,6 +35,12 @@ hi link scalaNameDefinition Function
 syn match scalaInstanceDeclaration /\<[_\.A-Za-z0-9$]\+\>/ contained
 syn match scalaInstanceDeclaration /`[^`]\+`/ contained
 hi link scalaInstanceDeclaration Special
+
+syn match scalaTypeDeclaration /\<[_A-Za-z0-9$]\+\>/ contained nextgroup=scalaTypeExtension,scalaTypeEquals skipwhite
+syn match scalaTypeExtension /\%(=>\|<:\|:>\|=:=\|::\)/ contained nextgroup=scalaTypeDeclaration skipwhite
+syn match scalaTypeEquals /=/ contained nextgroup=scalaTypeDeclaration skipwhite
+hi link scalaTypeDeclaration Type
+hi link scalaTypeExtension Keyword
 
 syn match scalaCaseFollowing /\<[_\.A-Za-z0-9$]*\>/ contained
 syn match scalaCaseFollowing /`[^`]\+`/ contained
@@ -88,15 +95,13 @@ syn match scalaNumber "\<\d\+[eE][-+]\=\d\+[fFdD]\=\>"
 syn match scalaNumber "\<\d\+\%([eE][-+]\=\d\+\)\=[fFdD]\>"
 hi link scalaNumber Number
 
-syn region scalaSquareBrackets matchgroup=Type start="\[" end="\]" contains=scalaSpecial,scalaTypeParameter,scalaSquareBrackets,scalaTypeOperator,scalaTypeAnnotationParameter
-syn match scalaTypeAnnotation /\%([_a-zA-Z0-9$)\s]:\_s*\)\@<=[_\.A-Za-z0-9$]\+/
-syn match scalaTypeParameter /[_\.A-Za-z0-9$]\+/ contained
+syn region scalaSquareBrackets matchgroup=Type start="\[" end="\]" contains=scalaTypeDeclaration,scalaSquareBrackets,scalaTypeOperator,scalaTypeAnnotationParameter
 syn match scalaTypeOperator /[-+=:<>]\+/ contained
 syn match scalaTypeAnnotationParameter /@\<[`_A-Za-z0-9$]\+\>/ contained
-hi link scalaTypeAnnotation Type
-hi link scalaTypeParameter Type
 hi link scalaTypeOperator Keyword
 hi link scalaTypeAnnotationParameter Function
+syn match scalaTypeAnnotation /\%([_a-zA-Z0-9$)\s]:\_s*\)\@<=[_\.A-Za-z0-9$]\+/
+hi link scalaTypeAnnotation Type
 
 syn region scalaMultilineComment start="/\*" end="\*/" contains=scalaMultilineComment,scalaDocLinks,scalaParameterAnnotation,scalaCommentAnnotation,scalaCommentCodeBlock,@scalaHtml keepend
 syn match scalaCommentAnnotation "@[_A-Za-z0-9$]\+" contained
