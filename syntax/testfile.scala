@@ -5,6 +5,26 @@ package object SomeObject[A <: B] extends Implicits {
   type Booger[A] = A => Unit
 }
 
+object Test {
+  def test(
+    param1: List[(Int, Int)],
+    param2: List[Int]):
+  List[Int] = {
+    param2 match {
+      case head :: tail => tail
+    }
+  }
+}
+
+case class ACaseClass(param1: Float = 14.23f)
+case object ACaseObject extends Something
+
+def x(): Unit = {
+  case Something(a, b) =>
+  case SomethingElse() =>
+  case SomethingElseElse =>
+}
+
 class ScalaClass(i: Int = 12, b: Trait[A, Trait[B, C]]) extends B with SomeTrait[A, B[String], D] {
   /**
    * I forgot comments! [[scala.Option]]
@@ -27,6 +47,8 @@ class ScalaClass(i: Int = 12, b: Trait[A, Trait[B, C]]) extends B with SomeTrait
   val otherThings = """|This is a string
                        |that spans multiple lines.
                        |""".stripMargin
+  val aChar = 'a'
+  val aSymbol = 'SomeSymbol
   def number = 0xAf903adeL
   def float = 1f
   def float = 1F
