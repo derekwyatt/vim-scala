@@ -20,8 +20,12 @@ hi link scalaKeyword Keyword
 syn match scalaSymbol /'[_A-Za-z0-9$]\+/
 hi link scalaSymbol Number
 
-syn match scalaChar /\%('.'\|'\\.'\)/
+syn match scalaChar /'.'/
+syn match scalaEscapedChar /\\[\\ntbrf]/
+syn match scalaUnicodeChar /\\u[A-Fa-f0-9]\{4}/
 hi link scalaChar Character
+hi link scalaEscapedChar Function
+hi link scalaUnicodeChar Special
 
 syn match scalaNameDefinition /\<[_A-Za-z0-9$]\+\>/ contained
 syn match scalaNameDefinition /`[^`]\+`/ contained
@@ -44,20 +48,18 @@ syn match scalaSpecial "\%(=>\|⇒\|<-\|←\|->\|→\)"
 syn match scalaSpecial /`[^`]*`/  " Backtick literals
 hi link scalaSpecial PreProc
 
-syn match scalaStringEmbeddedQuote /\\[\\"']/ contained
-syn match scalaStringSpecialChar /\\[ntbrf]/ contained
-syn region scalaString start=/"/ end=/"/ contains=scalaStringEmbeddedQuote,scalaStringSpecialChar
+syn match scalaStringEmbeddedQuote /\\"/ contained
+syn region scalaString start=/"/ end=/"/ contains=scalaStringEmbeddedQuote,scalaEscapedChar,scalaUnicodeChar
 hi link scalaString String
 hi link scalaStringEmbeddedQuote String
-hi link scalaStringSpecialChar Function
 
-syn region scalaSString matchgroup=Special start=/s"/ skip=/\\"/ end=/"/ contains=scalaInterpolation
+syn region scalaSString matchgroup=Special start=/s"/ skip=/\\"/ end=/"/ contains=scalaInterpolation,scalaEscapedChar,scalaUnicodeChar
 syn match scalaInterpolation /\$[a-zA-Z0-9_$]\+/ contained
 syn match scalaInterpolation /\${[^}]\+}/ contained
 hi link scalaSString String
 hi link scalaInterpolation Function
 
-syn region scalaFString matchgroup=Special start=/f"/ skip=/\\"/ end=/"/ contains=scalaInterpolation,scalaFInterpolation
+syn region scalaFString matchgroup=Special start=/f"/ skip=/\\"/ end=/"/ contains=scalaInterpolation,scalaFInterpolation,scalaEscapedChar,scalaUnicodeChar
 syn match scalaFInterpolation /\$[a-zA-Z0-9_$]\+%[-A-Za-z0-9\.]\+/ contained
 syn match scalaFInterpolation /\${[^}]\+}%[-A-Za-z0-9\.]\+/ contained
 hi link scalaFString String
@@ -71,9 +73,9 @@ syn region scalaTripleQuasiQuotes matchgroup=Type start=/\<q"""/ end=/"""/ conta
 syn region scalaTripleQuasiQuotes matchgroup=Type start=/\<[tcp]q"""/ end=/"""/ contains=scalaInterpolation
 hi link scalaTripleQuasiQuotes String
 
-syn region scalaTripleString start=/"""/ end=/"""/
-syn region scalaTripleSString matchgroup=PreProc start=/s"""/ end=/"""/
-syn region scalaTripleFString matchgroup=PreProc start=/f"""/ end=/"""/
+syn region scalaTripleString start=/"""/ end=/"""/ contains=scalaEscapedChar,scalaUnicodeChar
+syn region scalaTripleSString matchgroup=Special start=/s"""/ end=/"""/ contains=scalaInterpolation,scalaEscapedChar,scalaUnicodeChar
+syn region scalaTripleFString matchgroup=Special start=/f"""/ end=/"""/ contains=scalaInterpolation,scalaFInterpolation,scalaEscapedChar,scalaUnicodeChar
 hi link scalaTripleString String
 hi link scalaTripleSString String
 hi link scalaTripleFString String
