@@ -89,7 +89,7 @@ syn match scalaNumber "\<\d\+\%([eE][-+]\=\d\+\)\=[fFdD]\>"
 hi link scalaNumber Number
 
 syn region scalaSquareBrackets matchgroup=Type start="\[" end="\]" contains=scalaSpecial,scalaTypeParameter,scalaSquareBrackets,scalaTypeOperator
-syn match scalaTypeAnnotation /\%([a-zA-Z0-9$)\s]:\_s*\)\@<=[_\.A-Za-z0-9$]\+/
+syn match scalaTypeAnnotation /\%([_a-zA-Z0-9$)\s]:\_s*\)\@<=[_\.A-Za-z0-9$]\+/
 syn match scalaTypeParameter /[_\.A-Za-z0-9$]\+/ contained
 syn match scalaTypeOperator /[=:<>]\+/ contained
 hi link scalaTypeAnnotation Type
