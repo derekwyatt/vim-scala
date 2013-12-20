@@ -79,6 +79,7 @@ class ScalaClass(i: Int = 12, b: Trait[A, Trait[B, C]]) extends B with SomeTrait
   someVar match {
     case Flooger(thing, that, matches) =>
       flender ! Message(hi, there, guys)
+    case '"' => Bah
   }
 
   try {
