@@ -20,7 +20,7 @@ hi link scalaKeyword Keyword
 syn match scalaSymbol /'[_A-Za-z0-9$]\+/
 hi link scalaSymbol Number
 
-syn match scalaChar /'.'/
+syn match scalaChar /\%('.'\|'\\.'\)/
 hi link scalaChar Character
 
 syn match scalaNameDefinition /\<[_A-Za-z0-9$]\+\>/ contained
