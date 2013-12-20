@@ -88,13 +88,15 @@ syn match scalaNumber "\<\d\+[eE][-+]\=\d\+[fFdD]\=\>"
 syn match scalaNumber "\<\d\+\%([eE][-+]\=\d\+\)\=[fFdD]\>"
 hi link scalaNumber Number
 
-syn region scalaSquareBrackets matchgroup=Type start="\[" end="\]" contains=scalaSpecial,scalaTypeParameter,scalaSquareBrackets,scalaTypeOperator
+syn region scalaSquareBrackets matchgroup=Type start="\[" end="\]" contains=scalaSpecial,scalaTypeParameter,scalaSquareBrackets,scalaTypeOperator,scalaTypeAnnotationParameter
 syn match scalaTypeAnnotation /\%([_a-zA-Z0-9$)\s]:\_s*\)\@<=[_\.A-Za-z0-9$]\+/
 syn match scalaTypeParameter /[_\.A-Za-z0-9$]\+/ contained
 syn match scalaTypeOperator /[=:<>]\+/ contained
+syn match scalaTypeAnnotationParameter /@\<[`_A-Za-z0-9$]\+\>/ contained
 hi link scalaTypeAnnotation Type
 hi link scalaTypeParameter Type
 hi link scalaTypeOperator Type
+hi link scalaTypeAnnotationParameter Function
 
 syn region scalaMultilineComment start="/\*" end="\*/" contains=scalaMultilineComment,scalaDocLinks,scalaParameterAnnotation,scalaCommentAnnotation,scalaCommentCodeBlock,@scalaHtml keepend
 syn match scalaCommentAnnotation "@[_A-Za-z0-9$]\+" contained
