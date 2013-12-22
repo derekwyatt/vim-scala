@@ -3,6 +3,14 @@ import java.something.com
 
 package object SomeObject[A <: B] extends Implicits {
   type Booger[A] = A => Unit
+  type SomeType = A <: B :> C
+  type SomeOtherType = A => Thing
+
+  def hasFunctionType[A, B <: A, Z](f: A => B, g: (A, B) => Z): Unit = {
+    println("Something")
+  }
+
+  val f: (Int, String) => Unit = (i: Int, s: String) => println(s"$i -- $s")
 }
 
 object Test {

@@ -37,10 +37,17 @@ syn match scalaInstanceDeclaration /`[^`]\+`/ contained
 hi link scalaInstanceDeclaration Special
 
 syn match scalaTypeDeclaration /\<[_A-Za-z0-9$]\+\>/ contained nextgroup=scalaTypeExtension,scalaTypeEquals skipwhite
+syn match scalaTypeEquals /=\ze[^>]/ contained nextgroup=scalaTypePostDeclaration skipwhite
 syn match scalaTypeExtension /\%(=>\|<:\|:>\|=:=\|::\)/ contained nextgroup=scalaTypeDeclaration skipwhite
-syn match scalaTypeEquals /=/ contained nextgroup=scalaTypeDeclaration skipwhite
+syn match scalaTypePostDeclaration /\<[_A-Za-z0-9$]\+\>/ contained nextgroup=scalaTypePostExtension skipwhite
+syn match scalaTypePostExtension /\%(=>\|<:\|:>\|=:=\|::\)/ contained nextgroup=scalaTypePostDeclaration skipwhite
 hi link scalaTypeDeclaration Type
 hi link scalaTypeExtension Keyword
+hi link scalaTypePostDeclaration Special
+hi link scalaTypePostExtension Keyword
+
+syn match scalaTypeAnnotation /\%([_a-zA-Z0-9$)\s]:\_s*\)\@<=[_(\.A-Za-z0-9$]\+/ skipwhite nextgroup=scalaTypeExtension contains=scalaRoundBrackets
+hi link scalaTypeAnnotation Type
 
 syn match scalaCaseFollowing /\<[_\.A-Za-z0-9$]*\>/ contained
 syn match scalaCaseFollowing /`[^`]\+`/ contained
@@ -95,13 +102,13 @@ syn match scalaNumber "\<\d\+[eE][-+]\=\d\+[fFdD]\=\>"
 syn match scalaNumber "\<\d\+\%([eE][-+]\=\d\+\)\=[fFdD]\>"
 hi link scalaNumber Number
 
-syn region scalaSquareBrackets matchgroup=Type start="\[" end="\]" contains=scalaTypeDeclaration,scalaSquareBrackets,scalaTypeOperator,scalaTypeAnnotationParameter
+syn region scalaRoundBrackets start="(" end=")" skipwhite contained contains=scalaTypeDeclaration,scalaSquareBrackets
+
+syn region scalaSquareBrackets matchgroup=Type start="\[" end="\]" skipwhite nextgroup=scalaTypeEquals,scalaTypeExtension contains=scalaTypeDeclaration,scalaSquareBrackets,scalaTypeOperator,scalaTypeAnnotationParameter
 syn match scalaTypeOperator /[-+=:<>]\+/ contained
 syn match scalaTypeAnnotationParameter /@\<[`_A-Za-z0-9$]\+\>/ contained
 hi link scalaTypeOperator Keyword
 hi link scalaTypeAnnotationParameter Function
-syn match scalaTypeAnnotation /\%([_a-zA-Z0-9$)\s]:\_s*\)\@<=[_\.A-Za-z0-9$]\+/
-hi link scalaTypeAnnotation Type
 
 syn region scalaMultilineComment start="/\*" end="\*/" contains=scalaMultilineComment,scalaDocLinks,scalaParameterAnnotation,scalaCommentAnnotation,scalaCommentCodeBlock,@scalaHtml keepend
 syn match scalaCommentAnnotation "@[_A-Za-z0-9$]\+" contained
