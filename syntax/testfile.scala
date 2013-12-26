@@ -57,6 +57,17 @@ class ScalaClass(i: Int = 12, b: Trait[A, Trait[B, C]]) extends B with SomeTrait
   val otherThings = """|This is a string
                        |that spans multiple lines.
                        |""".stripMargin
+
+  // Ripped off from Scalaz
+  final def foldMap[B: Monoid](f: A => B = (a: A) => A): B = F.foldMap(self)(f)
+  final def foldRight[B](z: => B)(f: (A, => B) => B): B = F.foldRight(self, z)(f)
+  final def foldLeft[B](z: B)(f: (B, A) => B): B = F.foldLeft(self, z)(f)
+  final def foldRightM[G[_], B](z: => B)(f: (A, => B) => G[B])(implicit M: Monad[G]): G[B] = F.foldRightM(self, z)(f)
+  final def foldLeftM[G[_], B](z: B)(f: (B, A) => G[B])(implicit M: Monad[G]): G[B] = F.foldLeftM(self, z)(f)
+  final def foldr[B](z: => B)(f: A => (=> B) => B): B = F.foldr(self, z)(f)
+  final def foldl[B](z: B)(f: B => A => B): B = F.foldl(self, z)(f)
+  final def foldrM[G[_], B](z: => B)(f: A => ( => B) => G[B])(implicit M: Monad[G]): G[B] = F.foldrM(self, z)(f)
+
   val aChar = 'a'
   val anEscapedChar = '\\'
   val anotherEscapedChar = '\n'
