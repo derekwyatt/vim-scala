@@ -36,26 +36,31 @@ syn match scalaInstanceDeclaration /\<[_\.A-Za-z0-9$]\+\>/ contained
 syn match scalaInstanceDeclaration /`[^`]\+`/ contained
 hi link scalaInstanceDeclaration Special
 
-syn match scalaTypeDeclaration /\zs(/ contained nextgroup=scalaTypeExtension,scalaTypeEquals contains=scalaRoundBrackets skipwhite
+syn match scalaTypeDeclaration /(/ contained nextgroup=scalaTypeExtension,scalaTypeEquals contains=scalaRoundBrackets skipwhite
+syn match scalaTypeDeclaration /\%(⇒\|=>\)\ze/ contained nextgroup=scalaTypeDeclaration contains=scalaTypeExtension skipwhite
 syn match scalaTypeDeclaration /\<[_\.A-Za-z0-9$]\+\>/ contained nextgroup=scalaTypeExtension,scalaTypeEquals skipwhite
 syn match scalaTypeEquals /=\ze[^>]/ contained nextgroup=scalaTypePostDeclaration skipwhite
-syn match scalaTypeExtension /\%(⇒\|=>\|<:\|:>\|=:=\|::\)/ contained nextgroup=scalaTypeDeclaration skipwhite
+syn match scalaTypeExtension /)\?\_s*\zs\%(⇒\|=>\|<:\|:>\|=:=\|::\)/ contained nextgroup=scalaTypeDeclaration skipwhite
 syn match scalaTypePostDeclaration /\<[_A-Za-z0-9$]\+\>/ contained nextgroup=scalaTypePostExtension contains=ALLBUT,scalaParamAnnotationValue skipwhite
-syn match scalaTypePostExtension /\%(=>\|<:\|:>\|=:=\|::\)/ contained nextgroup=scalaTypePostDeclaration skipwhite
+syn match scalaTypePostExtension /\%(⇒\|=>\|<:\|:>\|=:=\|::\)/ contained nextgroup=scalaTypePostDeclaration skipwhite
 hi link scalaTypeDeclaration Type
 hi link scalaTypeExtension Keyword
 hi link scalaTypePostDeclaration Special
 hi link scalaTypePostExtension Keyword
 
-syn match scalaTypeAnnotation /\%([_a-zA-Z0-9$)\s]:\_s*\)\ze[_(\.A-Za-z0-9$]\+/ skipwhite nextgroup=scalaTypeDeclaration contains=scalaRoundBrackets
+syn match scalaTypeAnnotation /\%([_a-zA-Z0-9$)\s]:\_s*\)\ze[_=(\.A-Za-z0-9$]\+/ skipwhite nextgroup=scalaTypeDeclaration contains=scalaRoundBrackets
 hi link scalaTypeAnnotation Normal
 
 syn match scalaCaseFollowing /\<[_\.A-Za-z0-9$]*\>/ contained
 syn match scalaCaseFollowing /`[^`]\+`/ contained
 hi link scalaCaseFollowing Special
 
-syn keyword scalaKeywordModifier abstract override final implicit lazy private protected sealed null require super
+syn keyword scalaKeywordModifier abstract override final lazy private protected sealed null require super
+syn keyword scalaImplicit implicit nextgroup=scalaImplicitParam skipwhite
+syn match scalaImplicitParam /\<[_A-Za-z0-9$\.]\+\>\ze\_s*:/ contained
 hi link scalaKeywordModifier Function
+hi link scalaImplicit Function
+hi link scalaImplicitParam PreProc
 
 syn keyword scalaSpecial this true false package import
 syn keyword scalaSpecial new nextgroup=scalaInstanceDeclaration skipwhite
@@ -103,7 +108,7 @@ syn match scalaNumber "\<\d\+[eE][-+]\=\d\+[fFdD]\=\>"
 syn match scalaNumber "\<\d\+\%([eE][-+]\=\d\+\)\=[fFdD]\>"
 hi link scalaNumber Number
 
-syn region scalaRoundBrackets start="(" end=")" skipwhite contained contains=scalaTypeDeclaration,scalaSquareBrackets
+syn region scalaRoundBrackets start="(" end=")" skipwhite contained contains=scalaTypeDeclaration,scalaSquareBrackets,scalaRoundBrackets
 
 syn region scalaSquareBrackets matchgroup=Type start="\[" end="\]" skipwhite nextgroup=scalaTypeEquals,scalaTypeExtension contains=scalaTypeDeclaration,scalaSquareBrackets,scalaTypeOperator,scalaTypeAnnotationParameter
 syn match scalaTypeOperator /[-+=:<>]\+/ contained
