@@ -12,7 +12,6 @@ syn sync minlines=200 maxlines=1000
 syn keyword scalaKeyword catch do else final finally for forSome if
 syn keyword scalaKeyword match return throw try while yield
 syn keyword scalaKeyword class trait object extends with nextgroup=scalaInstanceDeclaration skipwhite
-syn keyword scalaKeyword type nextgroup=scalaTypeTypeDeclaration skipwhite
 syn keyword scalaKeyword case nextgroup=scalaKeyword,scalaCaseFollowing skipwhite
 syn keyword scalaKeyword val nextgroup=scalaNameDefinition,scalaQuasiQuotes skipwhite
 syn keyword scalaKeyword def var nextgroup=scalaNameDefinition skipwhite
@@ -36,6 +35,9 @@ hi link scalaNameDefinition Function
 syn match scalaInstanceDeclaration /\<[_\.A-Za-z0-9$]\+\>/ contained
 syn match scalaInstanceDeclaration /`[^`]\+`/ contained
 hi link scalaInstanceDeclaration Special
+
+" Handle type declarations specially
+syn region scalaTypeStatement matchgroup=Keyword start=/\<type\_s\+\ze/ end=/$/ contains=scalaTypeTypeDeclaration,scalaSquareBrackets,scalaTypeTypeEquals
 
 " Ugh... duplication of all the scalaType* stuff to handle special highlighting
 " of `type X =` declarations
@@ -108,12 +110,12 @@ hi link scalaTripleString String
 hi link scalaTripleSString String
 hi link scalaTripleFString String
 
-syn match scalaNumber /\<0[dDfFlL]\?\>/
-syn match scalaNumber /\<[1-9]\d*[dDfFlL]\?\>/
-syn match scalaNumber /\<0[xX][0-9a-fA-F]\+[dDfFlL]\?\>/
-syn match scalaNumber "\%(\<\d\+\.\d*\|\.\d\+\)\%([eE][-+]\=\d\+\)\=[fFdD]\="
-syn match scalaNumber "\<\d\+[eE][-+]\=\d\+[fFdD]\=\>"
-syn match scalaNumber "\<\d\+\%([eE][-+]\=\d\+\)\=[fFdD]\>"
+syn match scalaNumber /\<0[dDfFlL]\?\>/ " Just a bare 0
+syn match scalaNumber /\<[1-9]\d*[dDfFlL]\?\>/  " A multi-digit number - octal numbers with leading 0's are deprecated in Scala
+syn match scalaNumber /\<0[xX][0-9a-fA-F]\+[dDfFlL]\?\>/ " Hex number
+syn match scalaNumber /\%(\<\d\+\.\d*\|\.\d\+\)\%([eE][-+]\=\d\+\)\=[fFdD]\=/ " exponential notation 1
+syn match scalaNumber /\<\d\+[eE][-+]\=\d\+[fFdD]\=\>/ " exponential notation 2
+syn match scalaNumber /\<\d\+\%([eE][-+]\=\d\+\)\=[fFdD]\>/ " exponential notation 3
 hi link scalaNumber Number
 
 syn region scalaRoundBrackets start="(" end=")" skipwhite contained contains=scalaTypeDeclaration,scalaSquareBrackets,scalaRoundBrackets
