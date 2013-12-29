@@ -53,9 +53,9 @@ hi link scalaTypeTypeExtension Keyword
 hi link scalaTypeTypePostDeclaration Special
 hi link scalaTypeTypePostExtension Keyword
 
-syn match scalaTypeDeclaration /(/ contained nextgroup=scalaTypeExtension,scalaTypeEquals contains=scalaRoundBrackets skipwhite
+syn match scalaTypeDeclaration /(/ contained nextgroup=scalaTypeExtension contains=scalaRoundBrackets skipwhite
 syn match scalaTypeDeclaration /\%(⇒\|=>\)\ze/ contained nextgroup=scalaTypeDeclaration contains=scalaTypeExtension skipwhite
-syn match scalaTypeDeclaration /\<[_\.A-Za-z0-9$]\+\>/ contained nextgroup=scalaTypeExtension,scalaTypeEquals skipwhite
+syn match scalaTypeDeclaration /\<[_\.A-Za-z0-9$]\+\>/ contained nextgroup=scalaTypeExtension skipwhite
 syn match scalaTypeExtension /)\?\_s*\zs\%(⇒\|=>\|<:\|:>\|=:=\|::\)/ contained nextgroup=scalaTypeDeclaration skipwhite
 hi link scalaTypeDeclaration Type
 hi link scalaTypeExtension Keyword
@@ -99,13 +99,13 @@ syn region scalaQuasiQuotes matchgroup=Type start=/\<q"/ skip=/\\"/ end=/"/ cont
 syn region scalaQuasiQuotes matchgroup=Type start=/\<[tcp]q"/ skip=/\\"/ end=/"/ contains=scalaInterpolation
 hi link scalaQuasiQuotes String
 
-syn region scalaTripleQuasiQuotes matchgroup=Type start=/\<q"""/ end=/"""/ contains=scalaInterpolation
-syn region scalaTripleQuasiQuotes matchgroup=Type start=/\<[tcp]q"""/ end=/"""/ contains=scalaInterpolation
+syn region scalaTripleQuasiQuotes matchgroup=Type start=/\<q"""/ end=/"""\%([^"]\|$\)/ contains=scalaInterpolation
+syn region scalaTripleQuasiQuotes matchgroup=Type start=/\<[tcp]q"""/ end=/"""\%([^"]\|$\)/ contains=scalaInterpolation
 hi link scalaTripleQuasiQuotes String
 
-syn region scalaTripleString start=/"""/ end=/"""/ contains=scalaEscapedChar,scalaUnicodeChar
-syn region scalaTripleSString matchgroup=Special start=/s"""/ end=/"""/ contains=scalaInterpolation,scalaEscapedChar,scalaUnicodeChar
-syn region scalaTripleFString matchgroup=Special start=/f"""/ end=/"""/ contains=scalaInterpolation,scalaFInterpolation,scalaEscapedChar,scalaUnicodeChar
+syn region scalaTripleString start=/"""/ end=/"""\%([^"]\|$\)/ contains=scalaEscapedChar,scalaUnicodeChar
+syn region scalaTripleSString matchgroup=Special start=/s"""/ end=/"""\%([^"]\|$\)/ contains=scalaInterpolation,scalaEscapedChar,scalaUnicodeChar
+syn region scalaTripleFString matchgroup=Special start=/f"""/ end=/"""\%([^"]\|$\)/ contains=scalaInterpolation,scalaFInterpolation,scalaEscapedChar,scalaUnicodeChar
 hi link scalaTripleString String
 hi link scalaTripleSString String
 hi link scalaTripleFString String
