@@ -37,7 +37,7 @@ syn match scalaInstanceDeclaration /`[^`]\+`/ contained
 hi link scalaInstanceDeclaration Special
 
 " Handle type declarations specially
-syn region scalaTypeStatement matchgroup=Keyword start=/\<type\_s\+\ze/ end=/$/ contains=scalaTypeTypeDeclaration,scalaSquareBrackets,scalaTypeTypeEquals
+syn region scalaTypeStatement matchgroup=Keyword start=/\<type\_s\+\ze/ end=/$/ contains=scalaTypeTypeDeclaration,scalaSquareBrackets,scalaTypeTypeEquals,scalaTypeStatement
 
 " Ugh... duplication of all the scalaType* stuff to handle special highlighting
 " of `type X =` declarations
@@ -45,8 +45,8 @@ syn match scalaTypeTypeDeclaration /(/ contained nextgroup=scalaTypeTypeExtensio
 syn match scalaTypeTypeDeclaration /\%(⇒\|=>\)\ze/ contained nextgroup=scalaTypeTypeDeclaration contains=scalaTypeTypeExtension skipwhite
 syn match scalaTypeTypeDeclaration /\<[_\.A-Za-z0-9$]\+\>/ contained nextgroup=scalaTypeTypeExtension,scalaTypeTypeEquals skipwhite
 syn match scalaTypeTypeEquals /=\ze[^>]/ contained nextgroup=scalaTypeTypePostDeclaration skipwhite
-syn match scalaTypeTypeExtension /)\?\_s*\zs\%(⇒\|=>\|<:\|:>\|=:=\|::\)/ contained nextgroup=scalaTypeTypeDeclaration skipwhite
-syn match scalaTypeTypePostDeclaration /\<[_A-Za-z0-9$]\+\>/ contained nextgroup=scalaTypeTypePostExtension contains=ALLBUT,scalaParamAnnotationValue skipwhite
+syn match scalaTypeTypeExtension /)\?\_s*\zs\%(⇒\|=>\|<:\|:>\|=:=\|::\|#\)/ contained nextgroup=scalaTypeTypeDeclaration skipwhite
+syn match scalaTypeTypePostDeclaration /\<[_\.A-Za-z0-9$]\+\>/ contained nextgroup=scalaTypeTypePostExtension skipwhite
 syn match scalaTypeTypePostExtension /\%(⇒\|=>\|<:\|:>\|=:=\|::\)/ contained nextgroup=scalaTypeTypePostDeclaration skipwhite
 hi link scalaTypeTypeDeclaration Type
 hi link scalaTypeTypeExtension Keyword
@@ -56,7 +56,7 @@ hi link scalaTypeTypePostExtension Keyword
 syn match scalaTypeDeclaration /(/ contained nextgroup=scalaTypeExtension contains=scalaRoundBrackets skipwhite
 syn match scalaTypeDeclaration /\%(⇒\|=>\)\ze/ contained nextgroup=scalaTypeDeclaration contains=scalaTypeExtension skipwhite
 syn match scalaTypeDeclaration /\<[_\.A-Za-z0-9$]\+\>/ contained nextgroup=scalaTypeExtension skipwhite
-syn match scalaTypeExtension /)\?\_s*\zs\%(⇒\|=>\|<:\|:>\|=:=\|::\)/ contained nextgroup=scalaTypeDeclaration skipwhite
+syn match scalaTypeExtension /)\?\_s*\zs\%(⇒\|=>\|<:\|:>\|=:=\|::\|#\)/ contained nextgroup=scalaTypeDeclaration skipwhite
 hi link scalaTypeDeclaration Type
 hi link scalaTypeExtension Keyword
 hi link scalaTypePostExtension Keyword
@@ -65,7 +65,7 @@ syn match scalaTypeAnnotation /\%([_a-zA-Z0-9$\s]:\_s*\)\ze[_=(\.A-Za-z0-9$]\+/ 
 syn match scalaTypeAnnotation /)\_s*:\_s*\ze[_=(\.A-Za-z0-9$]\+/ skipwhite nextgroup=scalaTypeDeclaration
 hi link scalaTypeAnnotation Normal
 
-syn match scalaCaseFollowing /\<[_\.A-Za-z0-9$]*\>/ contained
+syn match scalaCaseFollowing /\<[_\.A-Za-z0-9$]\+\>/ contained
 syn match scalaCaseFollowing /`[^`]\+`/ contained
 hi link scalaCaseFollowing Special
 
