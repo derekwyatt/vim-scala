@@ -32,9 +32,11 @@ syn match scalaNameDefinition /`[^`]\+`/ contained nextgroup=scalaPostNameDefini
 syn match scalaPostNameDefinition /\_s*:\_s*/ contained nextgroup=scalaTypeDeclaration
 hi link scalaNameDefinition Function
 
-syn match scalaInstanceDeclaration /\<[_\.A-Za-z0-9$]\+\>/ contained
+syn match scalaInstanceDeclaration /\<[_\.A-Za-z0-9$]\+\>/ contained nextgroup=scalaInstanceHash
 syn match scalaInstanceDeclaration /`[^`]\+`/ contained
+syn match scalaInstanceHash /#/ contained nextgroup=scalaInstanceDeclaration
 hi link scalaInstanceDeclaration Special
+hi link scalaInstanceHash Type
 
 " Handle type declarations specially
 syn region scalaTypeStatement matchgroup=Keyword start=/\<type\_s\+\ze/ end=/$/ contains=scalaTypeTypeDeclaration,scalaSquareBrackets,scalaTypeTypeEquals,scalaTypeStatement
