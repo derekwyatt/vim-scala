@@ -149,6 +149,7 @@ hi link scalaTrailingComment Comment
 
 syn match scalaAkkaFSM /goto([^)]*)\_s\+\<using\>/ contains=scalaAkkaFSMGotoUsing
 syn match scalaAkkaFSM /stay\_s\+using/
+syn match scalaAkkaFSM /^\s*stay\s*$/
 syn match scalaAkkaFSM /when\ze([^)]*)/
 syn match scalaAkkaFSM /startWith\ze([^)]*)/
 syn match scalaAkkaFSM /initialize\ze()/
