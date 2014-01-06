@@ -4,13 +4,21 @@ import java.something.com
 package object SomeObject[A <: B] extends Implicits {
   type Booger[A] = A => Unit
   type SomeType = A <: B :> C
-  type SomeOtherType = A => Thing
+  type SomeOtherType = A ⇒ Thing
+  type Something
+  type Something <: SomethingElse
+  type ParserContext = Context { type PrefixType = Parser }
+  
+  new Something#SomethingElse
+
+  def x: Something#SomethingElse
 
   def hasFunctionType[A, B <: A, Z](f: A => B, g: (A, B) => Z): Unit = {
     println("Something")
   }
 
   val f: (Int, String) => Unit = (i: Int, s: String) => println(s"$i -- $s")
+  val f: (Int, String) ⇒ Unit = (i: Int, s: String) ⇒ println(s"$i -- $s")
 }
 
 object Test {
@@ -58,6 +66,8 @@ class ScalaClass(i: Int = 12, b: Trait[A, Trait[B, C]]) extends B with SomeTrait
                        |that spans multiple lines.
                        |""".stripMargin
 
+  implicit val somethingImplicit = true
+
   // Ripped off from Scalaz
   final def foldMap[B: Monoid](f: A => B = (a: A) => A): B = F.foldMap(self)(f)
   final def foldRight[B](z: => B)(f: (A, => B) => B): B = F.foldRight(self, z)(f)
@@ -97,7 +107,7 @@ class ScalaClass(i: Int = 12, b: Trait[A, Trait[B, C]]) extends B with SomeTrait
   var flarf: Int = 12
   def flooger(x: String): Unit = println(42)
   private val booger = "Hithere"
-  protected[this] def something[A](y: SomeTrait[A])(implicit val shoot: Function[Int, String]): Long = 12
+  protected[this] def something[A](y: SomeTrait[A])(implicit shoot: Function[Int, String]): Long = 12
   private final val do = done
 
   someVar match {
@@ -141,6 +151,10 @@ class ScalaClass(i: Int = 12, b: Trait[A, Trait[B, C]]) extends B with SomeTrait
   cq"return this $thing"
   pq"""return this $thing"""
   pq"return this $thing"
+
+  val something = s"""bar="foo""""
+  val something = f"""bar="foo""""
+  val something = """bar="foo""""
 
   def someFunc[A <: B, X =:= Y]
 

@@ -35,15 +35,17 @@ syn match scalaNameDefinition /`[^`]\+`/ contained nextgroup=scalaPostNameDefini
 syn match scalaPostNameDefinition /\_s*:\_s*/ contained nextgroup=scalaTypeDeclaration
 hi link scalaNameDefinition Function
 
-syn match scalaInstanceDeclaration /\<[_\.A-Za-z0-9$]\+\>/ contained
+syn match scalaInstanceDeclaration /\<[_\.A-Za-z0-9$]\+\>/ contained nextgroup=scalaInstanceHash
 syn match scalaInstanceDeclaration /`[^`]\+`/ contained
+syn match scalaInstanceHash /#/ contained nextgroup=scalaInstanceDeclaration
 hi link scalaInstanceDeclaration Special
+hi link scalaInstanceHash Type
 
 syn match scalaCapitalWord /\<[A-Z][A-Za-z0-9$]*\>/
 hi link scalaCapitalWord Special
 
 " Handle type declarations specially
-syn region scalaTypeStatement matchgroup=Keyword start=/\<type\_s\+\ze/ end=/$/ contains=scalaTypeTypeDeclaration,scalaSquareBrackets,scalaTypeTypeEquals
+syn region scalaTypeStatement matchgroup=Keyword start=/\<type\_s\+\ze/ end=/$/ contains=scalaTypeTypeDeclaration,scalaSquareBrackets,scalaTypeTypeEquals,scalaTypeStatement
 
 " Ugh... duplication of all the scalaType* stuff to handle special highlighting
 " of `type X =` declarations
@@ -51,8 +53,8 @@ syn match scalaTypeTypeDeclaration /(/ contained nextgroup=scalaTypeTypeExtensio
 syn match scalaTypeTypeDeclaration /\%(⇒\|=>\)\ze/ contained nextgroup=scalaTypeTypeDeclaration contains=scalaTypeTypeExtension skipwhite
 syn match scalaTypeTypeDeclaration /\<[_\.A-Za-z0-9$]\+\>/ contained nextgroup=scalaTypeTypeExtension,scalaTypeTypeEquals skipwhite
 syn match scalaTypeTypeEquals /=\ze[^>]/ contained nextgroup=scalaTypeTypePostDeclaration skipwhite
-syn match scalaTypeTypeExtension /)\?\_s*\zs\%(⇒\|=>\|<:\|:>\|=:=\|::\)/ contained nextgroup=scalaTypeTypeDeclaration skipwhite
-syn match scalaTypeTypePostDeclaration /\<[_A-Za-z0-9$]\+\>/ contained nextgroup=scalaTypeTypePostExtension contains=ALLBUT,scalaParamAnnotationValue skipwhite
+syn match scalaTypeTypeExtension /)\?\_s*\zs\%(⇒\|=>\|<:\|:>\|=:=\|::\|#\)/ contained nextgroup=scalaTypeTypeDeclaration skipwhite
+syn match scalaTypeTypePostDeclaration /\<[_\.A-Za-z0-9$]\+\>/ contained nextgroup=scalaTypeTypePostExtension skipwhite
 syn match scalaTypeTypePostExtension /\%(⇒\|=>\|<:\|:>\|=:=\|::\)/ contained nextgroup=scalaTypeTypePostDeclaration skipwhite
 hi link scalaTypeTypeDeclaration Type
 hi link scalaTypeTypeExtension Keyword
@@ -62,7 +64,7 @@ hi link scalaTypeTypePostExtension Keyword
 syn match scalaTypeDeclaration /(/ contained nextgroup=scalaTypeExtension contains=scalaRoundBrackets skipwhite
 syn match scalaTypeDeclaration /\%(⇒\|=>\)\ze/ contained nextgroup=scalaTypeDeclaration contains=scalaTypeExtension skipwhite
 syn match scalaTypeDeclaration /\<[_\.A-Za-z0-9$]\+\>/ contained nextgroup=scalaTypeExtension skipwhite
-syn match scalaTypeExtension /)\?\_s*\zs\%(⇒\|=>\|<:\|:>\|=:=\|::\)/ contained nextgroup=scalaTypeDeclaration skipwhite
+syn match scalaTypeExtension /)\?\_s*\zs\%(⇒\|=>\|<:\|:>\|=:=\|::\|#\)/ contained nextgroup=scalaTypeDeclaration skipwhite
 hi link scalaTypeDeclaration Type
 hi link scalaTypeExtension Keyword
 hi link scalaTypePostExtension Keyword
@@ -71,7 +73,7 @@ syn match scalaTypeAnnotation /\%([_a-zA-Z0-9$\s]:\_s*\)\ze[_=(\.A-Za-z0-9$]\+/ 
 syn match scalaTypeAnnotation /)\_s*:\_s*\ze[_=(\.A-Za-z0-9$]\+/ skipwhite nextgroup=scalaTypeDeclaration
 hi link scalaTypeAnnotation Normal
 
-syn match scalaCaseFollowing /\<[_\.A-Za-z0-9$]*\>/ contained
+syn match scalaCaseFollowing /\<[_\.A-Za-z0-9$]\+\>/ contained
 syn match scalaCaseFollowing /`[^`]\+`/ contained
 hi link scalaCaseFollowing Special
 
@@ -150,3 +152,17 @@ hi link scalaAnnotation PreProc
 
 syn match scalaTrailingComment "//.*$"
 hi link scalaTrailingComment Comment
+
+syn match scalaAkkaFSM /goto([^)]*)\_s\+\<using\>/ contains=scalaAkkaFSMGotoUsing
+syn match scalaAkkaFSM /stay\_s\+using/
+syn match scalaAkkaFSM /^\s*stay\s*$/
+syn match scalaAkkaFSM /when\ze([^)]*)/
+syn match scalaAkkaFSM /startWith\ze([^)]*)/
+syn match scalaAkkaFSM /initialize\ze()/
+syn match scalaAkkaFSM /onTransition/
+syn match scalaAkkaFSM /onTermination/
+syn match scalaAkkaFSM /whenUnhandled/
+syn match scalaAkkaFSMGotoUsing /\<using\>/
+syn match scalaAkkaFSMGotoUsing /\<goto\>/
+hi link scalaAkkaFSM PreProc
+hi link scalaAkkaFSMGotoUsing PreProc
