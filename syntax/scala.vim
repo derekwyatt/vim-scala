@@ -27,6 +27,10 @@ hi link scalaChar Character
 hi link scalaEscapedChar Function
 hi link scalaUnicodeChar Special
 
+syn match scalaOperator "||"
+syn match scalaOperator "&&"
+hi link scalaOperator Special
+
 syn match scalaNameDefinition /\<[_A-Za-z0-9$]\+\>/ contained nextgroup=scalaPostNameDefinition
 syn match scalaNameDefinition /`[^`]\+`/ contained nextgroup=scalaPostNameDefinition
 syn match scalaPostNameDefinition /\_s*:\_s*/ contained nextgroup=scalaTypeDeclaration
@@ -74,7 +78,7 @@ hi link scalaCaseFollowing Special
 syn keyword scalaKeywordModifier abstract override final lazy implicit private protected sealed null require super
 hi link scalaKeywordModifier Function
 
-syn keyword scalaSpecial this true false package import
+syn keyword scalaSpecial this true false package import ne eq
 syn keyword scalaSpecial new nextgroup=scalaInstanceDeclaration skipwhite
 syn match scalaSpecial "\%(=>\|⇒\|<-\|←\|->\|→\)"
 syn match scalaSpecial /`[^`]*`/  " Backtick literals
