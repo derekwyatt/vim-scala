@@ -17,6 +17,9 @@ syn keyword scalaKeyword val nextgroup=scalaNameDefinition,scalaQuasiQuotes skip
 syn keyword scalaKeyword def var nextgroup=scalaNameDefinition skipwhite
 hi link scalaKeyword Keyword
 
+syn keyword scalaAkkaSpecialWord when goto using startWith initialize onTransition stay become unbecome
+hi link scalaAkkaSpecialWord PreProc
+
 syn match scalaSymbol /'[_A-Za-z0-9$]\+/
 hi link scalaSymbol Number
 
@@ -41,6 +44,9 @@ syn match scalaInstanceDeclaration /`[^`]\+`/ contained
 syn match scalaInstanceHash /#/ contained nextgroup=scalaInstanceDeclaration
 hi link scalaInstanceDeclaration Special
 hi link scalaInstanceHash Type
+
+syn match scalaCapitalWord /\<[A-Z][A-Za-z0-9$]*\>/
+hi link scalaCapitalWord Special
 
 " Handle type declarations specially
 syn region scalaTypeStatement matchgroup=Keyword start=/\<type\_s\+\ze/ end=/$/ contains=scalaTypeTypeDeclaration,scalaSquareBrackets,scalaTypeTypeEquals,scalaTypeStatement
@@ -75,7 +81,7 @@ syn match scalaCaseFollowing /\<[_\.A-Za-z0-9$]\+\>/ contained
 syn match scalaCaseFollowing /`[^`]\+`/ contained
 hi link scalaCaseFollowing Special
 
-syn keyword scalaKeywordModifier abstract override final lazy implicit private protected sealed null require super
+syn keyword scalaKeywordModifier abstract override final lazy implicit implicitly private protected sealed null require super
 hi link scalaKeywordModifier Function
 
 syn keyword scalaSpecial this true false package import ne eq
