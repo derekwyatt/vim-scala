@@ -164,3 +164,24 @@ let g:tagbar_type_scala = {
       \ 'case class' : 'r'
     \ }
 \ }
+
+function! s:NextSection(backwards)
+  if a:backwards
+    let dir = '?'
+  else
+    let dir = '/'
+  endif
+  let keywords = [ 'def', 'class', 'trait', 'object' ]
+  let keywordsOrExpression = '('.join(keywords, '|').')'
+
+  let modifiers = [ 'public', 'private', 'private\[\w*\]', 'protected', 'abstract', 'case', 'override']
+  let modifierOrExpression = '('.join(modifiers, '|').')'
+
+  let regex = '^ *('.modifierOrExpression.' )* *'.keywordsOrExpression."\r"
+  echo regex
+  execute 'silent normal! ' . dir . '\v'.regex
+endfunction
+
+noremap <script> <buffer> <silent> ]] :call <SID>NextSection(0)<cr>
+
+noremap <script> <buffer> <silent> [[ :call <SID>NextSection(1)<cr>
