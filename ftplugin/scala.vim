@@ -165,6 +165,10 @@ let g:tagbar_type_scala = {
     \ }
 \ }
 
+function! s:CreateOrExpression(keywords)
+  return '('.join(a:keywords, '|').')'
+endfunction
+
 function! s:NextSection(backwards)
   if a:backwards
     let dir = '?'
@@ -172,13 +176,12 @@ function! s:NextSection(backwards)
     let dir = '/'
   endif
   let keywords = [ 'def', 'class', 'trait', 'object' ]
-  let keywordsOrExpression = '('.join(keywords, '|').')'
+  let keywordsOrExpression = s:CreateOrExpression(keywords)
 
   let modifiers = [ 'public', 'private', 'private\[\w*\]', 'protected', 'abstract', 'case', 'override']
-  let modifierOrExpression = '('.join(modifiers, '|').')'
+  let modifierOrExpression = s:CreateOrExpression(modifiers)
 
   let regex = '^ *('.modifierOrExpression.' )* *'.keywordsOrExpression."\r"
-  echo regex
   execute 'silent normal! ' . dir . '\v'.regex
 endfunction
 
