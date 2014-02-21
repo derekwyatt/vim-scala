@@ -178,7 +178,7 @@ function! s:NextSection(backwards)
   let keywords = [ 'def', 'class', 'trait', 'object' ]
   let keywordsOrExpression = s:CreateOrExpression(keywords)
 
-  let modifiers = [ 'public', 'private', 'private\[\w*\]', 'protected', 'abstract', 'case', 'override']
+  let modifiers = [ 'public', 'private', 'private\[\w*\]', 'protected', 'abstract', 'case', 'override', 'implicit', 'final', 'sealed']
   let modifierOrExpression = s:CreateOrExpression(modifiers)
 
   let regex = '^ *('.modifierOrExpression.' )* *'.keywordsOrExpression."\r"
