@@ -65,6 +65,10 @@ class ScalaClass(i: Int = 12, b: Trait[A, Trait[B, C]]) extends B with SomeTrait
   val otherThings = """|This is a string
                        |that spans multiple lines.
                        |""".stripMargin
+  val intString = sql"select * from T where id = $id and name = ${name}"
+  val intString = sql"""
+    select * from T where id = $id and name = ${name}
+  """
 
   implicit val somethingImplicit = true
 
