@@ -17,6 +17,8 @@ syn keyword scalaKeyword val nextgroup=scalaNameDefinition,scalaQuasiQuotes skip
 syn keyword scalaKeyword def var nextgroup=scalaNameDefinition skipwhite
 hi link scalaKeyword Keyword
 
+syn region scalaBlock start=/{/ end=/}/ contains=TOP fold
+
 syn keyword scalaAkkaSpecialWord when goto using startWith initialize onTransition stay become unbecome
 hi link scalaAkkaSpecialWord PreProc
 
