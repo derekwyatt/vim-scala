@@ -103,18 +103,19 @@ hi link scalaIString String
 hi link scalaTripleIString String
 
 syn match scalaInterpolation /\$[a-zA-Z0-9_$]\+/ contained
-syn region scalaInterpolationB matchgroup=Special start=/\${/ end=/}/ contained contains=TOP
+syn region scalaInterpolationB matchgroup=scalaInterpolation start=/\${/ end=/}/ contained contains=TOP
 hi link scalaInterpolation Function
 hi link scalaInterpolationB Normal
 
-syn region scalaFString matchgroup=Special start=/f"/ skip=/\\"/ end=/"/ contains=scalaInterpolation,scalaInterpolationB,scalaFInterpolation,scalaEscapedChar,scalaUnicodeChar
-syn match scalaFInterpolation /\$[a-zA-Z0-9_$]\+%[-A-Za-z0-9\.]\+/ contained
-syn match scalaFInterpolation /\${[^}]\+}%[-A-Za-z0-9\.]\+/ contained
+syn region scalaFString matchgroup=Special start=/f"/ skip=/\\"/ end=/"/ contains=scalaFInterpolation,scalaFInterpolationB,scalaEscapedChar,scalaUnicodeChar
+syn match scalaFInterpolation /\$[a-zA-Z0-9_$]\+\(%[-A-Za-z0-9\.]\+\)\?/ contained
+syn region scalaFInterpolationB matchgroup=scalaFInterpolation start=/${/ end=/}\(%[-A-Za-z0-9\.]\+\)\?/ contained contains=TOP
 hi link scalaFString String
 hi link scalaFInterpolation Function
+hi link scalaFInterpolationB Normal
 
 syn region scalaTripleString start=/"""/ end=/"""\%([^"]\|$\)/ contains=scalaEscapedChar,scalaUnicodeChar
-syn region scalaTripleFString matchgroup=Special start=/f"""/ end=/"""\%([^"]\|$\)/ contains=scalaInterpolation,scalaInterpolationB,scalaFInterpolation,scalaEscapedChar,scalaUnicodeChar
+syn region scalaTripleFString matchgroup=Special start=/f"""/ end=/"""\%([^"]\|$\)/ contains=scalaFInterpolation,scalaFInterpolationB,scalaEscapedChar,scalaUnicodeChar
 hi link scalaTripleString String
 hi link scalaTripleFString String
 
