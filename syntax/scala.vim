@@ -101,7 +101,7 @@ hi link scalaIString String
 hi link scalaTripleIString String
 
 syn match scalaInterpolation /\$[a-zA-Z0-9_$]\+/ contained
-syn region scalaInterpolationB matchgroup=Special start=/\${/ end=/}/ contained contains=TOP
+syn region scalaInterpolationB matchgroup=Function start=/\${/ end=/}/ contained contains=TOP
 hi link scalaInterpolation Function
 hi link scalaInterpolationB Normal
 
