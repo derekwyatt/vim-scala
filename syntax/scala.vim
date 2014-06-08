@@ -4,6 +4,8 @@ elseif exists("b:current_syntax")
   finish
 endif
 
+scriptencoding utf-8
+
 let b:current_syntax = "scala"
 
 function! s:ContainedGroup()
