@@ -212,12 +212,17 @@ class SomeClass {
   def func = {
     val reply = new Something()
     some.block {
+      foo("string", bar("string"))
       new X {
         statement
         statement
       }
     }
     () => goAndDo.something
+  }
+
+  def foo() = {
+    statement
   }
 
   def func(param: Int) = new this.Something.Or.Other(
