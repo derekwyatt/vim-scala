@@ -102,7 +102,7 @@ function! scala#CurlyMatcher()
   if scala#CountParens(scala#GetLine(matchline)) < 0
     let savedpos = getpos('.')
     call setpos('.', [savedpos[0], matchline, 9999, savedpos[3]])
-    call searchpos('{', 'Wb')
+    call searchpos('{', 'Wbc')
     call searchpos(')', 'Wb')
     let [lnum, colnum] = searchpairpos('(', '', ')', 'Wbn')
     call setpos('.', savedpos)
@@ -133,7 +133,7 @@ function! scala#GetLineAndColumnThatMatchesBracket(openBracket, closedBracket)
     call searchpos(a:closedBracket . '\ze[^' . a:closedBracket . a:openBracket . ']*' . a:openBracket, 'W')
   else
     call setpos('.', [savedpos[0], savedpos[1], 9999, savedpos[3]])
-    call searchpos(a:closedBracket, 'Wb')
+    call searchpos(a:closedBracket, 'Wbc')
   endif
   let [lnum, colnum] = searchpairpos(a:openBracket, '', a:closedBracket, 'Wbn')
   call setpos('.', savedpos)
@@ -351,7 +351,7 @@ function! scala#LineCompletesBrackets(openBracket, closedBracket)
   let savedpos = getpos('.')
   let offline = 0
   while offline == 0
-    let [lnum, colnum] = searchpos(a:closedBracket, 'Wb')
+    let [lnum, colnum] = searchpos(a:closedBracket, 'Wbc')
     let [lnumA, colnumA] = searchpairpos(a:openBracket, '', a:closedBracket, 'Wbn')
     if lnum != lnumA
       let [lnumB, colnumB] = searchpairpos(a:openBracket, '', a:closedBracket, 'Wbnr')
