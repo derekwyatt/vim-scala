@@ -36,12 +36,12 @@ endfunction
 
 function! scala#GetLine(lnum)
   let line = substitute(getline(a:lnum), '//.*$', '', '')
-  let line = substitute(line, '"[^"]*"', '""', 'g')
+  let line = substitute(line, '"\(.\|\\"\)\{-}"', '""', 'g')
   return line
 endfunction
 
 function! scala#CountBrackets(line, openBracket, closedBracket)
-  let line = substitute(a:line, '"\(.\|\\"\)*"', '', 'g')
+  let line = substitute(a:line, '"\(.\|\\"\)\{-}"', '', 'g')
   let open = substitute(line, '[^' . a:openBracket . ']', '', 'g')
   let close = substitute(line, '[^' . a:closedBracket . ']', '', 'g')
   return strlen(open) - strlen(close)
