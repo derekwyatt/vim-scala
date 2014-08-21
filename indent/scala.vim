@@ -382,7 +382,11 @@ function! GetScalaIndent()
   let curline = scala#GetLine(curlnum)
 
   if prevline =~ '^\s*/\*\*'
-    return ind + 1
+    if prevline =~ '\*/\s*$' && 0
+      return ind
+    else
+      return ind + 1
+    endif
   endif
 
   if curline =~ '^\s*\*'
