@@ -209,6 +209,9 @@ class SomeClass {
    */
   def SomeOtherFunc = ...
 
+  /** This */
+  def blah = ...
+
   def func = {
     val reply = new Something()
     some.block {
