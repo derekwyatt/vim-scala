@@ -97,11 +97,14 @@ hi link scalaCaseFollowing Special
 syn keyword scalaKeywordModifier abstract override final lazy implicit implicitly private protected sealed null require super
 hi link scalaKeywordModifier Function
 
-syn keyword scalaSpecial this true false package import ne eq
+syn keyword scalaSpecial this true false ne eq
 syn keyword scalaSpecial new nextgroup=scalaInstanceDeclaration skipwhite
 syn match scalaSpecial "\%(=>\|⇒\|<-\|←\|->\|→\)"
 syn match scalaSpecial /`[^`]*`/  " Backtick literals
 hi link scalaSpecial PreProc
+
+syn keyword scalaExternal package import
+hi link scalaExternal Include
 
 syn match scalaStringEmbeddedQuote /\\"/ contained
 syn region scalaString start=/"/ end=/"/ contains=scalaStringEmbeddedQuote,scalaEscapedChar,scalaUnicodeChar
