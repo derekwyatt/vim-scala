@@ -8,12 +8,17 @@ scriptencoding utf-8
 
 let b:current_syntax = "scala"
 
+" Allows for embedding, see #59; main_syntax convention instead? Refactor TOP
+"
+" The @Spell here is a weird hack, it means *exclude* if the first group is
+" TOP. Otherwise we get spelling errors highlighted on code elements that
+" match scalaBlock, even with `syn spell notoplevel`.
 function! s:ContainedGroup()
   try
     silent syn list @scala
-    return '@scala'
+    return '@scala,@NoSpell'
   catch /E392/
-    return 'TOP'
+    return 'TOP,@Spell'
   endtry
 endfunction
 
@@ -146,7 +151,7 @@ syn match scalaTypeAnnotationParameter /@\<[`_A-Za-z0-9$]\+\>/ contained
 hi link scalaTypeOperator Keyword
 hi link scalaTypeAnnotationParameter Function
 
-syn region scalaMultilineComment start="/\*" end="\*/" contains=scalaMultilineComment,scalaDocLinks,scalaParameterAnnotation,scalaCommentAnnotation,scalaCommentCodeBlock,@scalaHtml keepend
+syn region scalaMultilineComment start="/\*" end="\*/" contains=scalaMultilineComment,scalaDocLinks,scalaParameterAnnotation,scalaCommentAnnotation,scalaCommentCodeBlock,@scalaHtml,@Spell keepend
 syn match scalaCommentAnnotation "@[_A-Za-z0-9$]\+" contained
 syn match scalaParameterAnnotation "@param" nextgroup=scalaParamAnnotationValue skipwhite contained
 syn match scalaParamAnnotationValue /[`_A-Za-z0-9$]\+/ contained
@@ -162,7 +167,7 @@ hi link scalaCommentCodeBlock String
 syn match scalaAnnotation /@\<[`_A-Za-z0-9$]\+\>/
 hi link scalaAnnotation PreProc
 
-syn match scalaTrailingComment "//.*$"
+syn match scalaTrailingComment "//.*$" contains=@Spell
 hi link scalaTrailingComment Comment
 
 syn match scalaAkkaFSM /goto([^)]*)\_s\+\<using\>/ contains=scalaAkkaFSMGotoUsing
