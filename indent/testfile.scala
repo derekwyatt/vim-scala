@@ -1,5 +1,5 @@
 /**
- * Commets are here
+ * Comments are here
  */
 class SomeClass {
   val someval = SomeObject.makeWithSomething
@@ -18,6 +18,13 @@ class SomeClass {
   def aSingleLineDef = someval + 12
 
   def main(args: Array[String]) = run(20000, 20000)
+
+  def multilineParams(
+    x: Int,
+    y: Int
+  ) = {
+    ???
+  }
 
   // This
   def aMultiLineSingleStatementDefWithBraces = {
@@ -231,7 +238,7 @@ class SomeClass {
         statement
       }
     },
-  otherParam) // comment
+    otherParam) // comment
 
   class AnotherSomeClass {
     this: Actor =>
