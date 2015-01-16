@@ -58,6 +58,9 @@ syn match scalaInstanceHash /#/ contained nextgroup=scalaInstanceDeclaration
 hi link scalaInstanceDeclaration Special
 hi link scalaInstanceHash Type
 
+syn match scalaUnimplemented /???/
+hi link scalaUnimplemented ERROR
+
 syn match scalaCapitalWord /\<[A-Z][A-Za-z0-9$]*\>/
 hi link scalaCapitalWord Special
 
