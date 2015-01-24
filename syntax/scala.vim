@@ -1,13 +1,15 @@
-if version < 600
-  syntax clear
-elseif exists("b:current_syntax")
-  finish
+if !exists('main_syntax')
+  if version < 600
+    syntax clear
+  elseif exists("b:current_syntax")
+    finish
+  endif
+  let main_syntax = 'scala'
 endif
 
 scriptencoding utf-8
 
-let b:current_syntax = "scala"
-
+" Allows for embedding, see #59; main_syntax convention instead? Refactor TOP
 function! s:ContainedGroup()
   try
     silent syn list @scala
@@ -16,6 +18,9 @@ function! s:ContainedGroup()
     return 'TOP'
   endtry
 endfunction
+
+syn include @scalaHtml syntax/html.vim  " Doc comment HTML
+unlet! b:current_syntax
 
 syn case match
 syn sync minlines=200 maxlines=1000
@@ -181,3 +186,9 @@ syn match scalaAkkaFSMGotoUsing /\<using\>/
 syn match scalaAkkaFSMGotoUsing /\<goto\>/
 hi link scalaAkkaFSM PreProc
 hi link scalaAkkaFSMGotoUsing PreProc
+
+let b:current_syntax = 'scala'
+
+if main_syntax ==# 'scala'
+  unlet main_syntax
+endif
