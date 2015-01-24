@@ -71,6 +71,8 @@ class ScalaClass(i: Int = 12, b: Trait[A, Trait[B, C]]) extends B with SomeTrait
     where id = $id and name = ${s"$name Jr"} and age > ${age + 10}
   """
 
+  val notImplemented = ???
+
   implicit val somethingImplicit = true
 
   // Ripped off from Scalaz
