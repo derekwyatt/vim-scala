@@ -5,10 +5,7 @@ let &l:includeexpr = 'substitute(v:fname,"\\.","/","g")'
 setlocal path+=src/main/scala,src/test/scala
 setlocal suffixesadd=.scala
 
-set makeprg=sbt\ -Dsbt.log.noformat=true\ compile
-set efm=%E\ %#[error]\ %f:%l:\ %m,%C\ %#[error]\ %p^,%-C%.%#,%Z,
-       \%W\ %#[warn]\ %f:%l:\ %m,%C\ %#[warn]\ %p^,%-C%.%#,%Z,
-       \%-G%.%#
+compiler sbt
 
 if globpath(&rtp, 'plugin/fuf.vim') != ''
     "
