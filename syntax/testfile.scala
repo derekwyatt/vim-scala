@@ -43,7 +43,7 @@ def x(): Unit = {
 
 class ScalaClass(i: Int = 12, b: Trait[A, Trait[B, C]]) extends B with SomeTrait[A, B[String], D] {
   /**
-   * I forgot comments! [[scala.Option]]
+   * I forgot comments! We spelcheck them. [[scala.Option]]
    *
    * {{{
    * scala> This is a REPL line
@@ -52,10 +52,10 @@ class ScalaClass(i: Int = 12, b: Trait[A, Trait[B, C]]) extends B with SomeTrait
    *
    * <li></li>
    *
-   * @param parameter Explanation of the parameter.
+   * @param parameter Explanation of the parameter. Speling.
    * @return 
    */
-  val thing = "A String" // this is a trailing comment
+  val thing = "A String" // this is a trailing comment, spelchecked too
   val thing = "A String with a \" in it"
   val intString = "A string with $stuff // and a comment in it"
   val intString = s"A string /* a comment and */ with $stuff and ${stuff} in it"
@@ -162,6 +162,7 @@ class ScalaClass(i: Int = 12, b: Trait[A, Trait[B, C]]) extends B with SomeTrait
   val something = s"""bar="foo""""
   val something = f"""bar="foo""""
   val something = """bar="foo""""
+  val something = s"Interpolatin' fancy expressions ${bar map (_.toString)}"
 
   def someFunc[A <: B, X =:= Y]
 
