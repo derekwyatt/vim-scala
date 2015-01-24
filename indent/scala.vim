@@ -543,7 +543,7 @@ function! GetScalaIndent()
     let ind = ind - 1
   endif
 
-  if scala#LineEndsInIncomplete(curline)
+  if scala#LineEndsInIncomplete(prevline)
     call scala#ConditionalConfirm("19")
     return ind
   endif
