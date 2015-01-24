@@ -16,13 +16,13 @@ manage your plugins.
 If you have Vundle installed, simply add the following to your .vimrc:
 
 ```vim
-Bundle 'derekwyatt/vim-scala'
+Plugin 'derekwyatt/vim-scala'
 ```
 
 and then run
 
 ```vim
-:BundleInstall
+:PluginInstall
 ```
 
 to install it.
