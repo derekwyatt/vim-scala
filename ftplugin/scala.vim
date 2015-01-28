@@ -1,7 +1,13 @@
 setlocal formatoptions+=ro
-setlocal commentstring=//%s
+
+" Just like c.vim, but additionally doesn't wrap text onto /** line when
+" formatting. Doesn't bungle bulleted lists when formatting.
+setlocal comments=sO:*\ -,mO:*\ \ ,exO:*/,s1:/**,mb:*,ex:*/,s1:/*,mb:*,ex:*/,://
+setlocal commentstring=//\ %s
+
 let &l:include = '^\s*import'
 let &l:includeexpr = 'substitute(v:fname,"\\.","/","g")'
+
 setlocal path+=src/main/scala,src/test/scala
 setlocal suffixesadd=.scala
 
