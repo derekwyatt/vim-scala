@@ -6,8 +6,40 @@ This plugin is only available if 'compatible' is not set.
 ==============================================================================
 INTRODUCTION                                    *scala*
 
-Syntax highlighting and helper functions for the scala language.
+Syntax highlighting and helper functions for the scala language. Extras
+include:
 
+  - Sorting of import statements, configurable to your conventions.
+  - Tagbar support to navigate definitions within a file in the plugin's
+    sidebar window.
+  - ...and probably more that we've forgotten to update in this doc.
+
+==============================================================================
+OPTIONS                                         *scala-options*
+
+Use these options to control behavior of the plugin. Default values are
+indicated in the examples.
+
+                                           *'g:scala_use_builtin_tagbar_defs'*
+If you are using the Tagbar Vim plugin, vim-scala includes a Tagbar type
+definition and ctags definition for Scala, so you can use Tagbar immediately.
+If you have your own ctags definition in `~/.ctags` and prefer to use it, set
+this option to 0 (we would appreciate contributions if you've improved the
+ctags definition!).
+
+Note that Tagbar's ctags definition for Scala is not used to generate a
+|tags| file that Vim can use to navigate to definitions in other files, only
+for the plugin sidebar. Feel free to copy `vim-scala/ctags/scala.ctags` into
+your own `~/.ctags` if you wish to generate |tags| files.
+>
+    let g:scala_use_builtin_tagbar_defs = 1
+<
+                                           *'g:scala_use_default_keymappings'*
+Set this option to disable definition of all mappings provided by vim-scala.
+See |scala-mappings|.
+>
+    let g:scala_use_default_keymappings = 1
+<
 ==============================================================================
 COMMANDS                                        *scala-commands*
 
