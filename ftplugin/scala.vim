@@ -130,12 +130,6 @@ if globpath(&rtp, 'plugin/fuf.vim') != ''
     endif
 endif
 
-" If you want to disable the default key mappings, write the following line in
-" your ~/.vimrc
-"     let g:scala_use_default_keymappings = 0
-if get(g:, 'scala_use_default_keymappings', 1)
-    nnoremap <buffer> <Leader>jt :call JustifyCurrentLine()<cr>
-endif
 
 "
 " TagBar

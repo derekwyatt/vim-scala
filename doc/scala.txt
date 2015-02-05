@@ -1,9 +1,11 @@
 *scala.txt* Syntax highlighting and helper functions for the Scala language.
 
+==============================================================================
 INTRODUCTION                                    *scala*
 
 Syntax highlighting and helper functions for the scala language.
 
+==============================================================================
 COMMANDS                                        *scala-commands*
 
                                                 *:SortScalaImports*
@@ -41,4 +43,40 @@ COMMANDS                                        *scala-commands*
                           g:scala_first_party_namespaces=
                              \ '\(controllers\|views\|models\)'
 
+==============================================================================
+MAPPINGS                                        *scala-mappings*
 
+Currently the only mappings defined are for FuzzyFinder users--these will
+only be enabled if FuzzyFinder is detected.
+
+                                                *scala-leader-fs*
+<Leader>fs              "Find src". Primes |:FufFile| with `src/main/scala`,
+                        and goes deeper still if only a single directory
+                        exists below that. Helpful for package namespacing
+                        like `src/main/scala/com/myorg`.
+
+                                                *scala-leader-ft*
+<Leader>ft              "Find test". Like |scala-leader-fs|, but with
+                        `src/test/scala`.
+
+                                                *scala-leader-fr*
+<Leader>fr              "Find from root". For the rarer cases when you want to
+                        start FuzzyFinder at project root (parent of `src/`).
+
+Disabling Mappings~
+
+If you wish to disable the default key mappings, write the following line in
+your ~/.vimrc: >
+
+    let g:scala_use_default_keymappings = 0
+
+==============================================================================
+CREDITS                                          *scala-credits*
+
+Developed by Derek Wyatt, building on initial work by Stefan Matthias Aust.
+Distributed under the Apache 2 license.
+
+Project's home and Git repository: https://github.com/derekwyatt/vim-scala
+
+------------------------------------------------------------------------------
+ vim:tw=78:ts=8:ft=help:norl:
