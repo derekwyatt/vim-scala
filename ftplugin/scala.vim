@@ -1,3 +1,15 @@
+" Vim filetype plugin
+" Language:             Scala
+" Maintainer:           Derek Wyatt
+" URL:                  https://github.com/derekwyatt/vim-scala
+" License:              Apache 2
+" ----------------------------------------------------------------------------
+
+if exists('b:did_ftplugin') || &cp
+  finish
+endif
+let b:did_ftplugin = 1
+
 setlocal formatoptions+=ro
 
 " Just like c.vim, but additionally doesn't wrap text onto /** line when
@@ -188,5 +200,6 @@ function! s:NextSection(backwards)
 endfunction
 
 noremap <script> <buffer> <silent> ]] :call <SID>NextSection(0)<cr>
-
 noremap <script> <buffer> <silent> [[ :call <SID>NextSection(1)<cr>
+
+" vim:set sw=2 sts=2 ts=8 et:

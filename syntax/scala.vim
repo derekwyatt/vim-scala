@@ -1,3 +1,10 @@
+" Vim syntax file
+" Language:             Scala
+" Maintainer:           Derek Wyatt
+" URL:                  https://github.com/derekwyatt/vim-scala
+" License:              Apache 2
+" ----------------------------------------------------------------------------
+
 if !exists('main_syntax')
   if version < 600
     syntax clear
@@ -201,3 +208,5 @@ let b:current_syntax = 'scala'
 if main_syntax ==# 'scala'
   unlet main_syntax
 endif
+
+" vim:set sw=2 sts=2 ts=8 et:

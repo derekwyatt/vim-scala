@@ -1,5 +1,8 @@
 *scala.txt* Syntax highlighting and helper functions for the Scala language.
 
+This plugin is only available if 'compatible' is not set.
+{Vi does not have any of this}
+
 ==============================================================================
 INTRODUCTION                                    *scala*
 

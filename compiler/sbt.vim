@@ -1,4 +1,9 @@
-" Vim compiler file for sbt, the Scala build tool.
+" Vim compiler file
+" Language:             Scala SBT (http://www.scala-sbt.org/)
+" Maintainer:           Derek Wyatt
+" URL:                  https://github.com/derekwyatt/vim-scala
+" License:              Apache 2
+" ----------------------------------------------------------------------------
 
 if exists('current_compiler')
   finish
@@ -22,3 +27,4 @@ CompilerSet errorformat=
 let &cpo = s:cpo_save
 unlet s:cpo_save
 
+" vim:set sw=2 sts=2 ts=8 et:

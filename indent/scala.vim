@@ -597,5 +597,6 @@ function! GetScalaIndent()
 
   return ind
 endfunction
-" vim:set ts=2 sts=2 sw=2:
+
+" vim:set sw=2 sts=2 ts=8 et:
 " vim600:fdm=marker fdl=1 fdc=0:
