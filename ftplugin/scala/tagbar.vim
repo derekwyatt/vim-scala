@@ -4,9 +4,7 @@
 " Hat tip to Leonard Ehrenfried for the built-in ctags deffile:
 "    https://leonard.io/blog/2013/04/editing-scala-with-vim/
 "
-if !executable('ctags')
-  finish
-elseif !exists(':Tagbar')
+if !exists(':Tagbar')
   finish
 endif
 
