@@ -1,9 +1,20 @@
+" Vim plugin file
+" Language:             Scala
+" Maintainer:           Derek Wyatt
+" URL:                  https://github.com/derekwyatt/vim-scala
+" License:              Apache 2
+" ----------------------------------------------------------------------------
+
+if exists('g:loaded_scala') || &cp
+  finish
+endif
+let g:loaded_scala = 1
+
 "
 " Sort imports
 "
 " author: Leonard Ehrenfried <leonard.ehrenfried@gmail.com>
 "
-
 function! SortScalaImports()
   let save_cursor = getpos(".")
 
@@ -130,3 +141,5 @@ function! s:sortIgnoreCase(i1, i2)
 endfunction
 
 command! SortScalaImports call SortScalaImports()
+
+" vim:set sw=2 sts=2 ts=8 et:

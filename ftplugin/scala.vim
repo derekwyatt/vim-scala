@@ -1,3 +1,15 @@
+" Vim filetype plugin
+" Language:             Scala
+" Maintainer:           Derek Wyatt
+" URL:                  https://github.com/derekwyatt/vim-scala
+" License:              Apache 2
+" ----------------------------------------------------------------------------
+
+if exists('b:did_ftplugin') || &cp
+  finish
+endif
+let b:did_ftplugin = 1
+
 setlocal formatoptions+=ro
 
 " Just like c.vim, but additionally doesn't wrap text onto /** line when
@@ -130,49 +142,6 @@ if globpath(&rtp, 'plugin/fuf.vim') != ''
     endif
 endif
 
-" If you want to disable the default key mappings, write the following line in
-" your ~/.vimrc
-"     let g:scala_use_default_keymappings = 0
-if get(g:, 'scala_use_default_keymappings', 1)
-    nnoremap <buffer> <Leader>jt :call JustifyCurrentLine()<cr>
-endif
-
-"
-" TagBar
-"
-let g:tagbar_type_scala = {
-    \ 'ctagstype' : 'scala',
-    \ 'kinds'     : [
-      \ 'p:packages:1',
-      \ 'V:values',
-      \ 'v:variables',
-      \ 'T:types',
-      \ 't:traits',
-      \ 'o:objects',
-      \ 'a:aclasses',
-      \ 'c:classes',
-      \ 'r:cclasses',
-      \ 'm:methods'
-    \ ],
-    \ 'sro'        : '.',
-    \ 'kind2scope' : {
-        \ 'T' : 'type',
-        \ 't' : 'trait',
-        \ 'o' : 'object',
-        \ 'a' : 'abstract class',
-        \ 'c' : 'class',
-        \ 'r' : 'case class'
-    \ },
-    \ 'scope2kind' : {
-      \ 'type' : 'T',
-      \ 'trait' : 't',
-      \ 'object' : 'o',
-      \ 'abstract class' : 'a',
-      \ 'class' : 'c',
-      \ 'case class' : 'r'
-    \ }
-\ }
-
 function! s:CreateOrExpression(keywords)
   return '('.join(a:keywords, '|').')'
 endfunction
@@ -194,5 +163,6 @@ function! s:NextSection(backwards)
 endfunction
 
 noremap <script> <buffer> <silent> ]] :call <SID>NextSection(0)<cr>
-
 noremap <script> <buffer> <silent> [[ :call <SID>NextSection(1)<cr>
+
+" vim:set sw=2 sts=2 ts=8 et:
