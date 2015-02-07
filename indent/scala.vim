@@ -9,13 +9,9 @@ if exists("b:did_indent")
 endif
 let b:did_indent = 1
 
+setlocal autoindent
 setlocal indentexpr=GetScalaIndent()
 setlocal indentkeys=0{,0},0),!^F,<>>,o,O,e,=case,<CR>
-setlocal autoindent
-setlocal softtabstop=2
-setlocal tabstop=2
-setlocal shiftwidth=2
-setlocal expandtab
 
 if exists("*GetScalaIndent")
   finish

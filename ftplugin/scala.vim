@@ -10,15 +10,19 @@ if exists('b:did_ftplugin') || &cp
 endif
 let b:did_ftplugin = 1
 
-setlocal formatoptions+=ro
+" j is fairly new in Vim, so don't complain if it's not there
+setlocal formatoptions-=t formatoptions+=croqnl
+silent! setlocal formatoptions+=j
 
 " Just like c.vim, but additionally doesn't wrap text onto /** line when
 " formatting. Doesn't bungle bulleted lists when formatting.
 setlocal comments=sO:*\ -,mO:*\ \ ,exO:*/,s1:/**,mb:*,ex:*/,s1:/*,mb:*,ex:*/,://
 setlocal commentstring=//\ %s
 
-let &l:include = '^\s*import'
-let &l:includeexpr = 'substitute(v:fname,"\\.","/","g")'
+setlocal shiftwidth=2 softtabstop=2 expandtab
+
+setlocal include='^\s*import'
+setlocal includeexpr='substitute(v:fname,"\\.","/","g")'
 
 setlocal path+=src/main/scala,src/test/scala
 setlocal suffixesadd=.scala
