@@ -111,8 +111,8 @@ syn match scalaTypeAnnotation /\%([_a-zA-Z0-9$\s]:\_s*\)\ze[_=(\.A-Za-z0-9$]\+/ 
 syn match scalaTypeAnnotation /)\_s*:\_s*\ze[_=(\.A-Za-z0-9$]\+/ skipwhite nextgroup=scalaTypeDeclaration
 hi link scalaTypeAnnotation Normal
 
-syn match scalaCaseFollowing /\<[_\.A-Za-z0-9$]\+\>/ contained
-syn match scalaCaseFollowing /`[^`]\+`/ contained
+syn match scalaCaseFollowing /\<[_\.A-Za-z0-9$]\+\>/ contained contains=scalaCapitalWord
+syn match scalaCaseFollowing /`[^`]\+`/ contained contains=scalaCapitalWord
 hi link scalaCaseFollowing Special
 
 syn keyword scalaKeywordModifier abstract override final lazy implicit implicitly private protected sealed null require super
