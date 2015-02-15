@@ -175,12 +175,13 @@ syn match scalaCommentAnnotation "@[_A-Za-z0-9$]\+" contained
 syn match scalaParameterAnnotation "@param" nextgroup=scalaParamAnnotationValue skipwhite contained
 syn match scalaParamAnnotationValue /[`_A-Za-z0-9$]\+/ contained
 syn region scalaDocLinks start="\[\[" end="\]\]" contained
-syn region scalaCommentCodeBlock matchgroup=Keyword start="{{{" end="}}}" contained
+syn region scalaCommentCodeBlock matchgroup=scalaCommentCodeBlockBrackets start="{{{" end="}}}" contained
 hi link scalaMultilineComment Comment
 hi link scalaDocLinks Function
 hi link scalaParameterAnnotation Function
 hi link scalaParamAnnotationValue Keyword
 hi link scalaCommentAnnotation Function
+hi link scalaCommentCodeBlockBrackets String
 hi link scalaCommentCodeBlock String
 
 syn match scalaAnnotation /@\<[`_A-Za-z0-9$]\+\>/
