@@ -132,27 +132,30 @@ syn region scalaString start=/"/ end=/"/ contains=scalaStringEmbeddedQuote,scala
 hi link scalaString String
 hi link scalaStringEmbeddedQuote String
 
-syn region scalaIString matchgroup=Special start=/\<[a-zA-Z][a-zA-Z0-9_]*"/ skip=/\\"/ end=/"/ contains=scalaInterpolation,scalaInterpolationB,scalaEscapedChar,scalaUnicodeChar
-syn region scalaTripleIString matchgroup=Special start=/\<[a-zA-Z][a-zA-Z0-9_]*"""/ end=/"""\%([^"]\|$\)/ contains=scalaInterpolation,scalaInterpolationB,scalaEscapedChar,scalaUnicodeChar
+syn region scalaIString matchgroup=scalaInterpolationBrackets start=/\<[a-zA-Z][a-zA-Z0-9_]*"/ skip=/\\"/ end=/"/ contains=scalaInterpolation,scalaInterpolationB,scalaEscapedChar,scalaUnicodeChar
+syn region scalaTripleIString matchgroup=scalaInterpolationBrackets start=/\<[a-zA-Z][a-zA-Z0-9_]*"""/ end=/"""\%([^"]\|$\)/ contains=scalaInterpolation,scalaInterpolationB,scalaEscapedChar,scalaUnicodeChar
 hi link scalaIString String
 hi link scalaTripleIString String
 
 syn match scalaInterpolation /\$[a-zA-Z0-9_$]\+/ contained
-exe 'syn region scalaInterpolationB matchgroup=scalaInterpolation start=/\${/ end=/}/ contained contains=' . s:ContainedGroup()
+exe 'syn region scalaInterpolationB matchgroup=scalaInterpolationBoundary start=/\${/ end=/}/ contained contains=' . s:ContainedGroup()
 hi link scalaInterpolation Function
 hi link scalaInterpolationB Normal
 
-syn region scalaFString matchgroup=Special start=/f"/ skip=/\\"/ end=/"/ contains=scalaFInterpolation,scalaFInterpolationB,scalaEscapedChar,scalaUnicodeChar
+syn region scalaFString matchgroup=scalaInterpolationBrackets start=/f"/ skip=/\\"/ end=/"/ contains=scalaFInterpolation,scalaFInterpolationB,scalaEscapedChar,scalaUnicodeChar
 syn match scalaFInterpolation /\$[a-zA-Z0-9_$]\+\(%[-A-Za-z0-9\.]\+\)\?/ contained
-exe 'syn region scalaFInterpolationB matchgroup=scalaFInterpolation start=/${/ end=/}\(%[-A-Za-z0-9\.]\+\)\?/ contained contains=' . s:ContainedGroup()
+exe 'syn region scalaFInterpolationB matchgroup=scalaInterpolationBoundary start=/${/ end=/}\(%[-A-Za-z0-9\.]\+\)\?/ contained contains=' . s:ContainedGroup()
 hi link scalaFString String
 hi link scalaFInterpolation Function
 hi link scalaFInterpolationB Normal
 
 syn region scalaTripleString start=/"""/ end=/"""\%([^"]\|$\)/ contains=scalaEscapedChar,scalaUnicodeChar
-syn region scalaTripleFString matchgroup=Special start=/f"""/ end=/"""\%([^"]\|$\)/ contains=scalaFInterpolation,scalaFInterpolationB,scalaEscapedChar,scalaUnicodeChar
+syn region scalaTripleFString matchgroup=scalaInterpolationBrackets start=/f"""/ end=/"""\%([^"]\|$\)/ contains=scalaFInterpolation,scalaFInterpolationB,scalaEscapedChar,scalaUnicodeChar
 hi link scalaTripleString String
 hi link scalaTripleFString String
+
+hi link scalaInterpolationBrackets Special
+hi link scalaInterpolationBoundary Normal " FIXME Works on ${foo}%.2f but not $foo%.2f
 
 syn match scalaNumber /\<0[dDfFlL]\?\>/ " Just a bare 0
 syn match scalaNumber /\<[1-9]\d*[dDfFlL]\?\>/  " A multi-digit number - octal numbers with leading 0's are deprecated in Scala
