@@ -53,9 +53,9 @@ class ScalaClass(i: Int = 12, b: Trait[A, Trait[B, C]]) extends B with SomeTrait
    * <li></li>
    *
    * @param parameter Explanation of the parameter. Speling.
-   * @return 
+   * @return TODO
    */
-  val thing = "A String" // this is a trailing comment, spelchecked too
+  val thing = "A String" // this is a trailing comment, spelchecked too [TODO]
   val thing = "A String with a \" in it"
   val intString = "A string with $stuff // and a comment in it"
   val intString = s"A string /* a comment and */ with $stuff and ${stuff} in it"

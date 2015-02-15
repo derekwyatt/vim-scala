@@ -172,23 +172,25 @@ syn match scalaTypeAnnotationParameter /@\<[`_A-Za-z0-9$]\+\>/ contained
 hi link scalaTypeOperator Keyword
 hi link scalaTypeAnnotationParameter Function
 
-syn region scalaMultilineComment start="/\*" end="\*/" contains=scalaMultilineComment,scalaDocLinks,scalaParameterAnnotation,scalaCommentAnnotation,scalaCommentCodeBlock,@scalaHtml,@Spell keepend
+syn region scalaMultilineComment start="/\*" end="\*/" contains=scalaMultilineComment,scalaDocLinks,scalaParameterAnnotation,scalaCommentAnnotation,scalaTodo,scalaCommentCodeBlock,@scalaHtml,@Spell keepend
 syn match scalaCommentAnnotation "@[_A-Za-z0-9$]\+" contained
 syn match scalaParameterAnnotation "@param" nextgroup=scalaParamAnnotationValue skipwhite contained
 syn match scalaParamAnnotationValue /[`_A-Za-z0-9$]\+/ contained
 syn region scalaDocLinks start="\[\[" end="\]\]" contained
 syn region scalaCommentCodeBlock matchgroup=Keyword start="{{{" end="}}}" contained
+syn match scalaTodo "\vTODO|FIXME|XXX" contained
 hi link scalaMultilineComment Comment
 hi link scalaDocLinks Function
 hi link scalaParameterAnnotation Function
 hi link scalaParamAnnotationValue Keyword
 hi link scalaCommentAnnotation Function
 hi link scalaCommentCodeBlock String
+hi link scalaTodo Todo
 
 syn match scalaAnnotation /@\<[`_A-Za-z0-9$]\+\>/
 hi link scalaAnnotation PreProc
 
-syn match scalaTrailingComment "//.*$" contains=@Spell
+syn match scalaTrailingComment "//.*$" contains=scalaTodo,@Spell
 hi link scalaTrailingComment Comment
 
 syn match scalaAkkaFSM /goto([^)]*)\_s\+\<using\>/ contains=scalaAkkaFSMGotoUsing
