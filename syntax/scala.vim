@@ -157,7 +157,7 @@ hi link scalaTripleString String
 hi link scalaTripleFString String
 
 hi link scalaInterpolationBrackets Special
-hi link scalaInterpolationBoundary Normal " FIXME Works on ${foo}%.2f but not $foo%.2f
+hi link scalaInterpolationBoundary Function
 
 syn match scalaNumber /\<0[dDfFlL]\?\>/ " Just a bare 0
 syn match scalaNumber /\<[1-9]\d*[dDfFlL]\?\>/  " A multi-digit number - octal numbers with leading 0's are deprecated in Scala
