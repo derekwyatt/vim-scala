@@ -100,9 +100,9 @@ syn match scalaTypeTypeDeclaration /(/ contained nextgroup=scalaTypeTypeExtensio
 syn match scalaTypeTypeDeclaration /\%(⇒\|=>\)\ze/ contained nextgroup=scalaTypeTypeDeclaration contains=scalaTypeTypeExtension skipwhite
 syn match scalaTypeTypeDeclaration /\<[_\.A-Za-z0-9$]\+\>/ contained nextgroup=scalaTypeTypeExtension,scalaTypeTypeEquals skipwhite
 syn match scalaTypeTypeEquals /=\ze[^>]/ contained nextgroup=scalaTypeTypePostDeclaration skipwhite
-syn match scalaTypeTypeExtension /)\?\_s*\zs\%(⇒\|=>\|<:\|:>\|=:=\|::\|#\)/ contained nextgroup=scalaTypeTypeDeclaration skipwhite
+syn match scalaTypeTypeExtension /)\?\_s*\zs\%(⇒\|=>\|<:\|:>\|=:=\|::\|#\)/ contained contains=scalaTypeOperator nextgroup=scalaTypeTypeDeclaration skipwhite
 syn match scalaTypeTypePostDeclaration /\<[_\.A-Za-z0-9$]\+\>/ contained nextgroup=scalaTypeTypePostExtension skipwhite
-syn match scalaTypeTypePostExtension /\%(⇒\|=>\|<:\|:>\|=:=\|::\)/ contained nextgroup=scalaTypeTypePostDeclaration skipwhite
+syn match scalaTypeTypePostExtension /\%(⇒\|=>\|<:\|:>\|=:=\|::\)/ contained contains=scalaTypeOperator nextgroup=scalaTypeTypePostDeclaration skipwhite
 hi link scalaTypeTypeDeclaration Type
 hi link scalaTypeTypeExtension Keyword
 hi link scalaTypeTypePostDeclaration Special
@@ -111,7 +111,7 @@ hi link scalaTypeTypePostExtension Keyword
 syn match scalaTypeDeclaration /(/ contained nextgroup=scalaTypeExtension contains=scalaRoundBrackets skipwhite
 syn match scalaTypeDeclaration /\%(⇒\|=>\)\ze/ contained nextgroup=scalaTypeDeclaration contains=scalaTypeExtension skipwhite
 syn match scalaTypeDeclaration /\<[_\.A-Za-z0-9$]\+\>/ contained nextgroup=scalaTypeExtension skipwhite
-syn match scalaTypeExtension /)\?\_s*\zs\%(⇒\|=>\|<:\|:>\|=:=\|::\|#\)/ contained nextgroup=scalaTypeDeclaration skipwhite
+syn match scalaTypeExtension /)\?\_s*\zs\%(⇒\|=>\|<:\|:>\|=:=\|::\|#\)/ contained contains=scalaTypeOperator nextgroup=scalaTypeDeclaration skipwhite
 hi link scalaTypeDeclaration Type
 hi link scalaTypeExtension Keyword
 hi link scalaTypePostExtension Keyword
