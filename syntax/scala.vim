@@ -55,7 +55,9 @@ syn match scalaSymbol /'[_A-Za-z0-9$]\+/
 hi link scalaSymbol Number
 
 syn match scalaChar /'.'/
-syn match scalaEscapedChar /\\[\\"ntbrf]/
+syn match scalaChar /'\\[\\"'ntbrf]'/ contains=scalaEscapedChar
+syn match scalaChar /'\\u[A-Fa-f0-9]\{4}'/ contains=scalaUnicodeChar
+syn match scalaEscapedChar /\\[\\"'ntbrf]/
 syn match scalaUnicodeChar /\\u[A-Fa-f0-9]\{4}/
 hi link scalaChar Character
 hi link scalaEscapedChar Function
