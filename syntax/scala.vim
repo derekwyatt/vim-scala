@@ -124,8 +124,10 @@ syn match scalaCaseFollowing /\<[_\.A-Za-z0-9$]\+\>/ contained contains=scalaCap
 syn match scalaCaseFollowing /`[^`]\+`/ contained contains=scalaCapitalWord
 hi link scalaCaseFollowing Special
 
-syn keyword scalaKeywordModifier abstract override final lazy implicit implicitly private protected sealed null require super
+syn keyword scalaKeywordModifier abstract override final lazy implicit private protected sealed null super
+syn keyword scalaSpecialFunction implicitly require
 hi link scalaKeywordModifier Function
+hi link scalaSpecialFunction Function
 
 syn keyword scalaSpecial this true false ne eq
 syn keyword scalaSpecial new nextgroup=scalaInstanceDeclaration skipwhite
