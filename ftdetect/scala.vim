@@ -1,5 +1,5 @@
 fun! s:DetectScala()
-    if getline(1) == '#!/usr/bin/env scala'
+    if getline(1) =~# '^#!\(/usr\)\?/bin/env\s\+scalas\?'
         set filetype=scala
     endif
 endfun

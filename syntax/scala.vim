@@ -176,6 +176,7 @@ hi link scalaSquareBracketsBrackets Type
 hi link scalaTypeOperator Keyword
 hi link scalaTypeAnnotationParameter Function
 
+syn match scalaShebang "\%^#!.*" display
 syn region scalaMultilineComment start="/\*" end="\*/" contains=scalaMultilineComment,scalaDocLinks,scalaParameterAnnotation,scalaCommentAnnotation,scalaTodo,scalaCommentCodeBlock,@scalaHtml,@Spell keepend
 syn match scalaCommentAnnotation "@[_A-Za-z0-9$]\+" contained
 syn match scalaParameterAnnotation "@param" nextgroup=scalaParamAnnotationValue skipwhite contained
@@ -183,6 +184,7 @@ syn match scalaParamAnnotationValue /[`_A-Za-z0-9$]\+/ contained
 syn region scalaDocLinks start="\[\[" end="\]\]" contained
 syn region scalaCommentCodeBlock matchgroup=Keyword start="{{{" end="}}}" contained
 syn match scalaTodo "\vTODO|FIXME|XXX" contained
+hi link scalaShebang Comment
 hi link scalaMultilineComment Comment
 hi link scalaDocLinks Function
 hi link scalaParameterAnnotation Function
