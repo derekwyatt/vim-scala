@@ -26,7 +26,7 @@ manage your plugins.
 If you have Vundle installed, simply add the following to your .vimrc:
 
 ```vim
-Plugin 'derekwyatt/vim-scala'
+Bundle 'derekwyatt/vim-scala'
 ```
 
 and then run
