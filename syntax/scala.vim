@@ -199,7 +199,6 @@ hi link scalaDocLinks Function
 hi link scalaParameterAnnotation Function
 hi link scalaParamAnnotationValue Keyword
 hi link scalaCommentAnnotation Function
-hi link scalaCommentCodeBlockBrackets String
 hi link scalaCommentCodeBlock String
 hi link scalaTodo Todo
 
