@@ -1,4 +1,4 @@
-vim-scala [![Build Status](https://secure.travis-ci.org/lenniboy/vim-scala.png)](http://travis-ci.org/lenniboy/vim-scala)
+vim-scala [![Build Status](https://secure.travis-ci.org/derekwyatt/vim-scala.png)](http://travis-ci.org/derekwyatt/vim-scala)
 ==========
 
 This is a "bundle" for Vim that builds off of the initial Scala plugin modules
