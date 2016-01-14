@@ -1,5 +1,5 @@
-vim-scala [![Build Status](https://secure.travis-ci.org/lenniboy/vim-scala.png)](http://travis-ci.org/lenniboy/vim-scala)
-==========
+vim-scala
+=========
 
 This is a "bundle" for Vim that builds off of the initial Scala plugin modules
 by Stefan Matthias Aust and adds some more "stuff" that I find useful, including
