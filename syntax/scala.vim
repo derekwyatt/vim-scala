@@ -32,7 +32,6 @@ function! s:ContainedGroup()
   endtry
 endfunction
 
-syn include @scalaHtml syntax/html.vim  " Doc comment HTML
 unlet! b:current_syntax
 
 syn case match
