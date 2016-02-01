@@ -51,6 +51,13 @@ exe 'syn region scalaBlock start=/{/ end=/}/ contains=' . s:ContainedGroup() . '
 syn keyword scalaAkkaSpecialWord when goto using startWith initialize onTransition stay become unbecome
 hi link scalaAkkaSpecialWord PreProc
 
+syn keyword scalatestSpecialWord shouldBe
+syn match scalatestShouldDSLA /^\s\+\zsit should/
+syn match scalatestShouldDSLB /\<should\>/
+hi link scalatestSpecialWord PreProc
+hi link scalatestShouldDSLA PreProc
+hi link scalatestShouldDSLB PreProc
+
 syn match scalaSymbol /'[_A-Za-z0-9$]\+/
 hi link scalaSymbol Number
 
