@@ -73,8 +73,9 @@ syn match scalaOperator "||"
 syn match scalaOperator "&&"
 hi link scalaOperator Special
 
-syn match scalaNameDefinition /\<[_A-Za-z0-9$]\+\>/ contained nextgroup=scalaPostNameDefinition
+syn match scalaNameDefinition /\<[_A-Za-z0-9$]\+\>/ contained nextgroup=scalaPostNameDefinition,scalaVariableDeclarationList
 syn match scalaNameDefinition /`[^`]\+`/ contained nextgroup=scalaPostNameDefinition
+syn match scalaVariableDeclarationList /\s*,\s*/ contained nextgroup=scalaNameDefinition
 syn match scalaPostNameDefinition /\_s*:\_s*/ contained nextgroup=scalaTypeDeclaration
 hi link scalaNameDefinition Function
 

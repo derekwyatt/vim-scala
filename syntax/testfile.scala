@@ -11,6 +11,11 @@ package object SomeObject[A <: B] extends Implicits {
   
   new Something#SomethingElse
 
+  val GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS, CONNECT, PATCH = Value
+
+  // Doesn't yet work
+  val GET, HEAD: Value, POST, PUT, DELETE, TRACE, OPTIONS, CONNECT, PATCH: Value = Value
+
   def x: Something#SomethingElse
 
   def hasFunctionType[A, B <: A, Z](f: A => B, g: (A, B) => Z): Unit = {
