@@ -130,7 +130,7 @@ hi link scalaKeywordModifier Function
 syn keyword scalaSpecial this true false ne eq
 syn keyword scalaSpecial new nextgroup=scalaInstanceDeclaration skipwhite
 syn match scalaSpecial "\%(=>\|⇒\|<-\|←\|->\|→\)"
-syn match scalaSpecial /`[^`]*`/  " Backtick literals
+syn match scalaSpecial /`[^`]\+`/  " Backtick literals
 hi link scalaSpecial PreProc
 
 syn keyword scalaExternal package import
