@@ -40,6 +40,22 @@ See |scala-mappings|.
 >
     let g:scala_use_default_keymappings = 1
 <
+
+                                                   *'g:scala_scaladoc_indent'*
+By default, the plugin indents documentation comments according to the
+standard Javadoc format.
+    /**
+     * This is a doc comment using Javadoc-style indentation.
+     */
+Set this option to enable the indentation standard as recommended for Scaladoc
+comments.
+    /** This is a Scaladoc comment using 
+      * the recommended indentation.
+      */
+>
+    let g:scala_scaladoc_indent = 1
+<
+                                                     
 ==============================================================================
 COMMANDS                                        *scala-commands*
 

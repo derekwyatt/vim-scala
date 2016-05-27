@@ -44,3 +44,20 @@ There are different modes for import sorting available. For details, please
 consult the vimdoc help with
 
     :help :SortScalaImports
+
+##Scaladoc comment indentation
+
+By default, the plugin indents documentation comments according to the standard
+Javadoc format
+
+    /**
+     * This is a doc comment using Javadoc-style indentation.
+     */
+
+To enable the indentation standard as recommended for Scaladoc comments (from
+http://docs.scala-lang.org/style/scaladoc.html, since Scaladoc2), add the
+command ``let g:scala_scaladoc_indent = 1`` to .vimrc file, e.g:
+
+    /** This is a Scaladoc comment using the recommended indentation.
+      * let g:scala_scaladoc_indent = 1
+      */
