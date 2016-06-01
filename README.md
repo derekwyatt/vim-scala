@@ -37,10 +37,9 @@ and then run
 
 to install it.
 
-##Sorting of import statements
-    :SortScalaImports
+##Help
+After installing the plugin, type the following within Vim to see the full help manual associated with this plugin.
 
-There are different modes for import sorting available. For details, please
-consult the vimdoc help with
-
-    :help :SortScalaImports
+```vim
+:help Scala
+```
