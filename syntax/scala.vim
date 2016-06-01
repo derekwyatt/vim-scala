@@ -57,6 +57,8 @@ syn keyword scalatestAggregations atLeastOneOf atLeastOneElementOf atMostOneOf a
 syn keyword scalatestSequences inOrder inOrderOnly inOrderElementsOf theSameElementsInOrderAs sorted
 syn keyword scalatestExceptions thrownBy
 syn keyword scalatestBeforeAndAfter before after
+syn keyword scalatestPropertyChecks forAll whenever
+syn keyword scalatestScalaFutures whenReady
 syn match scalatestShouldDSLA /^\s\+\zsit should/
 syn match scalatestShouldDSLB /\<should\>/
 hi link scalatestEquality PreProc
@@ -66,6 +68,8 @@ hi link scalatestAggregations PreProc
 hi link scalatestSequences PreProc
 hi link scalatestExceptions PreProc
 hi link scalatestBeforeAndAfter PreProc
+hi link scalatestPropertyChecks PreProc
+hi link scalatestScalaFutures PreProc
 hi link scalatestShouldDSLA PreProc
 hi link scalatestShouldDSLB PreProc
 
