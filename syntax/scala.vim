@@ -55,6 +55,7 @@ syn keyword scalatestStrings startWith endWith fullyMatch include regex withGrou
 syn keyword scalatestContainers empty contain oneOf oneElementOf noneOf noElementOf
 syn keyword scalatestAggregations atLeastOneOf atLeastOneElementOf atMostOneOf atMostOneElementOf allOf allElementsOf theSameElementsAs only
 syn keyword scalatestSequences inOrder inOrderOnly inOrderElementsOf theSameElementsInOrderAs sorted
+syn keyword scalatestExceptions thrownBy
 syn keyword scalatestBeforeAndAfter before after
 syn match scalatestShouldDSLA /^\s\+\zsit should/
 syn match scalatestShouldDSLB /\<should\>/
@@ -63,6 +64,7 @@ hi link scalatestStrings PreProc
 hi link scalatestContainers PreProc
 hi link scalatestAggregations PreProc
 hi link scalatestSequences PreProc
+hi link scalatestExceptions PreProc
 hi link scalatestBeforeAndAfter PreProc
 hi link scalatestShouldDSLA PreProc
 hi link scalatestShouldDSLB PreProc
