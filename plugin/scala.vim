@@ -82,14 +82,18 @@ function! s:sortAcrossGroups()
   call cursor(first_line, 0)
   let to_delete = last_line - first_line
 
-  execute 'd'to_delete
+  if to_delete > 0
+    execute 'd'to_delete
+  endif
 
   call s:sortAndPrint(first_party_imports)
   call s:sortAndPrint(third_party_imports)
   call s:sortAndPrint(java_scala_imports)
 
-  " remove extra blank line at top
-  execute 'delete'
+  if first_line != -1
+    " remove extra blank line at top
+    execute 'delete'
+  endif
 
   call cursor(last_line + 2, 0)
   if empty(getline(line(".")))
