@@ -202,7 +202,7 @@ hi link scalaTypeAnnotationParameter Function
 syn match scalaShebang "\%^#!.*" display
 syn region scalaMultilineComment start="/\*" end="\*/" contains=scalaMultilineComment,scalaDocLinks,scalaParameterAnnotation,scalaCommentAnnotation,scalaTodo,scalaCommentCodeBlock,@Spell keepend fold
 syn match scalaCommentAnnotation "@[_A-Za-z0-9$]\+" contained
-syn match scalaParameterAnnotation "\%(@tparam\|@param\|@see\)" nextgroup=scalaParamAnnotationValue skipwhite contained
+syn match scalaParameterAnnotation "\%(@tparam\|@param\|@see\|@throws\)" nextgroup=scalaParamAnnotationValue skipwhite contained
 syn match scalaParamAnnotationValue /[.`_A-Za-z0-9$]\+/ contained
 syn region scalaDocLinks start="\[\[" end="\]\]" contained
 syn region scalaCommentCodeBlock matchgroup=Keyword start="{{{" end="}}}" contained
