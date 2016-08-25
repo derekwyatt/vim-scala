@@ -50,7 +50,7 @@ exe 'syn region scalaBlock start=/{/ end=/}/ contains=' . s:ContainedGroup() . '
 syn keyword scalaAkkaSpecialWord when goto using startWith initialize onTransition stay become unbecome
 hi link scalaAkkaSpecialWord PreProc
 
-syn keyword scalatestEquality shouldBe shouldEqual should not be have a an equal have theSameInstanceAs
+syn keyword scalatestEquality shouldBe shouldEqual should not be have equal have theSameInstanceAs
 syn keyword scalatestStrings startWith endWith fullyMatch include regex withGroups being
 syn keyword scalatestContainers empty contain oneOf oneElementOf noneOf noElementOf
 syn keyword scalatestAggregations atLeastOneOf atLeastOneElementOf atMostOneOf atMostOneElementOf allOf allElementsOf theSameElementsAs only
@@ -61,6 +61,7 @@ syn keyword scalatestPropertyChecks forAll whenever
 syn keyword scalatestScalaFutures whenReady
 syn match scalatestShouldDSLA /^\s\+\zsit should/
 syn match scalatestShouldDSLB /\<should\>/
+syn match scalatestShouldDSLC /\<shouldBe \(a\|an\)\>/
 hi link scalatestEquality PreProc
 hi link scalatestStrings PreProc
 hi link scalatestContainers PreProc
