@@ -26,7 +26,7 @@ function! SortScalaImports()
 
   "move cursor to where it was before the function call
   call setpos('.', save_cursor)
-
+  write
 endfunction
 
 " Iterates over _all_ imports and puts them into 3 groups
