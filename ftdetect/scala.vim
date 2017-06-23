@@ -4,7 +4,7 @@ fun! s:DetectScala()
     endif
 endfun
 
-au BufRead,BufNewFile *.scala set filetype=scala
+au BufRead,BufNewFile *.scala,*.sc set filetype=scala
 au BufRead,BufNewFile * call s:DetectScala()
 
 " Install vim-sbt for additional syntax highlighting.
