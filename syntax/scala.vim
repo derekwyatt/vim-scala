@@ -50,10 +50,27 @@ exe 'syn region scalaBlock start=/{/ end=/}/ contains=' . s:ContainedGroup() . '
 syn keyword scalaAkkaSpecialWord when goto using startWith initialize onTransition stay become unbecome
 hi link scalaAkkaSpecialWord PreProc
 
-syn keyword scalatestSpecialWord shouldBe
+syn keyword scalatestEquality shouldBe shouldEqual should not be have equal have theSameInstanceAs
+syn keyword scalatestStrings startWith endWith fullyMatch include regex withGroups being
+syn keyword scalatestContainers empty contain oneOf oneElementOf noneOf noElementOf
+syn keyword scalatestAggregations atLeastOneOf atLeastOneElementOf atMostOneOf atMostOneElementOf allOf allElementsOf theSameElementsAs only
+syn keyword scalatestSequences inOrder inOrderOnly inOrderElementsOf theSameElementsInOrderAs sorted
+syn keyword scalatestExceptions thrownBy
+syn keyword scalatestBeforeAndAfter before after
+syn keyword scalatestPropertyChecks forAll whenever
+syn keyword scalatestScalaFutures whenReady
 syn match scalatestShouldDSLA /^\s\+\zsit should/
 syn match scalatestShouldDSLB /\<should\>/
-hi link scalatestSpecialWord PreProc
+syn match scalatestShouldDSLC /\<shouldBe \(a\|an\)\>/
+hi link scalatestEquality PreProc
+hi link scalatestStrings PreProc
+hi link scalatestContainers PreProc
+hi link scalatestAggregations PreProc
+hi link scalatestSequences PreProc
+hi link scalatestExceptions PreProc
+hi link scalatestBeforeAndAfter PreProc
+hi link scalatestPropertyChecks PreProc
+hi link scalatestScalaFutures PreProc
 hi link scalatestShouldDSLA PreProc
 hi link scalatestShouldDSLB PreProc
 
@@ -186,7 +203,7 @@ hi link scalaTypeAnnotationParameter Function
 syn match scalaShebang "\%^#!.*" display
 syn region scalaMultilineComment start="/\*" end="\*/" contains=scalaMultilineComment,scalaDocLinks,scalaParameterAnnotation,scalaCommentAnnotation,scalaTodo,scalaCommentCodeBlock,@Spell keepend fold
 syn match scalaCommentAnnotation "@[_A-Za-z0-9$]\+" contained
-syn match scalaParameterAnnotation "\%(@tparam\|@param\|@see\)" nextgroup=scalaParamAnnotationValue skipwhite contained
+syn match scalaParameterAnnotation "\%(@tparam\|@param\|@see\|@throws\)" nextgroup=scalaParamAnnotationValue skipwhite contained
 syn match scalaParamAnnotationValue /[.`_A-Za-z0-9$]\+/ contained
 syn region scalaDocLinks start="\[\[" end="\]\]" contained
 syn region scalaCommentCodeBlock matchgroup=Keyword start="{{{" end="}}}" contained
