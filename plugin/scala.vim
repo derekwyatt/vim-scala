@@ -40,9 +40,20 @@ function! s:sortAcrossGroups()
   let first_line = -1
   let last_line = -1
   let trailing_newlines = 0
-  let java_scala_imports = []
-  let first_party_imports = []
-  let third_party_imports = []
+
+  if exists('g:scala_import_sort_groups')
+    let sort_group_patterns = copy(g:scala_import_sort_groups)
+  else
+    let sort_group_patterns = ['\(java\(x\)\?\|scala\)\.']
+  endif
+
+  " A catch all pattern for imports which didn't match the other cases.
+  call add(sort_group_patterns, '.*')
+
+  let import_groups = []
+  for x in sort_group_patterns
+    call add(import_groups, [])
+  endfor
 
   " loop over lines in buffer
   while curr <= line('$')
@@ -54,18 +65,17 @@ function! s:sortAcrossGroups()
         let first_line = curr
       endif
 
-      if line =~ '^import \(java\(x\)\?\|scala\)\.'
-        call add(java_scala_imports, line)
-      elseif exists('g:scala_first_party_namespaces')
-        let regex = '^import '.g:scala_first_party_namespaces
+      let iterator = 0
+      for sort_group_pattern in sort_group_patterns
+        let regex = '^import '.sort_group_pattern
         if line =~ regex
-          call add(first_party_imports, line)
-        else
-          call add(third_party_imports, line)
+          call add(import_groups[iterator], line)
+          let iterator += 1
+          break
         endif
-      else
-        call add(third_party_imports, line)
-      endif
+
+        let iterator += 1
+      endfor
 
       let trailing_newlines = 0
     elseif empty(line)
@@ -86,9 +96,9 @@ function! s:sortAcrossGroups()
     execute 'd'to_delete
   endif
 
-  call s:sortAndPrint(first_party_imports)
-  call s:sortAndPrint(third_party_imports)
-  call s:sortAndPrint(java_scala_imports)
+  for lines in reverse(import_groups)
+    call s:sortAndPrint(lines)
+  endfor
 
   if first_line != -1
     " remove extra blank line at top
