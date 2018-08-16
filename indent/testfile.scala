@@ -380,6 +380,25 @@ class SomeClass {
       }
   }
 
+  /** annotations should not change indent, also allow modifiers for vals */
+  @annotation.tailrec def someFunction =
+    some stuff here
+
+  final def foo2 =
+    some stuff here
+
+  final val someValue =
+    some stuff here
+
+  private val someValue =
+    some stuff here
+
+  lazy val someValue =
+    some stuff here
+
+  @annotation.foo val someValue =
+    some stuff here
+
   private[this] def followingFunction = oneliner
 
   val someFunction: List[(Option[T], Option[U])] = TODO
