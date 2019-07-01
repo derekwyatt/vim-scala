@@ -1,0 +1,4 @@
+object Main {
+  foo(')')
+  foo('(')
+}

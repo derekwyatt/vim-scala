@@ -1,44 +1,74 @@
 require 'vimrunner'
 require 'tempfile'
+require 'minitest'
+require 'minitest/spec'
+require 'minitest/autorun'
 
-PWD = File.expand_path File.dirname(__FILE__)
+PWD = File.expand_path('..', __FILE__)
 
-RSpec.configure do |config|
+def start_vim_without_plugins
+  Vimrunner.start do |vim|
+    vim.command 'filetype on'
+    vim.command 'set verbose=2'
 
-  config.before(:suite) do
-    VIM = Vimrunner.start
-    VIM.add_plugin(File.expand_path('../..', __FILE__), 'plugin/scala.vim')
-  end
+    # Prepend our local path to ensure the built-in scala code is not used.
+    vim.prepend_runtimepath(File.expand_path('../..', __FILE__))
+    # puts 'vimrunner runtimepath:', vim.echo('&runtimepath')
 
-  config.after(:suite) do
-    VIM.kill
+    plugin_loader = lambda do
+      vim.command 'runtime! ftdetect/scala.vim'
+      vim.command 'runtime! ftplugin/scala.vim'
+      vim.command 'runtime! ftplugin/scala/tagbar.vim'
+      vim.command 'runtime! indent/scala.vim'
+      vim.command 'runtime! plugin/scala.vim'
+      vim.command 'runtime! syntax/scala.vim'
+      vim.command 'runtime! compiler/scala.vim'
+      vim.command 'runtime! after/syntax/scala.vim'
+    end
+
+    yield vim, plugin_loader
   end
 end
 
-def sort_fixture_across_groups(name)
-  fixture_path = "#{PWD}/fixtures/#{name}.scala"
-
-  temp_file = Tempfile.new('vim-scala-')
-  temp_file.write File.read(fixture_path)
-  temp_file.rewind
-
-  VIM.edit temp_file.path
-
-  VIM.command "let g:scala_sort_across_groups=1"
-  VIM.command "SortScalaImports"
-  VIM.write
-
-  temp_file.rewind
-  output = temp_file.read
-
-  temp_file.close
-  temp_file.unlink
-
-  output
+def start_vim
+  start_vim_without_plugins do |vim, plugin_loader|
+    plugin_loader.call
+    yield vim
+  end
 end
 
-def expected(name)
-  path = "#{PWD}/fixtures/#{name}.expected.scala"
-  File.read(path)
+def with_temp_file(source_filename)
+  temp_file = Tempfile.new('vim-scala-testing-')
+  begin
+    temp_file.write File.read(source_filename)
+    temp_file.rewind
+
+    yield temp_file
+
+    temp_file.rewind
+    temp_file.read
+  ensure
+    temp_file.close
+    temp_file.unlink
+  end
+end
+
+def with_fixture(fixture_name, &block)
+  with_temp_file fixture_path(fixture_name), &block
+end
+
+def each_fixture(dir)
+  Dir.each_child(File.join(PWD, 'fixtures', dir)) do |child|
+    next if child.end_with? '.expected.scala'
+    yield File.join(dir, child)
+  end
+end
+
+def fixture_path(filename)
+  %'#{PWD}/fixtures/#{filename}'
+end
+
+def expected(filename)
+  File.read fixture_path filename.gsub(/scala$/, 'expected.scala')
 end
 
