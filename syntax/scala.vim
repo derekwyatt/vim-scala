@@ -71,6 +71,8 @@ hi link scalaUnicodeChar Special
 
 syn match scalaOperator "||"
 syn match scalaOperator "&&"
+syn match scalaOperator "|"
+syn match scalaOperator "&"
 hi link scalaOperator Special
 
 syn match scalaNameDefinition /\<[_A-Za-z0-9$]\+\>/ contained nextgroup=scalaPostNameDefinition,scalaVariableDeclarationList
