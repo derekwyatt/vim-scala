@@ -210,15 +210,15 @@ hi link scalaAnnotation PreProc
 syn match scalaTrailingComment "//.*$" contains=scalaTodo,@Spell
 hi link scalaTrailingComment Comment
 
-syn match scalaAkkaFSM /goto([^)]*)\_s\+\<using\>/ contains=scalaAkkaFSMGotoUsing
-syn match scalaAkkaFSM /stay\_s\+using/
+syn match scalaAkkaFSM /\<goto([^)]*)\_s\+using\>/ contains=scalaAkkaFSMGotoUsing
+syn match scalaAkkaFSM /\<stay\_s\+using\>/
 syn match scalaAkkaFSM /^\s*stay\s*$/
-syn match scalaAkkaFSM /when\ze([^)]*)/
-syn match scalaAkkaFSM /startWith\ze([^)]*)/
-syn match scalaAkkaFSM /initialize\ze()/
-syn match scalaAkkaFSM /onTransition/
-syn match scalaAkkaFSM /onTermination/
-syn match scalaAkkaFSM /whenUnhandled/
+syn match scalaAkkaFSM /\<when\ze([^)]*)/
+syn match scalaAkkaFSM /\<startWith\ze([^)]*)/
+syn match scalaAkkaFSM /\<initialize\ze()/
+syn match scalaAkkaFSM /\<onTransition\>/
+syn match scalaAkkaFSM /\<onTermination\>/
+syn match scalaAkkaFSM /\<whenUnhandled\>/
 syn match scalaAkkaFSMGotoUsing /\<using\>/
 syn match scalaAkkaFSMGotoUsing /\<goto\>/
 hi link scalaAkkaFSM PreProc
