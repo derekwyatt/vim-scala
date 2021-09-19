@@ -57,6 +57,8 @@ class ScalaClass(i: Int = 12, b: Trait[A, Trait[B, C]]) extends B with SomeTrait
    *
    * <li></li>
    *
+   * /* a nested block comment */
+   *
    * @param parameter Explanation of the parameter. Speling.
    * @return TODO
    */
