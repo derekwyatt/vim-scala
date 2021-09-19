@@ -31,6 +31,8 @@ setlocal includeexpr=substitute(v:fname,'\\.','/','g')
 setlocal path+=src/main/scala,src/test/scala
 setlocal suffixesadd=.scala
 
+let b:undo_ftplugin = "setlocal fo< com< cms< sw< sts< et< inc< inex< pa< sua<"
+
 compiler sbt
 
 if globpath(&rtp, 'plugin/fuf.vim') != ''
@@ -143,10 +145,13 @@ if globpath(&rtp, 'plugin/fuf.vim') != ''
     " If you want to disable the default key mappings, write the following line in
     " your ~/.vimrc
     "     let g:scala_use_default_keymappings = 0
-    if get(g:, 'scala_use_default_keymappings', 1)
+    if !exists("no_plugin_maps") && !exists("no_scala_maps") && get(g:, 'scala_use_default_keymappings', 1)
       nnoremap <buffer> <silent> <Leader>ft :FufFile <c-r>=scala#GetTestDirForFuzzyFinder('%:p:h')<cr><cr>
       nnoremap <buffer> <silent> <Leader>fs :FufFile <c-r>=scala#GetMainDirForFuzzyFinder('%:p:h')<cr><cr>
       nnoremap <buffer> <silent> <Leader>fr :FufFile <c-r>=scala#GetRootDirForFuzzyFinder('%:p:h')<cr><cr>
+      let b:undo_ftplugin .= " | silent! execute 'nunmap <buffer> <Leader>ft'" .
+            \                " | silent! execute 'nunmap <buffer> <Leader>fs'" .
+            \                " | silent! execute 'nunmap <buffer> <Leader>fr'"
     endif
 endif
 
@@ -170,7 +175,11 @@ function! s:NextSection(backwards)
   execute 'silent normal! ' . dir . '\v'.regex
 endfunction
 
-noremap <script> <buffer> <silent> ]] :call <SID>NextSection(0)<cr>
-noremap <script> <buffer> <silent> [[ :call <SID>NextSection(1)<cr>
+if !exists("no_plugin_maps") && !exists("no_scala_maps") && get(g:, 'scala_use_default_keymappings', 1)
+  noremap <script> <buffer> <silent> ]] :call <SID>NextSection(0)<cr>
+  noremap <script> <buffer> <silent> [[ :call <SID>NextSection(1)<cr>
+  let b:undo_ftplugin .= " | silent! execute 'unmap <buffer> ]]'" .
+        \                " | silent! execute 'unmap <buffer> [['"
+endif
 
 " vim:set sw=2 sts=2 ts=8 et:
