@@ -13,6 +13,8 @@ setlocal autoindent
 setlocal indentexpr=GetScalaIndent()
 setlocal indentkeys=0{,0},0),!^F,<>>,o,O,e,=case,<CR>
 
+let b:undo_indent = "setl ai< inde< indk<"
+
 if exists("*GetScalaIndent")
   finish
 endif
