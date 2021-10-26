@@ -34,6 +34,7 @@ endfunction
 " 1. Java/Scala imports like java.util.UUID
 " 2. Third party libraries
 " 3. First party libraries (ie. your own stuff)
+" 4. Field imports (MyObject._)
 "
 function! s:sortAcrossGroups()
   let curr = 1
@@ -43,6 +44,7 @@ function! s:sortAcrossGroups()
   let java_scala_imports = []
   let first_party_imports = []
   let third_party_imports = []
+  let field_imports = []
 
   " loop over lines in buffer
   while curr <= line('$')
@@ -56,6 +58,8 @@ function! s:sortAcrossGroups()
 
       if line =~ '^import \(java\(x\)\?\|scala\)\.'
         call add(java_scala_imports, line)
+      elseif line =~ '\v\C^import [A-Z]'
+        call add(field_imports, line)
       elseif exists('g:scala_first_party_namespaces')
         let regex = '^import '.g:scala_first_party_namespaces
         if line =~ regex
@@ -86,6 +90,7 @@ function! s:sortAcrossGroups()
     execute 'd'to_delete
   endif
 
+  call s:sortAndPrint(field_imports)
   call s:sortAndPrint(first_party_imports)
   call s:sortAndPrint(third_party_imports)
   call s:sortAndPrint(java_scala_imports)
@@ -132,7 +137,7 @@ endfunction
 
 function! s:sortAndPrint(imports)
   if len(a:imports) > 0
-    call sort(a:imports, "s:sortIgnoreCase")
+    call uniq(sort(a:imports, "s:sortIgnoreCase"))
     call append(line("."), "")
     call append(line("."), a:imports)
   endif
