@@ -49,13 +49,13 @@ standard Javadoc format.
      */
 Set this option to enable the indentation standard as recommended for Scaladoc
 comments.
-    /** This is a Scaladoc comment using 
+    /** This is a Scaladoc comment using
       * the recommended indentation.
       */
 >
     let g:scala_scaladoc_indent = 1
 <
-                                                     
+
 ==============================================================================
 COMMANDS                                        *scala-commands*
 
@@ -73,26 +73,44 @@ COMMANDS                                        *scala-commands*
 
                         This makes this command include all imports in the
                         sorting regardless of blank lines in between them and
-                        puts them in three predefined groups instead.
-                        The three groups in which the imports can fall are:
+                        puts them in to predefined groups instead.
+                        The two groups in which the imports fall by default
+                        are:
 
                           1. Scala and Java core
-                          2. Third party libraries
-                          3. First party code (ie. your own)
+                          2. All others
 
-                        Java and Scala core imports are identified by the
-                        java(x) and scala namespaces.
-                        Everything else that isn't a first party namespace
-                        will be a third party import.
-                        You can define a regex that matches first party
-                        namespaces by setting
+                        By default, Java and Scala imports are identified by
+                        the java(x) and scala namespaces.
 
-                          g:scala_first_party_namespaces
+                        You can modify this behavior and provide your own
+                        import groups by setting
 
-                        For example in a standard Play app this would be
-                        set to
-                          g:scala_first_party_namespaces=
-                             \ '\(controllers\|views\|models\)'
+                          g:scala_import_sort_groups.
+
+                        Any imports not caught in the patterns will be put at
+                        the end of the imports list, in their own group.
+
+                        For example, a standard Play app would have the
+                        following sort groups:
+
+                          g:scala_import_sort_groups = [
+                            \ '\(java\(x\)\?\|scala\)\.',
+                            \ '\(controllers\|views\|models\)'
+                            \]
+
+                        If you were to want packages that are specific to your
+                        project to be placed at the end of the imports list,
+                        you can get this behavior using a negative lookahead.
+                        Building on  the example above, that would look like
+
+                          g:scala_import_sort_groups = [
+                            \ '\(java\(x\)\?\|scala\)\.',
+                            \ '\(controllers\|views\|models\)',
+                            \ '\(com.my.project\)\@!'
+                            \]
+
+
 
 ==============================================================================
 MAPPINGS                                        *scala-mappings*
