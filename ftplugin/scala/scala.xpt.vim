@@ -1,3 +1,6 @@
+if !exists(':XPTemplate')
+    finish
+endif
 
 XPTemplate priority=lang
 
